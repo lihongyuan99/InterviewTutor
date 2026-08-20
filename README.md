@@ -65,7 +65,7 @@ InterviewTutor 通过**题库 RAG、模拟追问、结构化评分、错题复�
 
 ```bash
 # 克隆仓库
-git clone <your-repo-url>
+git clone https://github.com/lihongyuan99/InterviewTutor.git
 cd InterviewTutor
 
 # 创建并激活虚拟环境（项目默认使用 tutor 目录）
