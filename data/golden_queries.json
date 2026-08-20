@@ -1,0 +1,363 @@
+{
+  "description": "面试知识库检索黄金查询集。每条 query 标注期望命中的题目 ID（relevant_ids）与查询类型。",
+  "metrics": ["Hit@1", "Hit@3", "Hit@5", "MRR", "Recall@5"],
+  "query_types": {
+    "verbatim": "原题复述（baseline，应稳定命中）",
+    "paraphrase": "同义改写（测语义召回）",
+    "colloquial": "口语化/带噪声（测鲁棒性）",
+    "cross_dimension": "跨维度/易混淆（测区分度）",
+    "negative": "负样本（应拒答/低分）"
+  },
+  "queries": [
+    {
+      "id": "g01",
+      "query": "RAG 系统中如何设计文档分块策略？不同场景下应该怎么选择？",
+      "relevant_ids": ["rag-rag-系统中如何设计文档分块策略-不同场景下应该怎么选择-86ed64bb"],
+      "dimension": "rag",
+      "type": "verbatim"
+    },
+    {
+      "id": "g02",
+      "query": "RAG 的文档怎么切块？有哪些切分方法？",
+      "relevant_ids": ["rag-rag-系统中如何设计文档分块策略-不同场景下应该怎么选择-86ed64bb", "rag-分块策略怎么设计-不同策略的优缺点-19dff388"],
+      "dimension": "rag",
+      "type": "paraphrase"
+    },
+    {
+      "id": "g03",
+      "query": "就是给知识库文档切成一小块一小块的，具体咋选切法",
+      "relevant_ids": ["rag-rag-系统中如何设计文档分块策略-不同场景下应该怎么选择-86ed64bb"],
+      "dimension": "rag",
+      "type": "colloquial"
+    },
+    {
+      "id": "g04",
+      "query": "什么是嵌入 Embedding？为什么 RAG 要把文本转成向量？",
+      "relevant_ids": ["rag-什么是嵌入-embedding-为什么-rag-系统需要将文本转为向量-f245079d"],
+      "dimension": "rag",
+      "type": "verbatim"
+    },
+    {
+      "id": "g05",
+      "query": "向量化到底有啥用，为啥 RAG 不能直接关键词搜",
+      "relevant_ids": ["rag-什么是嵌入-embedding-为什么-rag-系统需要将文本转为向量-f245079d", "rag-rag-为什么需要向量检索-和传统关键词检索有什么本质区别-4fcbd426"],
+      "dimension": "rag",
+      "type": "colloquial"
+    },
+    {
+      "id": "g06",
+      "query": "Agentic RAG 和传统 RAG 有什么区别？",
+      "relevant_ids": ["rag-agentic-rag-是什么-和传统-rag-的核心区别-cffb9914"],
+      "dimension": "rag",
+      "type": "verbatim"
+    },
+    {
+      "id": "g07",
+      "query": "RAG 和微调 Fine-tuning 该怎么选？各自适合啥场景？",
+      "relevant_ids": ["rag-rag-架构与模型微调-fine-tuning-相比-各自的适用场景和优缺点是什-c12a742e"],
+      "dimension": "rag",
+      "type": "paraphrase"
+    },
+    {
+      "id": "g08",
+      "query": "向量数据库怎么选型？小规模和大规模分别用什么？",
+      "relevant_ids": ["rag-向量数据库怎么选型-不同规模下该用什么方案-5c91c9ce"],
+      "dimension": "rag",
+      "type": "paraphrase"
+    },
+    {
+      "id": "g09",
+      "query": "Agent 的记忆系统应该怎么设计？",
+      "relevant_ids": ["memory-context-设计会话记忆系统时需要考虑哪些维度-6335a56a", "memory-context-讲一下-agent-中的-长短期记忆-a9f13c31"],
+      "dimension": "memory-context",
+      "type": "paraphrase"
+    },
+    {
+      "id": "g10",
+      "query": "如果让你设计一个三层记忆机制，你会如何设计？从整体架构和具体压缩方法进行描述。",
+      "relevant_ids": ["memory-context-如果让你设计一个三层记忆机制-你会如何设计-从整体架构和具体压缩方法进行描述-7548521c"],
+      "dimension": "memory-context",
+      "type": "verbatim"
+    },
+    {
+      "id": "g11",
+      "query": "用户说了喜欢吃辣，后来又说不吃辣了，记忆冲突怎么办？",
+      "relevant_ids": ["memory-context-记忆冲突怎么解决-比如用户前后说了不同的过敏信息-54ce92e5"],
+      "dimension": "memory-context",
+      "type": "colloquial"
+    },
+    {
+      "id": "g12",
+      "query": "短期记忆压缩以后，过很久又需要当时的完整信息怎么办？",
+      "relevant_ids": ["memory-context-短期记忆压缩后-过了很长时间又需要当时完整信息怎么办-e58b843e"],
+      "dimension": "memory-context",
+      "type": "verbatim"
+    },
+    {
+      "id": "g13",
+      "query": "ReAct 和 Plan-and-Execute 怎么选？",
+      "relevant_ids": ["architecture-你用-react-还是-plan-and-execute-为什么-d077c252"],
+      "dimension": "architecture",
+      "type": "verbatim"
+    },
+    {
+      "id": "g14",
+      "query": "什么时候该做 Agent，什么时候直接用 Workflow 就行？边界在哪？",
+      "relevant_ids": ["architecture-什么时候该做-agent-和-workflow-的边界在哪-abc45df1"],
+      "dimension": "architecture",
+      "type": "paraphrase"
+    },
+    {
+      "id": "g15",
+      "query": "Agent 的 Tool Calling 是怎么工作的？Function Calling 和 Tool Use 有啥区别？",
+      "relevant_ids": ["architecture-agent-的-tool-calling-机制是怎么工作的-function-c-691fbba5"],
+      "dimension": "architecture",
+      "type": "verbatim"
+    },
+    {
+      "id": "g16",
+      "query": "Multi-Agent 如何通信？不同项目分别用了哪些通信方法？",
+      "relevant_ids": ["multi-agent-multi-agent-如何通信-不同项目分别用了哪些通信方法-6b07a598"],
+      "dimension": "multi-agent",
+      "type": "verbatim"
+    },
+    {
+      "id": "g17",
+      "query": "多个 agent 一起干活，它们之间怎么互相通信配合？",
+      "relevant_ids": ["multi-agent-multi-agent-如何通信-不同项目分别用了哪些通信方法-6b07a598"],
+      "dimension": "multi-agent",
+      "type": "colloquial"
+    },
+    {
+      "id": "g18",
+      "query": "Agent 如何减少幻觉？工业场景下怎么做？",
+      "relevant_ids": ["fault-tolerance-agent-如何减少幻觉-在工业场景下怎么做-8af274bc"],
+      "dimension": "fault-tolerance",
+      "type": "verbatim"
+    },
+    {
+      "id": "g19",
+      "query": "Prompt 注入攻击怎么防？",
+      "relevant_ids": ["fault-tolerance-prompt-注入攻击如何防御-8b91b6b6"],
+      "dimension": "fault-tolerance",
+      "type": "paraphrase"
+    },
+    {
+      "id": "g20",
+      "query": "Embedding 模型怎么选？选型考虑哪些因素？",
+      "relevant_ids": ["rag-embedding-模型怎么选-选型时考虑哪些因素-309cc260"],
+      "dimension": "rag",
+      "type": "verbatim"
+    },
+    {
+      "id": "g21",
+      "query": "RAG 里怎么提高文档召回率？",
+      "relevant_ids": ["rag-rag-中如何提高文档召回率-9081029d"],
+      "dimension": "rag",
+      "type": "paraphrase"
+    },
+    {
+      "id": "g22",
+      "query": "父子索引在 RAG 里是干嘛的？",
+      "relevant_ids": ["rag-rag-中为什么引入父子索引-8529ce6e"],
+      "dimension": "rag",
+      "type": "paraphrase"
+    },
+    {
+      "id": "g23",
+      "query": "怎么用 Prompt 提取用户的风格偏好？",
+      "relevant_ids": ["memory-context-如何用-prompt-提取用户风格偏好-风格偏好应包含哪些内容-16a253ad"],
+      "dimension": "memory-context",
+      "type": "paraphrase"
+    },
+    {
+      "id": "g24",
+      "query": "怎么做红烧肉？",
+      "relevant_ids": [],
+      "dimension": "",
+      "type": "negative"
+    },
+    {
+      "id": "g25",
+      "query": "今天天气怎么样？",
+      "relevant_ids": [],
+      "dimension": "",
+      "type": "negative"
+    },
+    {
+      "id": "g26",
+      "query": "Agent 的 Self-Reflection 机制是什么？怎么识别输出里的逻辑错误？",
+      "relevant_ids": ["architecture-agent-的-self-reflection-机制是什么-它怎么识别输出中的逻-af642c07", "fault-tolerance-agent-的-self-reflection-机制怎么识别输出中的逻辑错误-6dc9a070"],
+      "dimension": "architecture",
+      "type": "verbatim"
+    },
+    {
+      "id": "g27",
+      "query": "怎么减少无关上下文对模型的干扰？",
+      "relevant_ids": ["memory-context-如何减少无关上下文对模型的干扰-当前上下文有哪些优化思路-1e23bcf1"],
+      "dimension": "memory-context",
+      "type": "paraphrase"
+    },
+    {
+      "id": "g28",
+      "query": "RAG 知识库要更新，怎么不停服热更新？",
+      "relevant_ids": ["rag-rag-知识库更新怎么不停服-热更新方案怎么设计-5f83c96d"],
+      "dimension": "rag",
+      "type": "colloquial"
+    },
+    {
+      "id": "g29",
+      "query": "怎么评估一个上线的 Agent 好不好？除了准确率还有啥指标？",
+      "relevant_ids": ["evaluation-如何量化评估一个上线的-agent-好坏-除了准确率-247f50b8"],
+      "dimension": "evaluation",
+      "type": "paraphrase"
+    },
+    {
+      "id": "g30",
+      "query": "GraphRAG 处理 Agent 复杂关联查询时优势在哪？",
+      "relevant_ids": ["rag-graphrag-在处理-agent-复杂关联查询时的优势在哪里-f57ca1a3"],
+      "dimension": "rag",
+      "type": "paraphrase"
+    },
+    {
+      "id": "g31",
+      "query": "MCP 是啥？它解决了 Function Calling 的什么根本问题？",
+      "relevant_ids": ["agent-concepts-mcp-是什么-它解决了-function-calling-的什么根本问题-140c1cf2"],
+      "dimension": "agent-concepts",
+      "type": "colloquial"
+    },
+    {
+      "id": "g32",
+      "query": "MCP 和 A2A 分别解决什么层面的问题？为什么需要两个协议？",
+      "relevant_ids": ["agent-concepts-mcp-和-a2a-分别解决什么层面的问题-为什么需要两个协议-5daf26c3"],
+      "dimension": "agent-concepts",
+      "type": "verbatim"
+    },
+    {
+      "id": "g33",
+      "query": "AI 生成的代码测试没问题，一上线就炸了怎么办？",
+      "relevant_ids": ["ai-code-testing-ai-生成的代码线下测试没问题-上线后出了问题怎么办-cf07f1ce"],
+      "dimension": "ai-code-testing",
+      "type": "colloquial"
+    },
+    {
+      "id": "g34",
+      "query": "如何测试 AI 生成代码的正确性？",
+      "relevant_ids": ["ai-code-testing-如何测试-ai-生成代码的正确性-6c07989b"],
+      "dimension": "ai-code-testing",
+      "type": "verbatim"
+    },
+    {
+      "id": "g35",
+      "query": "Agent 项目从 Demo 到企业级落地，要补哪些工程能力？",
+      "relevant_ids": ["business-ai-agent-项目如何从-demo-进行企业级落地-从原型到生产需要补全哪些工程能-2f180f56"],
+      "dimension": "business-ai",
+      "type": "paraphrase"
+    },
+    {
+      "id": "g36",
+      "query": "业务方说 AI 效果差，怎么系统定位问题？",
+      "relevant_ids": ["business-ai-业务方反馈-ai-效果差-你怎么系统性定位问题-33fca2d3"],
+      "dimension": "business-ai",
+      "type": "colloquial"
+    },
+    {
+      "id": "g37",
+      "query": "LangGraph 里的 State 怎么定义和流转？节点多了怎么防止状态膨胀？",
+      "relevant_ids": ["project-deep-dive-langgraph-中的-state-怎么定义和流转-节点多了怎么防止状态膨胀-8b428953"],
+      "dimension": "project-deep-dive",
+      "type": "verbatim"
+    },
+    {
+      "id": "g38",
+      "query": "工具调用时怎么保证参数提取准确？",
+      "relevant_ids": ["project-deep-dive-工具调用时怎么保证参数提取准确-f2801139"],
+      "dimension": "project-deep-dive",
+      "type": "verbatim"
+    },
+    {
+      "id": "g39",
+      "query": "向量数据库里的 IVF_FLAT 和 HNSW 索引有啥区别？",
+      "relevant_ids": ["rag-向量数据库中-ivf_flat-和-hnsw-索引的区别是什么-各自适合什么场景-f3753d42"],
+      "dimension": "rag",
+      "type": "colloquial"
+    },
+    {
+      "id": "g40",
+      "query": "Embedding 和 ReRank 模型具体怎么做微调？",
+      "relevant_ids": ["rag-embedding-和-rerank-模型具体怎么做的微调-75f503bb"],
+      "dimension": "rag",
+      "type": "verbatim"
+    },
+    {
+      "id": "g41",
+      "query": "RAG 检索到的 chunk 不够回答问题，后面怎么办？",
+      "relevant_ids": ["rag-rag-检索到的-chunk-不足以回答问题-后续怎么处理-b08b3d26"],
+      "dimension": "rag",
+      "type": "colloquial"
+    },
+    {
+      "id": "g42",
+      "query": "RAG 系统检索到的文档很多但回答质量差，怎么排查？",
+      "relevant_ids": ["rag-rag-系统检索到的文档很多但回答质量差-怎么排查-92dcff3d"],
+      "dimension": "rag",
+      "type": "verbatim"
+    },
+    {
+      "id": "g43",
+      "query": "帮我写一首诗",
+      "relevant_ids": [],
+      "dimension": "",
+      "type": "negative"
+    },
+    {
+      "id": "g44",
+      "query": "推荐几个好吃的餐厅",
+      "relevant_ids": [],
+      "dimension": "",
+      "type": "negative"
+    },
+    {
+      "id": "g45",
+      "query": "怎么炒股赚钱？",
+      "relevant_ids": [],
+      "dimension": "",
+      "type": "negative"
+    },
+    {
+      "id": "g46",
+      "query": "明天要交作业了怎么办",
+      "relevant_ids": [],
+      "dimension": "",
+      "type": "negative"
+    },
+    {
+      "id": "g47",
+      "query": "怎么快速减掉肚子上的肉？",
+      "relevant_ids": [],
+      "dimension": "",
+      "type": "negative"
+    },
+    {
+      "id": "g48",
+      "query": "prompt 注入攻击怎么防？有哪些工程手段？",
+      "relevant_ids": ["fault-tolerance-prompt-注入攻击如何防御-8b91b6b6"],
+      "dimension": "fault-tolerance",
+      "type": "colloquial"
+    },
+    {
+      "id": "g49",
+      "query": "Agent 执行 shell 命令怎么保证安全？",
+      "relevant_ids": ["fault-tolerance-agent-执行-shell-命令怎么保证安全-还有哪些安全问题-51ce98fa"],
+      "dimension": "fault-tolerance",
+      "type": "verbatim"
+    },
+    {
+      "id": "g50",
+      "query": "NL2SQL 场景下的 SQL 安全防护怎么做？",
+      "relevant_ids": ["fault-tolerance-nl2sql-场景下的-sql-安全防护怎么做-9cc26886"],
+      "dimension": "fault-tolerance",
+      "type": "verbatim"
+    }
+  ]
+}

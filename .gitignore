@@ -1,0 +1,39 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+web/.env
+web/.env.*
+!web/.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+tutor/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node / Vite
+node_modules/
+web/dist/
+*.tsbuildinfo
+
+# Runtime and generated user data
+memory/
+kg_output/
+*.log
+
+# Local editor / OS files
+.DS_Store
+.idea/
+.vscode/
+
+# Accidental root lockfile; the frontend lockfile lives in web/
+/package-lock.json
