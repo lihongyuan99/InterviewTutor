@@ -375,7 +375,6 @@ python scripts/build_knowledge_index.py --no-embedding
 - **题库向量化**：输入由 `题目 + 专家答案前 1500 字` 拼接而成，作为学习模式（`/interview/learn`）语义检索主通道。
 - **对话记忆向量化**：把用户历史问答对（`User: ... Assistant: ...`）写入 FAISS，作为通用对话 Agent 的历史记忆召回通道。
 - 调用时使用 `requests` 而非 `openai` SDK，以规避本地 `omlx` 服务对 httpx 的 502 兼容问题。
-- 模型本身为中文友好（Qwen 系列），相比早期使用的 `all-MiniLM-L6-v2`（英文模型，384 维），中文语义召回能力显著提升。
 
 ### 前端
 
