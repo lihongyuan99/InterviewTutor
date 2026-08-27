@@ -44,5 +44,8 @@ data/knowledge_runtime/
 /.playwright-cli/
 /output/
 
+# Local handoff notes
+/HANDOFF.md
+
 # Accidental root lockfile; the frontend lockfile lives in web/
 /package-lock.json
