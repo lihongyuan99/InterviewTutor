@@ -53,6 +53,8 @@ _DIMENSION_ALIASES = {
     "13-project-deep-dive": "project-deep-dive",
     "14-company-preferences": "company-preferences",
     "15-agent-concepts": "agent-concepts",
+    "16-agent-infra": "agent-infra",
+    "17-ai-infra": "ai-infra",
 }
 
 # 维度 -> 中文名。用于 dimension_label 字段。
@@ -72,6 +74,8 @@ _DIMENSION_LABELS = {
     "project-deep-dive": "简历项目深挖",
     "company-preferences": "公司偏好",
     "agent-concepts": "Agent 概念",
+    "agent-infra": "Agent 基础设施",
+    "ai-infra": "AI 基础设施",
     "engineering": "工程实践",
     "model": "模型",
     "full-stack": "全栈工程",

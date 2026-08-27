@@ -34,6 +34,12 @@ def build_index(
     """
     questions, warnings = parse_knowledge(knowledge_dir)
 
+    # CLI/manual builds always target the configured bundled database unless an
+    # explicit path is supplied; they never mutate the currently active release.
+    if db_path is None:
+        from app.core.config import settings
+
+        db_path = settings.KNOWLEDGE_DB_PATH
     repo = KnowledgeRepository(db_path)
     embeddings: Optional[dict] = None
 
@@ -58,9 +64,10 @@ def search(
     limit: int = 5,
     threshold: float = 0.0,
     db_path: Optional[str] = None,
+    snapshot_id: Optional[str] = None,
 ) -> List[SearchResult]:
     """检索知识库。"""
-    repo = KnowledgeRepository(db_path)
+    repo = KnowledgeRepository(db_path, snapshot_id=snapshot_id)
     retriever = KnowledgeRetriever(repository=repo)
     results = retriever.search(
         query, dimension=dimension, limit=limit, threshold=threshold
@@ -69,9 +76,13 @@ def search(
     return results
 
 
-def get_question(qid: str, db_path: Optional[str] = None) -> Optional[InterviewQuestion]:
+def get_question(
+    qid: str,
+    db_path: Optional[str] = None,
+    snapshot_id: Optional[str] = None,
+) -> Optional[InterviewQuestion]:
     """按 ID 获取完整题目（含高手答、差距分析）。"""
-    repo = KnowledgeRepository(db_path)
+    repo = KnowledgeRepository(db_path, snapshot_id=snapshot_id)
     q = repo.get(qid)
     repo.close()
     return q

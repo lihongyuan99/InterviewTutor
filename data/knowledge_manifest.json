@@ -1,0 +1,2400 @@
+{
+  "schema_version": 1,
+  "build_version": 1,
+  "release_id": "bundled",
+  "source": {
+    "repository": "ranxi2001/zero2Agent",
+    "ref": "main",
+    "path": "learn-agent-interview",
+    "commit_sha": "f7c2e45eacb18546dd879a589c12664ef82d2087",
+    "commit_date": "2026-08-26T17:24:24+08:00"
+  },
+  "built_at": "2026-08-26T12:34:44.460220+00:00",
+  "question_count": 592,
+  "dimension_count": 16,
+  "parse_warning_count": 0,
+  "embedding": {
+    "model": "Qwen3-Embedding-0.6B-4bit-DWQ",
+    "dimension": 1024,
+    "pipeline_version": 1,
+    "fingerprint": "174a69d23b74ace6778fd6502fbc09021c8547d306c235a1cd78ebd90629b661",
+    "reused": 0,
+    "generated": 592
+  },
+  "question_hashes": {
+    "architecture-你用-react-还是-plan-and-execute-为什么-d077c252": {
+      "content_hash": "8d451fd926f244d2f474e7594f26357d2f25886711ba7e55082c2552c63fe1c4",
+      "embedding_hash": "3ada0820f5c3a8ac282c89e3cb552b5112310c1b7803fa721733c05a505272f1"
+    },
+    "architecture-tree-of-thoughts-tot-在线上系统里能用吗-成本不高-4d830127": {
+      "content_hash": "fd243453f91a666f154cdba2a6a79a6d340a8919cec7650165324df722526035",
+      "embedding_hash": "2d0780341bac101acdc30bec675e177ab2f76e47c69b5e8d7e4e41dfc33b6d9a"
+    },
+    "architecture-了解过-agent-的设计范式吗-9301f300": {
+      "content_hash": "93396908bb452289a2156fe4f9ddcb14fbe3926aa12994ebe2e0b4ecc397201c",
+      "embedding_hash": "dbdf899f38b41153ecc7135673ae333a0bebecf9317e89d84bd65f40ce059a38"
+    },
+    "architecture-agent-的架构设计-从系统角度来拆分-ec6241fa": {
+      "content_hash": "31dd5226693e4cad9cc11c84a789f51535301cc9893a2f50be9074c321b503fe",
+      "embedding_hash": "5dc69688bda8173551739b425c29137b5bdd40541589930184f12291f27978e9"
+    },
+    "architecture-agent-在学术上由哪些部分组成-994f53b2": {
+      "content_hash": "dc905ca9baf85bae47b938a1e690cfa4e808d003589aca48c732322593d4f05f",
+      "embedding_hash": "8494cceed196030307838a88d948a5c530aade846c9d7fb292d743b72538dab7"
+    },
+    "architecture-如果让你设计一个-agent-的规划器-怎么避免它每一步都重新规划-导致路径震荡-c3bd9a0e": {
+      "content_hash": "d071b03ab762eb1e74cb9e404d9d55aa1d3cbb15e796e44d60acc1ce24895390",
+      "embedding_hash": "953f1ddf576b3424efca66383cdf5479e28fc87641525d12b40c37c7e22a3fd5"
+    },
+    "architecture-如果模型特别擅长生成-但不擅长严格遵守流程-你会怎么把它放进一个强约束工作流里-c42f530d": {
+      "content_hash": "2161b9defd1f09791d6f5b6b3cf2938910c8ce3aca6ccbe78c9d3e75768ca708",
+      "embedding_hash": "bd939dcab055192c2025efea045afec72db3f7477495155bac2cb4b83eb25075"
+    },
+    "architecture-什么时候该做-agent-和-workflow-的边界在哪-abc45df1": {
+      "content_hash": "09f3effd8e79caa53ba702629e6540b617cca435a00097f3acda1a3d473f5de5",
+      "embedding_hash": "2b4590a3756ab4a6c22b741528630dc92096433ed26a3ffed7f0edc0c3118313"
+    },
+    "architecture-设计一个-ai-agent-爬取短视频平台内容-如何设计-fd1ce0cb": {
+      "content_hash": "d1518361de5dfd0da3aae097cf509afcc5a68dcf4f3fef4a331b6de4198adfea",
+      "embedding_hash": "26709a65faa6046574e65110a88438541a99289f3356a145eb17a6bd6d7d62ea"
+    },
+    "architecture-生产级-agent-的执行循环包含哪些阶段-哪些必须显式状态化-02132982": {
+      "content_hash": "382ce33cdfc66a9b59d96af64b9a00181d3a98793e219224288fa8f7ba11281d",
+      "embedding_hash": "5dc7e3ffa5860c86162a00060ad6e6691b0e86f77c6445cfb48729ffb59c4a30"
+    },
+    "architecture-为什么很多团队做到最后是-workflow-agent-节点-的混合架构-2bf8d10f": {
+      "content_hash": "f1b80e56977f78f22cad8bb3baf25b63d5be1d525167c753ef0289d8fa60ae31",
+      "embedding_hash": "b77fb66f1726d172067fd1e9f765eab0f1713e2626140837b85d8e2ae6e8efc9"
+    },
+    "architecture-agent-系统里-模型和系统代码的职责边界怎么划-37875b04": {
+      "content_hash": "bae7668a130fa76a051c07155278f2cb260eff4547b7e733e19ca4e2730c04b5",
+      "embedding_hash": "a263dc3e58ee59ac494e13f6ac0a314e61b28ac14c21a13aa62ed3a3d3e66667"
+    },
+    "architecture-如果面试官说-agent-本质上就是套壳调用工具-你怎么反驳-d200d0f8": {
+      "content_hash": "5f4add3ae075f64859479bcf9a039a98beceaa6605df2f4d19d22381585c9b91",
+      "embedding_hash": "7c174a1032d56bd9639eeca57e09ba3f7b18be2a097156ac3bcf4bc01c41a873"
+    },
+    "architecture-什么样的任务适合先全局规划再执行-什么样的任务更适合边走边决策-7b325597": {
+      "content_hash": "d90b6d65733a15a7c38bb6bc2ba5d9fd0e3a5b324360f885b6c7e7baa9b9d0ba",
+      "embedding_hash": "2c21a30396359bfaaf64a5ec743c678dea9b3c37ae614eec3d49b89c58649414"
+    },
+    "architecture-现在的-agent-架构和之前有什么本质不同-渐进式披露是什么思路-6a33b884": {
+      "content_hash": "bb3c2da5e06123bf1d1f1961c22a750b306e4dba734eed0ca9419235cc5269bb",
+      "embedding_hash": "39d4c24ff7c36247d255a088d0d4d37a6e6db96263b0b0e0ce4449d1f0483972"
+    },
+    "architecture-skill-mcp-rule-三者有什么区别-724a3967": {
+      "content_hash": "7c334a0bd8304003129e0f066f12ddaf7d088748faf22291a7bdde070dae9526",
+      "embedding_hash": "16d6498e6e9bfa9733ca8c5941fe6b2dbaa5d85f7192b47390aa6778371b73af"
+    },
+    "architecture-微服务怎么接入一个-agent-系统-5e24a062": {
+      "content_hash": "c7b18ae6a6554d96035becbae4ae8d6538e033e7af84a772a41481380cfe241c",
+      "embedding_hash": "a9db384e797b0e2488e8b184c21f76d8b25a1d1eb2c6920edda567419d012692"
+    },
+    "architecture-如何保证规划-agent-plan-的结果正确-a41a6dea": {
+      "content_hash": "43a8e3566692bd292c1ad85cc7ab7817fa67239b2b174f23d1eb914854f11640",
+      "embedding_hash": "e7c7c97372f43e5d865a00804fb2d686658921c3021da7e8ff0fd41b704fb720"
+    },
+    "architecture-规划完成后需要人工介入修改大纲-sse-怎么实现这种-human-in-the--9959a7ab": {
+      "content_hash": "9009ce385b4c658c5b227a3792cc044b1e90c775af9422490d9adf89e9fc3980",
+      "embedding_hash": "714fb1490557cb3eb41a6406d0c0ff34ffce12c16b0645318013ce7a41aed77d"
+    },
+    "architecture-agent-的任务规划是怎么做的-规划由模型完成还是规则实现-dd4b5617": {
+      "content_hash": "53595f1a4bbab86d1289f346ffbf80f6a5fb066c5847da892ddfc0bfe4eea28d",
+      "embedding_hash": "529e603faa21a304c72cf78550966c1b78ddf9bea93b4a85a24a0ef15deddaa1"
+    },
+    "architecture-langchain-和-langgraph-有什么区别-分别适合什么场景-96ff043c": {
+      "content_hash": "11ecbf98b64f427ad5eb6b715b8b73bc49876d645f9c3cdecdaa2e130224277e",
+      "embedding_hash": "c272cac2bfcb6e28d284b8d6b7386428406398ceee379d4d76992de36138addc"
+    },
+    "architecture-模型和-agent-的区别到底是什么-18868297": {
+      "content_hash": "3e85e6b8d80ce8c85830a0f96a694b4d7660fcf05cb821abdbe9467904af16a1",
+      "embedding_hash": "f19da872e8ac613a0f04e2765f2e3af29c4e1a0478c85ecc236195abfdf33b2f"
+    },
+    "architecture-agent-的-self-reflection-机制是什么-它怎么识别输出中的逻-af642c07": {
+      "content_hash": "21c6a63965e7bc10a2e43b7ba2013226da01cf736f9f647b7025c30b34358e29",
+      "embedding_hash": "2fbd44b940b9c4f3aea81a3d07ea404205c54b3de9a510e4f60c8b2e056c778c"
+    },
+    "architecture-在-推理-行动-循环中-如何设计来纠正逻辑塌缩或无效工具调用-fa95e95a": {
+      "content_hash": "35f83b2c3655cb23ccbf354f1946bb524c786deba4f449394b68138496986071",
+      "embedding_hash": "d043833e032bf8ff1a3be8d9bf5782d0db97a4e06f1fc0cc01d98803414b1e60"
+    },
+    "architecture-设计一个智能导购助手-agent-描述其感知-规划-记忆和执行四大模块在分布式架-27d6562b": {
+      "content_hash": "300dd8fa615a80b2ca2b90793b2b90d4ffe5cf5fcd5001ff6da5f1086d70825b",
+      "embedding_hash": "7d6b0bb2bb7ece0ae24709b067be1b8d7c7e13f84ef2e7c7cb37a7629e656699"
+    },
+    "architecture-如果设计一个科研辅助-agent-整体流程应该怎么设计-3a6fee68": {
+      "content_hash": "5a5e4d970abb07c26d45ff0c801bf730a8a898d885046b89fbe656a27c67d14c",
+      "embedding_hash": "f459e7469783ee7ee5e7bafb8cf3ca8bbacfd8004ea3daae1471e9449423bbee"
+    },
+    "architecture-如何保障自然语言任务描述能精准转化为稳定-可靠的执行路径-a59229e8": {
+      "content_hash": "50fb046dbe8a473abfe84a73a87882c01f27e732ae5983d2684b6f521e140641",
+      "embedding_hash": "bd67ab53bd3668d977fa522167e219ed43549dbf6c29c06f6344e5576cd49a43"
+    },
+    "architecture-多角色智能客服场景-b-c-d-端-用-rag-还是-skill-怎么设计-3aaf2b4b": {
+      "content_hash": "bf251a07de66c70fd11f5904ffa8ed15fea3530424811867294d23b58e3eec18",
+      "embedding_hash": "2466db7c9d66bb1adccb554c6205f3d51fa22addb13988dc997152cd2b8096c7"
+    },
+    "architecture-场景题-如果有一个监控日志-给-agent-分析-需要得到分析结果-怎么设计这个-b12cd15f": {
+      "content_hash": "6906cf8c459fadbdbee52b9e3e3b48b7f32301f9903e02a9e287ba84bac8c2e1",
+      "embedding_hash": "7f8d404cde1df9aac3cd91f5e7f391184e62607602b7137f17bc93f4adf0fa0b"
+    },
+    "architecture-skill-和-workflow-的区别是什么-什么场景该用-skill-而不是-ec4ca6fd": {
+      "content_hash": "eac37e95d1d1ab7ce0fe41be720e8d9fd161dbe2e0498c93a21086e6276fe00f",
+      "embedding_hash": "cf83cee3b7ff173f395dd1db8495e32985437d9d21e93b6c25f4dcb817550339"
+    },
+    "architecture-dag-与含循环图在-agent-编排中的区别和适用场景-b7d3bf9e": {
+      "content_hash": "6eaec30e7141a05a24e6b2c9ddc7bb5d99914deae9c84947bc32f992ea9db084",
+      "embedding_hash": "7df9869a036e2bbf965d3c45e1f710e4392f73d14b42808be8c46af8915f0c24"
+    },
+    "architecture-基于强化学习的-agent-与传统基于-prompt-的-agent-有何区别--d7f849a0": {
+      "content_hash": "8966b6ee59acb8e55b34afbab5ea2edc5180ac6385af70c4152191f59654507d",
+      "embedding_hash": "eb440657198d81ec7a7c8c1e8566d362cfbe630b647233fd40c1fcff27d5b113"
+    },
+    "architecture-讲一讲-agent-的-middleware-中间件-是什么-b7c61817": {
+      "content_hash": "ff274213cd6219d723e9ce49adb22790d73f45d6f186222bee23911000d4dbdf",
+      "embedding_hash": "cd292c481195ddada945ce9771382e992a6a18b0937f2b6ed5c62ecda5a90dac"
+    },
+    "architecture-ai-系统该做单域工具还是跨团队通用平台-怎么选-166c14f3": {
+      "content_hash": "7b4d1053550b26f21883ba9b82b899988546c34900d8c6786c01c4fd2c4382e4",
+      "embedding_hash": "84272bf43ebb3d883e7d516a764ed3136106520c233f9bea7c6e2834f0969fec"
+    },
+    "architecture-coding-agent-的完整链路是怎么运转的-从用户输入到代码产出的全流程-47a475b3": {
+      "content_hash": "d3a6013c2ddac0190cbb47f31883c9c78f66fed7b76cc356c64b7b38b1d91301",
+      "embedding_hash": "0f719b1be63b6f7deee3bc03ec8b42cc0e5987c8149fb71547391ac20c22531b"
+    },
+    "architecture-只有模型-api-和-vs-code-如何从零搭建一套可用的-agent-应用-69d11a5a": {
+      "content_hash": "156cb484f36753c0fae69d7937ed3f5163ca01a035f1177b9106e96e6608271d",
+      "embedding_hash": "a5817829a5d16817499504ab07c2c024bf4e67f8837854df092d9bbcb5fe20e5"
+    },
+    "architecture-用拓扑排序-规则式-管理任务依赖-vs-让大模型自己推理决策执行顺序-各有什么问-e11b05dc": {
+      "content_hash": "5e7bcb27a66095445f7d1a8701b5828a697b78346772fa867cac1873addf7f7a",
+      "embedding_hash": "48e409bf1b7c83e4c45f890e56b465a1db4e4f53050c6e16064a2ccbe5ff8d57"
+    },
+    "architecture-agent-的-thinking-阶段怎么决定是调用工具还是直接回复-e206aa5e": {
+      "content_hash": "aae04842ce36de39f1dae15245b1d78ba3a0a23494ca52eec6551775c5a40928",
+      "embedding_hash": "49ed96e49bbccd5ab9e02259349ab87e8dbc59663dfc3c44f0a1cf6fdc444f64"
+    },
+    "architecture-agent-如何判断已经收集了足够的信息-并最终给出输出结论-1235640d": {
+      "content_hash": "4ef5168c0cb68a758626ffb7d8083977ad181a4dc19142144ab8b8ce486537d3",
+      "embedding_hash": "1bd26ee21e0e062be0f53848b68ccd432c5c7f2bdef862f67550450ead0388e0"
+    },
+    "architecture-设计一个内部的多源文档问答-ai-架构设计是什么-7467471a": {
+      "content_hash": "01eb1729e9388d4ab43d744b55763acf30b8572b65ea8921a8da0effcc98e74f",
+      "embedding_hash": "e57987be7af616db1bd17e6392fe5e674f595205f6e42dd106ab36abef6588ab"
+    },
+    "architecture-react-在工程实现中-消息和状态协议应该怎么设计-b98621cb": {
+      "content_hash": "8d306cfe4d4afaa2d5a85f5ca8d304bbd5bd446ed0dc27ce8ffb288c4f0efd73",
+      "embedding_hash": "faed81f23a947c058b033a39600f1c7fa28c376c607d5a57c794683092edb9ba"
+    },
+    "architecture-设计一个预订机票的-agent-如何处理澄清-支付确认和失败补偿-f98474c2": {
+      "content_hash": "96370157c7bd6df5395ee0e9f520363f1dcd8081b02ac7e02f25c244c84f8124",
+      "embedding_hash": "cd6f2408dc6f1ec54c58ee827f4549160cf2a6ba0f02a3bce752c1a03780b89c"
+    },
+    "architecture-agent-如何持续推进-goal-并避免行为漂移和目标漂移-141a17fa": {
+      "content_hash": "588ef33b1b8d0d8ee41f019ea63edc5ecb24bbfbc5a293b8149360280b3d8cd8",
+      "embedding_hash": "d9ff8857e843ce90f8da627691a405f30e6bb1b19e92d49fd779bdd946686cff"
+    },
+    "architecture-在-ai-agent-辅助编码时代-为什么-ddd-和清晰的领域边界反而更重要-ec5e62ef": {
+      "content_hash": "daa37faae2fe4452e25d8c0015458a1addb3df91b54071a786ef55711efe58d5",
+      "embedding_hash": "df4855373032d113472509260c6a2f5ef4eb2bfd7bf1fbeb3e83e263a587bdfb"
+    },
+    "architecture-agent-组件拆解为什么适合责任链模式-与状态机-dag-的边界是什么-fb63a847": {
+      "content_hash": "4181191eedd021be4e87a7c41c052d0e72798721f898c48d32d9ad8c0bf22e95",
+      "embedding_hash": "b7abca7ca56376b417b74f0acf835dc8c52cf09d2398fdd5a6163cea3f6482b3"
+    },
+    "tool-management-工具描述写得再好-模型也瞎传参数怎么办-84633765": {
+      "content_hash": "05a8dbb1e3e6d327c2260ca8718f163734618d5c02e4a909686cdb30ed148ca7",
+      "embedding_hash": "7a772b4275c3404ca6f189a174a2f1acd00d34b96e9b3078df768fb60b1dfbe1"
+    },
+    "tool-management-你们工具库有上百个工具-怎么让模型快速选对-8062f8a3": {
+      "content_hash": "adc3cfff2fa8f0a31cc4dbaad4be3840df1cbb6ccb0a39ec82ee17a5340873bf",
+      "embedding_hash": "daebdf92a3b1cbe68b0adc27da1efe6f60221c6a182cbb344965e92b91bb03f0"
+    },
+    "tool-management-多工具场景下的调度策略-b84eeb09": {
+      "content_hash": "76c2e5f0fdd834c7cad363734c40ff8a9b84c07123a616f0dda774394edc774d",
+      "embedding_hash": "bd33c784c677bd14bf3102c04101d5d6da30e1d8449930d269644bac18aadf74"
+    },
+    "tool-management-如果工具调用是成功的-但返回结果语义不完整-模型很容易误判-你怎么设计中间层-293afd0e": {
+      "content_hash": "24dcee4e8e8ec24c2b179bf3c3b13c3ea291520b5a0762cbf198a4c57e0ce09b",
+      "embedding_hash": "5c3f8b5df9b2547ae460f767c6b359b42b4ec865b094d63aa5d6cbea181e7415"
+    },
+    "tool-management-工具多导致-token-数过多-怎么解决-9835c7fe": {
+      "content_hash": "8ab1b9ce5179c7b6992dcb7c346898ca571d6a2200c2ebada07b82b6cab1b572",
+      "embedding_hash": "594204b446e232fc3fa3eb75eb69dac98f019b8596270a4b164397082251d75a"
+    },
+    "tool-management-mock-是怎么实现的-在自动化生成测试的场景下-be28ffc5": {
+      "content_hash": "4770ee5049ed37c4d4449778a9ea3370e491f757768a7e638f0e17dc9127c63b",
+      "embedding_hash": "915f90db5a40ac82e8ce3b9b294c8ea54b137515f415758e925d0f0384f16e45"
+    },
+    "tool-management-大模型的-function-call-是什么-tool-use-一般怎么用-ffe5388e": {
+      "content_hash": "c30ca6b2df5e57268b077888bef3666df709d36d8844640397dfa3f80cff6d88",
+      "embedding_hash": "481ab5297e9c43cae53e9959347a31f90ea3d93072592be5b816b61a07301945"
+    },
+    "tool-management-mcp-和-skills-的本质区别是什么-都是工具调用-为什么需要两套机制-f298f434": {
+      "content_hash": "e68df87da8c2088482a5f738decec56805b3fa3991e797d82789ab651660f7ef",
+      "embedding_hash": "6cce4ff1d73a4a3dacefc0346f13e225e583f658dc4efe0093969eb16466dbef"
+    },
+    "tool-management-function-calling-的本质价值是什么-它解决的是-模型能力问题-还-da670919": {
+      "content_hash": "bea248232207748baea2fd8a815cf2e6f402334fb3f74de265beff93dc2a1b88",
+      "embedding_hash": "71cfbef8d9ff374767e02a27afb86eb3e7d6b90310e464f6ee54363ff915a151"
+    },
+    "tool-management-mcp-server-是怎么构建的-63a393f6": {
+      "content_hash": "b4d548a3c938ea1b576c135410cbf081b69b679d59864dbcee9008bc5c486f33",
+      "embedding_hash": "dcd6a6817a1b756a78bbb35798fe9abc297b98709819cc417f05d150357f7d57"
+    },
+    "tool-management-大厂开源的-cli-工具-如-lark-cli-和-mcp-有什么区别-它们跟直-08cceba4": {
+      "content_hash": "ba03f54acbdb04eb6d5f6f97880650894ba4d7e54c2d416efe2bfe353dde1c37",
+      "embedding_hash": "aea1208641f4827c682e17456d449c89ed10b42de6d82527b4e77c0a032f8b95"
+    },
+    "tool-management-手撕一个-react-架构的-agent-实现文件操作-找文件-删除文件-961f9f25": {
+      "content_hash": "7529c3051a69e1fd732292c6c12c25a79109eb6ed808fa33385d47478819cb28",
+      "embedding_hash": "2a353b76abaa45c0f8c90a907b325bdcaf1d13dbfa893f337db80887ce96d896"
+    },
+    "tool-management-你会如何设计工具-schema-才能降低模型传错参数-漏参数-乱调用的问题-b2c53fc6": {
+      "content_hash": "11863a280e924ed2f71a050518b9adc7f6b18ebc730a5a2d12ff4869fa7086e6",
+      "embedding_hash": "ea0a7bc49d28f41e76f4168e73a241f56adf7ac3276813e0c95210ebb2d73158"
+    },
+    "tool-management-同一个能力是做成-一个大而全工具-还是-多个小工具-怎么权衡-82205ccb": {
+      "content_hash": "03feec193e2f09d031adac283c6f30eae48263d9fc6cc82cc776552e6ef262e5",
+      "embedding_hash": "c179658e85ecd3e8ff3bca50519a9def1aa7d17e665fe9e23a35f9bb57622f16"
+    },
+    "tool-management-mcp-协议的完整调用过程是怎样的-ea8e124b": {
+      "content_hash": "2c7b4ab77931c17e8c3e7d1eaa9f0cd1bfeb9724f911ce47c6c987a0cae8f871",
+      "embedding_hash": "62d308d8ac113f5397be2f0bd3ce7e760e9aa33aba6e999e17fa760ce53d36ed"
+    },
+    "tool-management-如何在多智能体环境中实现动态发现并注册跨协议工具-555cbe80": {
+      "content_hash": "f5c0d50d9a7e6124ffd560d55b9c9663c75fa95e7553a3a43cdf665cad0fdcc7",
+      "embedding_hash": "6db1606b898756602dcba0a6b30c0ef01b8e65442a7a63ff0b7ea7449ce6807c"
+    },
+    "tool-management-llm-是怎么从用户意图匹配到具体工具参数的-0b13c5aa": {
+      "content_hash": "982bf5027ad62ceb4b73fa934fed9af114038b3aff4bd3e52ec02905f34659f9",
+      "embedding_hash": "af6c6ec41efd8d7aff4f1da50f7127e3aa9a8742ba4dc4309c6458853c1faec0"
+    },
+    "tool-management-agent-做多轮工具调用和单轮调用相比-会面临哪些额外挑战-4f558cda": {
+      "content_hash": "84f0c66a94c66bc56855023f6d1c6a3c7dd911b56caa112097c7cc715adb32b8",
+      "embedding_hash": "7dd229cf894a19d7edfe14c091d22f185be14b3aeacbd7dbaf9dd04619dc1dfd"
+    },
+    "tool-management-为什么将-agent-工具注册到微服务注册中心-如-nacos-而不是用-mcp-c05bc19f": {
+      "content_hash": "c3ae056d20dd35b3d779821958ff3f6484143a9bacf046b845fb91e2dd26be3c",
+      "embedding_hash": "c06ab99abfb479d8f3222d927bd781d7dde243c1e3e27b12ab40f07b646c25cd"
+    },
+    "tool-management-推理模型-如-o1-deepseek-r1-为什么不支持工具调用-技术原因是什么-45f36ae9": {
+      "content_hash": "4134f207ef267de6315a44402baf4da65549d9396b5d12768238fcd3fad41505",
+      "embedding_hash": "243da43bdee78e1feb123df5290f55e612f6cc34c398506dedd6ddc8eba5b356"
+    },
+    "tool-management-多工具场景下怎么定工具调用的优先级-91b4dded": {
+      "content_hash": "bf572321d0187c6b8dff168c1f453d6aee9fb3bb4197c934954881f743a88ef1",
+      "embedding_hash": "d6b47ff4750d7d33902c23caa75263f4de21256930495844727035041ec3b808"
+    },
+    "tool-management-开源模型的-function-calling-能力较弱-如何通过微调或-prom-fb78008d": {
+      "content_hash": "21daab14d75fdf8ddd5fe16cb6f0f835ed98ceec3291e0936534764f1b05b817",
+      "embedding_hash": "49812fcb89207c97c5eebb1fecf6f6bfc56f2b7172979accba07ea20613127a9"
+    },
+    "tool-management-对于边界不好定义的场景-skill-形式不能很好区分场景披露工具-怎么办-47d37a9a": {
+      "content_hash": "f8061ff529ef195a7f38458b6ba07231fcd0c4bdbd0982bea96fb2405a3f3a6b",
+      "embedding_hash": "1575419e999a3876fcf04be41006b344638a4b055896e26abca18ef381ab6683"
+    },
+    "tool-management-多-skill-串行-嵌套时-依赖冲突-参数不兼容怎么做容错-有无编排优先级调度-bc7f73e8": {
+      "content_hash": "fc9b3672c1fe1a675e1561b55d25919e39a515c05048694a8e4d4b36874bdc57",
+      "embedding_hash": "2c84e52bf7c12a6a1027030cf58fb7ebd8c08c8a60f45028e049140b27635fb0"
+    },
+    "tool-management-你们有没有用-mcp-为什么要把-oauth2-1-接到-mcp-里-34265445": {
+      "content_hash": "a4108941490e76b0c592fe54662b682cb94e41dd98166408402edb7d307abd75",
+      "embedding_hash": "54a17076e498f4fc853489fa3b9b22cc3444443a713ddae45f7efb04031dd4ad"
+    },
+    "tool-management-工具返回了非常大的数据超出了大模型的上下文窗口-怎么办-9d5ae4e8": {
+      "content_hash": "ebc351837165115a8c39d586fdfd58f6e3249b9f32ee9761698b907e7ab76ffb",
+      "embedding_hash": "9aa7ccc8fcb6506359e975f71e077062a23463bcf212e327d12db6dc124127a9"
+    },
+    "tool-management-没有-mcp-之前大模型调用工具走的是什么流程-mcp-本身有什么缺点或者挑战-c0aa2942": {
+      "content_hash": "86c8340cc4bb8ac0a169d5108796cb99fb7c90042e7a56d9dd3573ce3f3fcca1",
+      "embedding_hash": "0459a143f4b5ff08b924e634f5abfa68187017f393380a1a58f9a9da48cc3e4b"
+    },
+    "tool-management-tool-result-回写模型时-消息契约应该包含哪些字段-75ad7087": {
+      "content_hash": "d5242c73ceb9dc5ed6dabab63b0f83379fe41fa7eaf3b04a4d928b4f71b567e5",
+      "embedding_hash": "d2ec859982aced2eb36aa499da7de07adda3bcdbf180d19bcb64c827af419521"
+    },
+    "tool-management-mcp-返回结果支不支持流式-e2a0a9a8": {
+      "content_hash": "1a84f99baf0af5c8624a928baf2c8c9ad4ba22ca646404f627d3fca0ef269e09",
+      "embedding_hash": "216d9ffb2e7631c707cbbc5cdb1274920306e96369b09c1e5790f136a14fac47"
+    },
+    "tool-management-tool-use-sft-的训练目标是什么-基座模型已经具备工具调用能力时-sf-53df2ca5": {
+      "content_hash": "d05a61619be096629e5563c6dd0b2a66793d8efa88af95f8e008dffad3159f21",
+      "embedding_hash": "2c069a7917e7722741f67a29a08c75b27b4de54f6c7d75f9f119e80adc166723"
+    },
+    "tool-management-如何不用多智能体方案让-1000-个-tools-正常工作-8c2ba6ef": {
+      "content_hash": "573a7e242dd3b3ae2cfba50ffc57876a58830963f66e9ca4a6350db36d172ce4",
+      "embedding_hash": "c5b13a925577091d7a79ef87c226909ae00c622a1a0a6c3b25904184475f2cf2"
+    },
+    "tool-management-一个-agent-如何同时连接多个-mcp-server-并保证用户与会话隔离-13cf7330": {
+      "content_hash": "a6bda2d51495e4a5638d63236dea20d1e269d4e9df9d6b5df8ba94d8f83e96ca",
+      "embedding_hash": "9f60ef1285ef6710cbd14996425fe626e7ac11927bf9366931fbed61c3edaf73"
+    },
+    "tool-management-cli-skill-和-sub-agent-应该如何划分职责-cli-直接调用--fffd32cf": {
+      "content_hash": "50086bdab7f5e8e7adbf0d4a3571c3f0d3f1d14f0a72bf0b99f8d15cb21edc83",
+      "embedding_hash": "aa40f50dff5e8f0fdec4d5b7cc5e074a642652ca0e1e39ce4d806e393359c81f"
+    },
+    "tool-management-agent-调用启动较慢的外部工具时-如何设计异步任务和结果回调-3f117f53": {
+      "content_hash": "6bdc41d3fe83ff30852c3c28902a76735cecd23f4ece6f8961d44a3a5b19c932",
+      "embedding_hash": "a8932b3c419d348f0fdb129639e957b85afb3c91d9369d215bad89b8a059aa72"
+    },
+    "tool-management-跨平台工具授权即将过期时-agent-如何调整调用顺序并安全续权-8304a027": {
+      "content_hash": "d77ceaf70246e5116343385ad096be3901e44a393dc63c246228977b4905c1a9",
+      "embedding_hash": "17995575481f4941b1c4751358f287688012ae85726b6a3502ebfd2d4885027a"
+    },
+    "tool-management-mcp-工具治理为什么需要审计-应该审计哪些证据-4aab7879": {
+      "content_hash": "e12f41c7b3755e3a15ee57a7a47e22247b81af251773b8bd156454f4caea5c64",
+      "embedding_hash": "50c31be62ea4f7664d368680cd4daec4a69e9f40bf4209a00d6ee68a06ade963"
+    },
+    "tool-management-如何评测-mcp-server-tool-自身的契约-可用性和效果-并用轨迹-b-d480a517": {
+      "content_hash": "7dc2ab3e4d7aed3ff1f8f71bb38c51dcc369458476fa91646254902f42375f05",
+      "embedding_hash": "5fb3c344163ddf702f0b12d2c94ec19d855f80b30ebf756fa21b251e5c89ebac"
+    },
+    "fault-tolerance-agent-如何减少幻觉-在工业场景下怎么做-8af274bc": {
+      "content_hash": "645ae1f71ccf9f53cc8dd568ef9ac7a46d4033115158bd8fb08fa078caa92fa1",
+      "embedding_hash": "ff4be962e7179143e75b8cbc957663b279a394f8cfd99ad0209b9100bad848c9"
+    },
+    "fault-tolerance-你怎么设计-agent-的失败恢复机制-bee16339": {
+      "content_hash": "8967f6b1c656dc357efda80a6904dfebda2e8c8e9bd37069d33a095ee6ee955e",
+      "embedding_hash": "81652dc1768cf721676c08ac4d4d4c9a80e3c27fdca4ea9df5dc194ccbea7b22"
+    },
+    "fault-tolerance-执行到一半-比如调支付接口超时了-agent-怎么处理-be84a9a6": {
+      "content_hash": "c2eeecef4c74cf68331b73bd72c86329b6b5d48edb96ddcc9efe8facf27675b6",
+      "embedding_hash": "27f96f8150cfc044bf270eadfd468d2c9128dc4e8b49145dff7fe1130e031968"
+    },
+    "fault-tolerance-如果-agent-的决策出错了-比如错误删除了数据-系统设计上怎么防范-3a07e33d": {
+      "content_hash": "fccd1301111413fa645fe0341ceda18471df330b8641543a7ff29347b919ee94",
+      "embedding_hash": "4c03ff8828795e7746aa543b4b1f72a66cd47a293f5f6edbba7864065c64e774"
+    },
+    "fault-tolerance-你会如何限制-agent-的思考深度-工具调用次数和递归层级-避免无限循环-13754bf0": {
+      "content_hash": "18a89d1560e652f062a69f90904ffe17af324d88753053050c07004de05c173d",
+      "embedding_hash": "591b38f2b8d8a3c9c249125a04cb7f86cc859f770a65bb69e57bf19e5c890146"
+    },
+    "fault-tolerance-幻觉的各种治理手段-优缺点分别是什么-行为限制在什么阶段做-ffb6f87c": {
+      "content_hash": "00462d9c22020c0bc6142a733dc8aba6d518ae553f15d84ed6ce14c061d26661",
+      "embedding_hash": "baa330b56429427fb25df7a9ba06b5e6563616a613f44cf5d9874cbec0292cad"
+    },
+    "fault-tolerance-如果-agent-在中间步骤已经偏了-但表面上还能继续执行-你怎么尽早发现-eeee3f37": {
+      "content_hash": "133a29c72247e9001c0ce9f5942174c50ab10abe13b496377bf35c4d8180bffe",
+      "embedding_hash": "46c9bc0168cf56b9aff96cb642a08d069f6b66f703533c24feca65f3be40ad1d"
+    },
+    "fault-tolerance-agent-执行-shell-命令怎么保证安全-还有哪些安全问题-51ce98fa": {
+      "content_hash": "b64cc7bd93fbfd4c6c34a6a7e499fc9d89937bf3214b9282d9a18ef44c8ea673",
+      "embedding_hash": "052a718c979bc16950e4d62f43269a1bb0559ab7b2e4e6ebdf4b8850eb46cbfd"
+    },
+    "fault-tolerance-资源紧张怎么处理-资源紧张时候的用户排队机制怎么实现-1c696908": {
+      "content_hash": "47604f1f7c4e9d4e7ae2c3edd4626b6073fc6c54fe3a4a03f88cbc4dd2cf00db",
+      "embedding_hash": "93e786502bcdc2bdab349c9188e7e852883f1b8352606682ba9c2ba3f20867b1"
+    },
+    "fault-tolerance-prompt-注入攻击如何防御-8b91b6b6": {
+      "content_hash": "7e18dc9b9a97958c801167310fb53415a3fc188e3c18f39c41ab79da01ca759b",
+      "embedding_hash": "95d6a8d37571aea8984d158713e31d59aa4d59ca0e8fc0b4e3b1c655f49dff72"
+    },
+    "fault-tolerance-工具调用的安全控制是怎么实现的-如何限制模型调用敏感接口-d6109db6": {
+      "content_hash": "f39060da4d7dc69326435e157f3cde6ade6e3c2b66cbd16bfa21598d3890503b",
+      "embedding_hash": "71824180cd1b2b86981443e7e8f2170d4df6a04c60cf78ed6140582e144c3fe6"
+    },
+    "fault-tolerance-为什么在复杂的-agent-闭环场景中-仅靠-rag-无法彻底解决幻觉问题-54e6967c": {
+      "content_hash": "ab5afc34db8c33b02e930047684bea9480eb4b16ffb9263bea9997653417b9cb",
+      "embedding_hash": "2ecbc98367389207d6eb42f35a0d49a4a7d6f38a79a56cabee4073128def42cf"
+    },
+    "fault-tolerance-支付等高敏感操作场景下-human-in-the-loop-流程怎么设计-d5ed66b1": {
+      "content_hash": "a4fc8da9f2cdb430eda34a518daad95b56c1c86c585f5b69b8067d993a58ca5a",
+      "embedding_hash": "8d53a954baad35bc966ea45ea05d9512698054bf41ea9e701e1ae459ecdfdc91"
+    },
+    "fault-tolerance-agent-的-self-reflection-机制怎么识别输出中的逻辑错误-6dc9a070": {
+      "content_hash": "0c2de88c842f79702fba82eac3606b2b80f80de0f36fe0ce5026be387af5dbb0",
+      "embedding_hash": "54a45e23f8e51e6cc9554bd457837bf012dcb062520bea505f174ee4a4de4288"
+    },
+    "fault-tolerance-高风险在线环境中-agent-的异常管控方案怎么设计-29874b19": {
+      "content_hash": "95d7c7a2db973420e2aaa35d86a801198c741d013661feb97e8e1e034de48c9a",
+      "embedding_hash": "b05d32ac154183ba1a084d08188c7a632859b90af725d448bd953e1abac174b8"
+    },
+    "fault-tolerance-金融系统不能让-agent-真实操作-钱放出去就是大问题-怎么设计-b718430d": {
+      "content_hash": "458352abf0f162349c691c2c64f48374882e34570b157d66accc93619210a4f5",
+      "embedding_hash": "b2b044530f2730d8bc89eccd685aaba6ecdd1dc5a0187b7cf36aa4b0ae8f504d"
+    },
+    "fault-tolerance-agent-系统的安全护栏怎么设计-敏感词拦截的工程方案有哪些-8d405942": {
+      "content_hash": "7a2854a79e96017b605261a18d42d2ee6bdf06ee7773a43ad4077c3d022189e6",
+      "embedding_hash": "a69bb90813d8ca653794e5fa4ca42627081f151af04f12beb1484b0871af2373"
+    },
+    "fault-tolerance-agent-系统中网络抖动-vs-真实故障-如何区分判断-7d24fd39": {
+      "content_hash": "bfb7c96466fba745131be187a331f155248bb2015cefc5df52a90740f68c0e3f",
+      "embedding_hash": "a4d2ca0bad604dc3e2f5787feb0d85ecc1a0b41b1d959216138d20338610f534"
+    },
+    "fault-tolerance-nl2sql-场景下的-sql-安全防护怎么做-9cc26886": {
+      "content_hash": "ec2d12e449017aca347343d86952d466c33dded982228e7882ceb59f6437bb6d",
+      "embedding_hash": "bfb329cd06bf226a1aba0a198a623502479fd3ab1a747378abbbf250a1c0265a"
+    },
+    "fault-tolerance-如果上下文爆炸或工具循环调用-你是怎么解决的-fcf8b7c1": {
+      "content_hash": "25211c664be67799add451679eccab001e82d4b207ebb58608eef25b3dcc80b0",
+      "embedding_hash": "498aab2d678db292c2cf849a063a11a66b868478d213dcaf830e25a83685e323"
+    },
+    "fault-tolerance-agent-系统的-fallback-是怎么做的-abf2ddba": {
+      "content_hash": "5c489504f1bd07a08950ffc84e31af8ea6ac5a0b0d6ab4ab0a8d54035d7f2113",
+      "embedding_hash": "3f1a06d3845c5dd71fae7d6523811c708b1d6f827c7bf0c1037289ed256fdbbb"
+    },
+    "fault-tolerance-介绍下整体的失败重试机制-node-rag-链-tools-分别怎么做-1295ce4e": {
+      "content_hash": "16b8c674dc7d7104deeae99432d59c3dd2d5db5f55799340838279eaa7815bd9",
+      "embedding_hash": "7f5572ef8b5ef5683081a2f4669ff27c71536ba5548526b894f8f7f5952ba45a"
+    },
+    "fault-tolerance-agent-用状态机编排时-状态机卡死悬停-死循环怎么排查和熔断-2b115ce3": {
+      "content_hash": "5805df8218f7da77faa035d1c00e17195e38cb8f865ec297a39140021556a640",
+      "embedding_hash": "020e294d9968c8b988a3e45a9cd8f1d4bf9f0d0dca5110c621ffc6e0f878c721"
+    },
+    "fault-tolerance-工具调用返回结果为空或调用失败-agent-应该怎么处理-是直接重试还是换策略-6f2fb118": {
+      "content_hash": "06740cd0a56d7c6664770e6d417941a2952abdb06179aa8279ef351cf005087c",
+      "embedding_hash": "4785b844dfe91f6230a64d3cd626de3ab1425dc126ed0506a6499dd726d57983"
+    },
+    "fault-tolerance-在跨境汇款等金融业务场景下-agent-超时-失败如何应对-并保证资金安全-0ed00862": {
+      "content_hash": "b99bc48c687bab7275965e5d00f91438a8d08ad6824047b5bc0f8d07d3bb616c",
+      "embedding_hash": "dcd85f9a7e182890e3512b0ff2f5ff439c5e2b2df2b2e078dadb1b47b91635b3"
+    },
+    "fault-tolerance-所有模型超时或故障时怎么兜底-什么时候用规则引擎-什么时候转人工-服务恢复后怎么-658888e2": {
+      "content_hash": "fc4192520708b79e80344319b8001b45114aadf85b5c83f4f2024a42e35a6baf",
+      "embedding_hash": "f0e13e6f5a16e994a511e78302aefeb984bf53f10238bf048d48ca1c9fe394ad"
+    },
+    "fault-tolerance-coding-agent-看到-env-文件会怎样-如何设计安全边界-f5ea033c": {
+      "content_hash": "b0eac5052c003c8bf1121397640406d75de1c7a002ca9909a2e49d52d399a695",
+      "embedding_hash": "7db5e67d5b8b80b5ccc0291df182ea74824a42f853d72f732dd7694778fde437"
+    },
+    "fault-tolerance-agent-失败通常有哪些原因-如何快速定位责任层-50a8ce52": {
+      "content_hash": "9601cc5eca17fe8f832eef7ce559b30a4739499dce9dc09f7b4ba74eeb9f8d5f",
+      "embedding_hash": "045c181484e237fbaf52e6cc19417a362cae3bf594a57282f96cf4e228956026"
+    },
+    "fault-tolerance-agent-workflow-如何保证节点原子性-并在部分成功后安全回滚-12f71ca7": {
+      "content_hash": "85b5c2c5747b259ff2904201c30e708b1ce9ab4016c41ed3a2eca972d92c8350",
+      "embedding_hash": "ceabb573c8230703e7f48b3a925c155469946d1023fc653dfafe84107704c97f"
+    },
+    "fault-tolerance-长时间运行的-coding-agent-等待用户决策时-如何避免任务永久卡住-626f9ac5": {
+      "content_hash": "cafd23924ed7c814edde396ca0f8d73fcc9ec910e47692c9bc39fbc7aa726bef",
+      "embedding_hash": "74b009a15ea01f7e523b1074a0f97333d8ecae110ba0219f6c2bb79f27a21246"
+    },
+    "fault-tolerance-llm-没有走标准-tool-call-而是在文本里直接输出命令请求-系统如何识-b8c60711": {
+      "content_hash": "8fa0761fc0272e163b39d4680f3314b4d8e708ee04700e860b708a7727e1432c",
+      "embedding_hash": "881f18d1e4baa98135da0d1142c7ed37498bdb69819824b4bff4c57a7f3f0234"
+    },
+    "fault-tolerance-工具失败后-哪些异常处理应由大模型参与-哪些必须由确定性程序控制-0510de16": {
+      "content_hash": "cd86411639d59534cae022bef52f44c390eeed87f32bd141c75198012c4b5b4a",
+      "embedding_hash": "56f966b725fa252528b19c336c529f1c96fead3f990962d6d6630d491cd0fb43"
+    },
+    "fault-tolerance-如何对自己的-agent-做系统化红队测试-而不是只测-prompt-injec-fffa69ad": {
+      "content_hash": "74b9590b814a28abb08c13b8d46682462c902c9f982ca94b53f04d45eeee4efc",
+      "embedding_hash": "f69006897555eab276325f7fb8e449423c658bdd37013f557015670183a4dd23"
+    },
+    "fault-tolerance-为什么安全攻击检测不能只依赖大模型-规则-专用模型和-llm-应该如何分工-196778ca": {
+      "content_hash": "23d1ba280b51fca0435946fc7f33e98d3275dfd1d7fc64cc1bfcf8e7b1cbca4d",
+      "embedding_hash": "df4c08573103885a6fa5d1953aa24ec3cda9d5926d561f25f065b0c5cd206d39"
+    },
+    "memory-context-上下文窗口不够用-对话太长了怎么办-7b6bd3a9": {
+      "content_hash": "6dbc7d1e8b828da2544ec75df1cc8019a75eefa29537d4aac2ba83423a4d714f",
+      "embedding_hash": "f562d6e5227a4ff9281115e88bff7727c6ebdeed6734503e33b2170b61adb422"
+    },
+    "memory-context-长上下文里-怎么让-agent-不忘记关键信息-71f3940f": {
+      "content_hash": "1826ed4b3686c9dcc42eb38c577d3ae46ec6f3900563ed65d848f602d5390e8f",
+      "embedding_hash": "d03581ade580e1df84d64eb3ff1645cf20a8d676173ec96c04a81d7e69d59982"
+    },
+    "memory-context-用户说-按老样子帮我订一下-这种模糊需求怎么处理-cbc31163": {
+      "content_hash": "60878f11607e442043ffa8144559fb322300bafd25333d2d0060bcfc8ae357fc",
+      "embedding_hash": "c35661f6bc000c2cdaccde2be74cbe94cb161b12468a65366eed8e1355a50995"
+    },
+    "memory-context-多-agent-多异步任务下-如何防止上下文污染-21e3700c": {
+      "content_hash": "ddf8e5600323a04ed0755677f1fb9100e442840d9d9a7e9de6014835af463dac",
+      "embedding_hash": "3811b9fd614871d5d64ff809e33231945504d11813aa9e375aec4884e82c431c"
+    },
+    "memory-context-讲一下-agent-中的-长短期记忆-a9f13c31": {
+      "content_hash": "9ab1a0a7667c4d68f15492753397b8124595714af6798528ee43c25d3d13b3f0",
+      "embedding_hash": "bd85556f4c3e466ab93989c1a2ea08feeff7f580b2b8cb2b300649acf5998007"
+    },
+    "memory-context-一个-agent-系统里-什么时候应该追问用户-什么时候应该自己继续推理-8ddedcad": {
+      "content_hash": "9fae4380db5e3452f124f341844fbfec1dd0585bde3b847ba4874687427b990d",
+      "embedding_hash": "6f65724a601e1f0d48f34388716ae69a9749ee960879e65e3fe8c0bede87e53c"
+    },
+    "memory-context-对于上下文工程有什么经验-有没有做过-to-do-list-为什么让模型更聚焦-1cdf7df6": {
+      "content_hash": "5c6721ec161386c105ef1f52f2a12a5316e93526df208f338dfa86c46ce4a419",
+      "embedding_hash": "fa9ca202d4e6dd1b1352cbfe5d2009badd4bc55fc16abd789f861311a852d73f"
+    },
+    "memory-context-agent-需要同时读知识库-调外部-api-结合用户历史偏好-怎么处理这三类上-7d58e697": {
+      "content_hash": "7fb53baa4c06b6c1f9aadf6127ebee45f7d83ce62f87878112b8ce9b8b5d876f",
+      "embedding_hash": "e1f6c3f029f3f0d27d5cc340375c170281eae82928f06644677b1d0594694c86"
+    },
+    "memory-context-你怎么理解-agent-里的-状态-而不是-上下文-b710c647": {
+      "content_hash": "66778151ac4c5cd6c790aacc0f0f8a589252a5bbccb3c19e184da4583a88e7df",
+      "embedding_hash": "6606f895e3cb3b4eb038bc0244affcac8195a04e4a9ebd2c91b02e73fcfb1f30"
+    },
+    "memory-context-agent-记忆系统里的-做梦机制-dreaming-是什么-和-reflect-128dc425": {
+      "content_hash": "717f432c32ce3a950149e017d952c9ff0f15534e408f14999e029d1486363d0b",
+      "embedding_hash": "2d726b810d38c07b09030ccd11d46ec9084716eedcb13fdbeb679dfb23f00b04"
+    },
+    "memory-context-设计一个能支持亿级用户-千亿级记忆条目的-agent-记忆系统-你会如何做技术选-93ab6464": {
+      "content_hash": "ebac7614397a4693de4e46c02780b0c0b29a5bbae219fc62017f0d4500b923b6",
+      "embedding_hash": "40a7bd165a669c78d526e352ce9a424cc8b035c58cd686ac819cc2f3839174ad"
+    },
+    "memory-context-如何处理记忆的-新鲜度-与-重要性-之间的冲突-e828068d": {
+      "content_hash": "0736ed05c9ed9c38de5bc53f3094343827af8c1fa820664c38235e813524d902",
+      "embedding_hash": "4be5a36f9346f7b99a2e13b6007af83e0e5b405fb6bf0aa3881466adc2c0274f"
+    },
+    "memory-context-agent-的记忆可能存在偏见-bias-或事实性错误-如何发现并纠正-eaf8aaca": {
+      "content_hash": "f25e402fa1bc93dd576b17a41952d7ceb12cc7937185ddd888084dd3c3ff938b",
+      "embedding_hash": "da666019c7603612bfa68ed22296e4f40eacac870eb32011293464a164a7714c"
+    },
+    "memory-context-什么是记忆的-reflection-机制-它与简单的-summarization-440f7c8d": {
+      "content_hash": "383c6d50a70c2f2ed828b99353e5fd9e8358040993e4be6c5c5302838958e7ce",
+      "embedding_hash": "68de1ef72983d972dec4cb14d51a7febce08a407dafad367a007ead0f497fe0d"
+    },
+    "memory-context-在实现长期记忆时-什么情况选向量数据库-什么情况选传统的-kv-或关系数据库-fa7d3708": {
+      "content_hash": "d51bd94dfd5b49a3f9a57c4e9bb465fb8dd4a30771863f78d6a07fbddc8347f0",
+      "embedding_hash": "466caa7e1df0b828420be963e882fe8b69d952481b48d190b9bf648e1d77d4ef"
+    },
+    "memory-context-什么是记忆的幻觉问题-它和-llm-本身的幻觉有何区别-如何缓解-71679e6f": {
+      "content_hash": "bf5de87ff65e4c940d756664aa305d3df8129aa54a19d18157b3c08d91ede55c",
+      "embedding_hash": "7ad50a037ca99c8503e2c0411708cbfecb0d7c541f72a0b33ea11b18a154a520"
+    },
+    "memory-context-什么是-工具态记忆-tool-state-memory-它在-agent-工作流-c04e04df": {
+      "content_hash": "50f79543c9e6bd9618ae694a9a849b885cb66e7038ca0c7d74d84ea1ee583cc4",
+      "embedding_hash": "00b987adcf1a26f95598714877bd432f50915a8d135f36afaa971565415aac03"
+    },
+    "memory-context-记忆的容量规划需要考虑哪些因素-如何估算存储成本-ff95466c": {
+      "content_hash": "98853fdf0a6a824039e0d5e5e7eb95dc9bc0fc2328f599350009d7787ff5acca",
+      "embedding_hash": "9646ae2d43640aaa55fdf2f691abfb30bb3226b0eef97218a9014485b9c46774"
+    },
+    "memory-context-如何判断当前对话与历史对话是否相关-cdef34bd": {
+      "content_hash": "70d295c8b355adb4fc3e30b8923e5f30d6bd6f3cb645487a53333ceeb29e3040",
+      "embedding_hash": "0fd7cd6cca85255276b8a34c4073ba96bb1e6ae30616a8ab234cd030071fc15f"
+    },
+    "memory-context-记忆摘要-压缩-去重-合并这几件事-你会怎么设计触发时机-b7979503": {
+      "content_hash": "187fc1b36674feac819cf68d793aeb9ff8f98fb0d9816fe07603ce61cacda25c",
+      "embedding_hash": "840468d41cdd697e51cb150e9b09f3a139794428ea2b8bee69dabd26f20d4584"
+    },
+    "memory-context-你会如何判断一条历史信息该进入长期记忆-还是只留在当前会话里-ceb70d7f": {
+      "content_hash": "f778d0de5425943e3b2cbabdca36f125a66c5b28a41d12a60539b78fd08565fb",
+      "embedding_hash": "e32bf8cd6edc85fc3f218d8e437248508be5ea762f5e299fbe8a7467b7d71088"
+    },
+    "memory-context-长期记忆检索时-怎么避免把-语义相关但当前无用-的内容召回进来污染理解-2c242949": {
+      "content_hash": "16cf937da489a7646ee8a91b45dc53d16f6c82d2154829a52c4d72c837a5130b",
+      "embedding_hash": "550df4297fdbaf7eb47b72e3558afc8e0ea71399090a32957d4c20eef9307741"
+    },
+    "memory-context-如果用户偏好-事实记忆-系统状态三者冲突了-agent-应该信谁-ec19ecdc": {
+      "content_hash": "224d8304669938be951bcb1be6f1fcd6f73b9c1823832daa3f2a00e8c44804ca",
+      "embedding_hash": "ebf55664e068b00ff43e8abd69202be6f96bd2c9f2fe69857272733fbcda18b5"
+    },
+    "memory-context-agent-的-checkpoint-用什么数据库存-初始化-session-时-160eae95": {
+      "content_hash": "e5e8a25dbf9f8ab589ae9cc24c03b3a8eff5c979582daaaf5d1054dfc8d9497d",
+      "embedding_hash": "a1e62ad5993c2e82d8b7fd870eea5a07061bb28163741fa45e5f7266844ce412"
+    },
+    "memory-context-code-agent-的上下文工程-和普通对话-agent-相比有哪些独特挑战-54f19727": {
+      "content_hash": "c7897552af758577b671a0d7e40fdbceb58d8cfcab41a79c05100771c66e3d54",
+      "embedding_hash": "3775eb4dc69780770cf326d2c6e104db9149c47bf94483e68fc4ff7b2ae546b8"
+    },
+    "memory-context-做上下文工程最关键的工作是什么-23ce9f45": {
+      "content_hash": "af374c00128cb8fce2b14c7c1ae8554587d62eeffcdbe43766e4e4be5a6c646c",
+      "embedding_hash": "3d701e79cb36db83fc92b4344d98c699b4c1a331fd357858b28dd8dcd6bfc383"
+    },
+    "memory-context-如何减少无关上下文对模型的干扰-当前上下文有哪些优化思路-1e23bcf1": {
+      "content_hash": "0792b16f94c7109009c7d09becce5315686c16bba0e514a4ac24c2b2803048b3",
+      "embedding_hash": "ea59ab2a9fc89c61f3a39dd65ad34192146d2eef863eff59d2bd002c964999e4"
+    },
+    "memory-context-在电商或导购场景下-用户的请求往往高度模糊-agent-怎么来精准理解这种需求-2ae7b7aa": {
+      "content_hash": "7d19976a2ae2e3bd350e11af606cc721a20fabf01947f5f8ebdff70b8e6ef96a",
+      "embedding_hash": "a227e3efe0e8e1140f60083881b2930790eb3d675a8432eeb2bda2acdf79e6a3"
+    },
+    "memory-context-摘要总结往往会丢失关键细节-在长文本-agent-中一般怎么来处理这一块-e251dde8": {
+      "content_hash": "94b3101036b8bb133823d5bdf225c5923ed89f5ea6bb76aaec5c97037f53dcf3",
+      "embedding_hash": "bd40073baa40858565b964120986238f19385bad2314818cd72b053446de0771"
+    },
+    "memory-context-有没有了解过最前沿的记忆设计-b82eb4d2": {
+      "content_hash": "0e05949eafe9cb0a9b4e0049099ceca97e13425bf397bdd128e5d28d72b505b2",
+      "embedding_hash": "861487e4c95eebc0e9f75ea0bdf81364173ae23890392ff83082588e86195094"
+    },
+    "memory-context-claude-code-的记忆架构是什么-上下文真的等于记忆吗-e4470950": {
+      "content_hash": "bc367df369234467ce15aae4d52f0ca2b49bd238349f7b57a22202a2e4819a84",
+      "embedding_hash": "9c3980163950fe4c6b44d25addbf7067c15dffeb0fb879a265111cc3052d0f3b"
+    },
+    "memory-context-会话记忆具体是怎么实现的-滑动窗口设几轮-摘要压缩怎么触发-08c505b3": {
+      "content_hash": "cb25a7acd5202d538a5052916472ed0ac5453aa119f8e56397f5d6cca27ddf93",
+      "embedding_hash": "8a5717941b1f23c902837ca6407c35f0a589ff7dbb95f3cf55c8045323e4e2ea"
+    },
+    "memory-context-设计会话记忆系统时需要考虑哪些维度-6335a56a": {
+      "content_hash": "bdb3aeb669dbd807ddbbff772f8ef8dc5494c8b74e70126660b4354114324899",
+      "embedding_hash": "e4a7b84e31c851fa6d8b448353b55ca2a09a730ee3f1dd1e797e84041a9c3d30"
+    },
+    "memory-context-用户对话中频繁切换话题-会话记忆该怎么设计-0ac87016": {
+      "content_hash": "450405fa51f93b88f6141d1604a1496611e74a379603973b448e53291fa4444d",
+      "embedding_hash": "44c74e3b3707d7b2ebdcad3582fc9de4b297f11a59c70cb425b303039d7faa69"
+    },
+    "memory-context-lost-in-the-middle-问题是什么-有哪些解决方案-634b9be9": {
+      "content_hash": "dcc7f24275df70adfe5ad3a3cf0f38b9990e6305fa8dbe70d498b66c934c9e10",
+      "embedding_hash": "0700a1d335eb9525b413c6ae63fcb1ede5b9546bcaa47eb5557233b4e33e95fc"
+    },
+    "memory-context-什么是上下文缓存-prompt-caching-它在-agent-系统中有什么价-1ee99aa4": {
+      "content_hash": "9c318076b3039165deb897a3b1be0de76689c764908ff6f4b19dbc282f017837",
+      "embedding_hash": "38fd0bc9400187c94b33890b09f66c8dc8b1284bd355dca9f7103528efd741b6"
+    },
+    "memory-context-长周期对话-间隔数周后继续-如何管理历史-冷启动怎么做-4ecc1ce7": {
+      "content_hash": "eda3a29ef3f4444c10c4965e4b11cda780f81a7c74c54db3c3541213a1cc6ebc",
+      "embedding_hash": "c4f2a7f5a2a98d10d8020df08220646ca3e49f89382a894d6cd369c461398817"
+    },
+    "memory-context-怎么判断当前用户的提问需不需要去检索长期记忆-85fef014": {
+      "content_hash": "da4bd84c77c27d606f3fd6e59f463d7af9bf407ef1461442941e9c4de2665ed3",
+      "embedding_hash": "f96e5fd65a53777c4d23d556af424b6546de601dfba52f3cf8c7189df35486ff"
+    },
+    "memory-context-怎么实现多轮对话过程中-根据用户反馈自我调整的功能-5f2d5db8": {
+      "content_hash": "79f424995038be69f9cff51ff3239bc0f932d595d7219da7440b319f584861c6",
+      "embedding_hash": "ee9253803c8bc12ef35b1921654785a08eb1becf21514189907ea36c623f8f79"
+    },
+    "memory-context-基于滑动窗口对最近-n-轮进行摘要时-是将之前摘要和新摘要合并还是分别保留-各自-18ccc507": {
+      "content_hash": "7d22578ab4666e93573fd601c71d5f5c47f0a517a92603effafc5396363baacb",
+      "embedding_hash": "1aae03d9c6b8fb6d5a4d1517434965b097390667032a6926df0be49ba488860b"
+    },
+    "memory-context-如果让你设计一个三层记忆机制-你会如何设计-从整体架构和具体压缩方法进行描述-7548521c": {
+      "content_hash": "9783a2e4348ef0d4e8e462cbdbe5d6e068009c757c401c6f835941e6d06be9e1",
+      "embedding_hash": "10487b12e396970330ffde038cd323d6182f3d98db8770597bc973442ff5b2de"
+    },
+    "memory-context-你的向量记忆库是如何更新用户画像的-7087aa0f": {
+      "content_hash": "bad74e9411bded7d060dacbc9d87db97f747c8c538a7ccd76f5fb6ab24e51fd5",
+      "embedding_hash": "dc86b17cf7bb3c204b645ab128aa62e5599803666e2d0ccf6b8567d019fe01f1"
+    },
+    "memory-context-压缩过程中会丢失工具调用历史-导致模型重复调用工具-怎么解决-a93003c2": {
+      "content_hash": "71faf054b64f1ea5ff41265712547646dc4d48cf2ef11be05b381914b891cad1",
+      "embedding_hash": "111d068d31021260072c1846924cf28e01653b3cbcb1a5165db115bbd321292f"
+    },
+    "memory-context-记忆冲突怎么解决-比如用户前后说了不同的过敏信息-54ce92e5": {
+      "content_hash": "dc9960a7f45d28e5d8c9838c296b2e8bfb53af1c8bb6b4cd70cbba3a2aab87b9",
+      "embedding_hash": "7a7ad06db113222709ced7214508c5ee7d2458553bb56ce791a21b1e98d96d79"
+    },
+    "memory-context-短期记忆压缩后-过了很长时间又需要当时完整信息怎么办-e58b843e": {
+      "content_hash": "fb37c9f7f527062811b3b93abb30329602221ab093a3211972fa95b1511103f4",
+      "embedding_hash": "b8b016f53f7e3a99b371c62b514df5e47704ce35b854cea536268169c29a1e6e"
+    },
+    "memory-context-如何判断是-prompt-内容影响了决策-还是-prompt-太长导致注意力涣散-1675a37f": {
+      "content_hash": "253f3ea95ed2a609dba2ad611b0ba735a8e7b03f40227bad73f6bc195075d5ce",
+      "embedding_hash": "ba3159bf269babd14654ec5bced462f76101ed38f11bff61ade696278532b302"
+    },
+    "memory-context-为什么要区分静态长期记忆和动态长期记忆-各自存什么-f6db69a4": {
+      "content_hash": "94b594f72e4fdbcac44b19f6987eb4c6669797660bb25f64e8fc58317cd688a1",
+      "embedding_hash": "195fafa9cccbde49eeacb573e000f93b2719df1beb3d2870267a7e9b0421d29e"
+    },
+    "memory-context-每轮对话都触发长期记忆存储-用户记忆快速积累-存得过多怎么办-a2d2f35b": {
+      "content_hash": "641b4877ddf77ce5cb1522115fe3d7116e071c24dc5bd6252978e3ab8bb54774",
+      "embedding_hash": "008fde3d53aea0b6ee9d649d1ea60f9336433f882166a6c9c9f6e5dfeaf63263"
+    },
+    "memory-context-已进行-10-轮并做了总结-第-11-轮开始时-总结怎么处理-是重算前-11-轮-428d67c3": {
+      "content_hash": "5bcda60457c2879583a144a69b64757cd82a622582d691a4f61645fe63194314",
+      "embedding_hash": "a27708b79e5463f4aeecf946ab376dd7a553b27f9927392e60b618f52d1bc178"
+    },
+    "memory-context-前-10-轮都变成了总结-之前的原始上下文就不需要了吗-4ec7a752": {
+      "content_hash": "65e2905c96d91c4382aed99634898523617c904c1445ca4e0a17f2f419884d71",
+      "embedding_hash": "08b3fcbd5ea56e0c54b9f21effbd230fdd9d2e776ec9ba7f7355d2a027aaeca2"
+    },
+    "memory-context-当用户对话零碎-跨轮次且意图发生跳跃时-如何结合上下文准确判断当前意图-a716417e": {
+      "content_hash": "06b8c100df9db5fbaea70a8c5508949e7df1e763b4b0f47121c6f39583c6d110",
+      "embedding_hash": "1ea50c4354f9f8926ffbc2f072cb4f3c83e13f7ac6eeed361eba9819c66d8c82"
+    },
+    "memory-context-session-里的临时文件存主服务还是-skill-进程服务-要不要删-什么时-dc1d2473": {
+      "content_hash": "3c2a580794147ac3444926c8de1fc1bc4b63c9688ba3be279f6afc73c42cd196",
+      "embedding_hash": "3112186af216a76189d5c0752c49bd744a842474133431709ffe46f64615ef2f"
+    },
+    "memory-context-agent-做上下文压缩后-如何验证没有破坏当前任务-4e56b843": {
+      "content_hash": "87af12ae8377e527ccf9fa49104a6000ccd8ce005b0b3af45f2da9cc3da50fc0",
+      "embedding_hash": "11a13b3b183b4bc0477149893843c3abc6a3aab1d67231f430ddd06cf1e096a5"
+    },
+    "memory-context-大体积工具结果落盘后-为什么还要返回预览-预览内容应该如何选择-756d5596": {
+      "content_hash": "98d858b8c79be4417f0446d5b138d2f0cddc96296a09fae2c03ed5f903cb8c33",
+      "embedding_hash": "2ccfc93f0e2f18dcce048ae752a97f540864155547eb82bc8846dd56991746e2"
+    },
+    "memory-context-跨会话记忆如何从对话中提取-哪些信息值得写入长期记忆-c7607d6f": {
+      "content_hash": "c95c929eb32adf2b25976c4c0d195bf7c7cb0d72e741e7031a82f98f47d23aba",
+      "embedding_hash": "0a44de75bb24dbb2de933d414f9b408af7163ebd4c018a5e826ec2d26eece78a"
+    },
+    "memory-context-如何用-prompt-提取用户风格偏好-风格偏好应包含哪些内容-16a253ad": {
+      "content_hash": "67fa2df42949a1c3419fd60c6b0203fd4e70c0b1aa267d561310356b0413330e",
+      "embedding_hash": "bb2f45f51d7c8ccd573f696e4cd856dcabcd03fae92fa0936157c2b4a554d928"
+    },
+    "memory-context-大模型生成会话摘要时-如何避免摘要内容污染用户偏好-新结论推翻旧结论时怎么保留-ef3a7771": {
+      "content_hash": "cca525e738096a7f4671a0c81c5d15bf24ffdcd94b3cba49983d87ef4c742610",
+      "embedding_hash": "c0e01ae946156295b5989cb4073fe834f113a14013d4663d6f6bedfb01be84c5"
+    },
+    "memory-context-金融-agent-执行股价提醒等定时任务时-应该携带哪些历史上下文-25f38496": {
+      "content_hash": "c5ede263b753b35c3138fe6e46a70186d7794a65ec8b3460602e9874ff3f4d23",
+      "embedding_hash": "fb42dec9d9f5914304acaa7bb6f682fb1dc204f03681dcf8bb250d4037345a94"
+    },
+    "memory-context-上下文预算不足时-如何按任务依赖压缩-而不是按时间删除旧消息-94c6bf2e": {
+      "content_hash": "9e7e57b72f17b070d6ced005f3bed7d39de1457b183442a769545be545fd2bd7",
+      "embedding_hash": "fb975cb78fe75da0802feb90f6cf669b08b9d6bbde8841f255774bc327f10cf0"
+    },
+    "memory-context-云端-coding-agent-的容器迁移或重启时-如何恢复会话上下文-工作区和-53d8e6b6": {
+      "content_hash": "189c8b2bf8421f87fb76d1ed640d531e81ebef37b77c273fd42daa1f171c16a3",
+      "embedding_hash": "a023fd9ba050c720438dfb9965862fd2ead4da588c9d00d38fa6d9eeb60add33"
+    },
+    "memory-context-按大纲分章节生成长文时-如何维持跨章节连续性与事实一致性-05f7b346": {
+      "content_hash": "465020b8f0cb22b3454ded3f74ebf2a3383035dcd70b8078b8f063d4ff5c7a5c",
+      "embedding_hash": "5e61fd1358de997d92571162c4e4b0ca6602545661dd85eb68f9dfb695a329b4"
+    },
+    "evaluation-如何量化评估一个上线的-agent-好坏-除了准确率-247f50b8": {
+      "content_hash": "1d7f12b0809db77377b14144b4d5e271e6f1e97aaa788b5eb144f2893c6de14e",
+      "embedding_hash": "7d42bf9859dd3b4aa3a5e10e61db760cd812c0cd3613d6d20c1d051b9b175117"
+    },
+    "evaluation-在你看来-当前阻碍-agent-大规模落地的最大挑战是什么-77a5b666": {
+      "content_hash": "699a0b93a5a8fca995833144ba1d12971c67663057b0341eecda0a2b991d4048",
+      "embedding_hash": "af1f8566fdc2fb583eb17e920d42b3d4d0cb0bb2bd3b844c1c9404ea2eb6f32a"
+    },
+    "evaluation-你觉得-agent-在线上最难监控的指标是什么-fc862474": {
+      "content_hash": "eeaea073ef0deb739a49e21fb5567cb027682ebea8fd695e2d53753d98c76b46",
+      "embedding_hash": "85ed95143d53031bc53e83c787b248a07366d8ca2bb08eaf7b853ea796146450"
+    },
+    "evaluation-如何对-agent-记忆系统的效果进行量化评估-cb92adeb": {
+      "content_hash": "f2e23126e3a4dd2161b50b5dc64c085c7179f2b63da949dbcc3be8807219e8b0",
+      "embedding_hash": "2cf6afb46fc57a31a4bb445bddc8bed4f844d0fd1a705a181e76b3f5052233a5"
+    },
+    "evaluation-你觉得-ai-工具最大的帮助场景是什么-f88dc2bb": {
+      "content_hash": "ccf9e6cccd044a42ee29317e200ee4b6a346dafe15dddabfbfc5dc3d2ef3059c",
+      "embedding_hash": "876f09a6c219b738f7493f3c71db944ffe52073f1f18c79422f999c36b1c47d9"
+    },
+    "evaluation-有没有遇到过-ai-应用或者工具无法解决的场景-f76a1019": {
+      "content_hash": "88f3afe63d60a89a644149a992cd7f5a3ebbb7918688d1990fef609906fc3ac7",
+      "embedding_hash": "1d1f00bf4d7a3031ea35457eef1d52b77da34311e6bce88ca5e7ef90635343bf"
+    },
+    "evaluation-你觉得-agent-框架-如-claude-code-还有哪些地方可以改进-127cd2f2": {
+      "content_hash": "545e48a43c68a12536ce746fb54aa4a44e3557d5c04fd3e1cb912bcd02380218",
+      "embedding_hash": "13c5e35586b8ac979d4034ec3e9dcbae726aae976aaeaf47be8dfc2afe680879"
+    },
+    "evaluation-从开发者角度-做-agent-最难的部分是什么-e985a0dc": {
+      "content_hash": "45b55197ac801a127a4e85d2e60c665029c2e3e777c0fbb9baa3abb1a0a6c609",
+      "embedding_hash": "4a07ec82362a53dd65cb351dd3cff4fe8b30ddf791422a20af8a495f4f77deb2"
+    },
+    "evaluation-你会怎么给-agent-建立评测体系-只看最终成功率为什么不够-1aca8809": {
+      "content_hash": "d03e678f97de207c5d5550138bcab8dc177f4079d67237b9482bdfbb7d395a1d",
+      "embedding_hash": "8052ececcb3131166b3f60a60413451ff354a4a67e636ae5854db9bfcfd2e96e"
+    },
+    "evaluation-rag-系统-如-oncall-机器人-的回答准确率怎么计算-用知识问答对比还是-37f23421": {
+      "content_hash": "69b17a83c9b733b1ec24b1c8eb013cfbf00846dfa6ffd0e302928a07f02937e4",
+      "embedding_hash": "4a21216dc1ba81b359af0e1e3c1c6c27a7307d2cdd67440b95946eb99d8d4280"
+    },
+    "evaluation-如果线上反馈-这个-agent-有时候很好-有时候很差-你第一步会看什么指标和日-505361fc": {
+      "content_hash": "e949e8f485fd0c28cd0d46723abed51977c8b26fc44130d423949f161879345b",
+      "embedding_hash": "d2c4ce55b223910ecf7a485598f2d13bd0b1037f6c255f03b03dc71147db35d8"
+    },
+    "evaluation-要把-agent-真正上线到生产环境-你认为最容易被低估的三个风险点是什么-79380744": {
+      "content_hash": "df25b3945383e86c1a8b4a53be69766b331415d877a2bac85494a222c884e512",
+      "embedding_hash": "0a14900d2316f3b61fc33bd0b7e2f10a143f15f4cd2eb372189e37eef70714ae"
+    },
+    "evaluation-2026-年做-agent-应用开发-跟去年相比最大的变化是什么-fbc94601": {
+      "content_hash": "1c9c2c876a250c49ce37f370f7643549954e2b0d3715bfabe38db2cfa0d24859",
+      "embedding_hash": "76946f1cccbb773b69ad9bd975b976508b62fb358a59d489bd2aeb08ffed2e6f"
+    },
+    "evaluation-了解最近-ai-的新方向吗-a1b7c304": {
+      "content_hash": "a4d5541c26c2a28e7a740902d412fc3f8f12064917b7e2300309f3f16ae2e57a",
+      "embedding_hash": "df086e79d1a2acb2545d74c048abba64bc570dc3127749679e34a6a8bbc46f95"
+    },
+    "evaluation-agent-的端到端成功率和工具误调用率怎么量化-怎么改进-69392f0f": {
+      "content_hash": "2f4f5545e42e6106f656951564a61b6cea715facc8b359ae6c509ff3e65ecaa4",
+      "embedding_hash": "7e206449438be65a4c09a599674d6b674b971f6276f61153ac99795e1afe5576"
+    },
+    "evaluation-通过什么方式去验证-skill-的提升效果-指标是什么-38e21f70": {
+      "content_hash": "3c7daf64ecafe2e6c4d84a782d2e5911cd735d6784b0fabfb4d7731c75a18bc3",
+      "embedding_hash": "7df3c433a2cc71ad55626c4609d56dc0f25a57e5338923349088dd5a0c8a374e"
+    },
+    "evaluation-rag-系统如何评测-有哪些评测维度和指标-评测数据集怎么构建-df3ad317": {
+      "content_hash": "113c98e514932c6bbf55844459f6a142c36e387496b33f6c2028b57a9b0798ad",
+      "embedding_hash": "8bbbe0d616919f29281870fd39904ab15a914b0f845c47e3a2018a32488dc47a"
+    },
+    "evaluation-ragas-评测框架是什么-answer-relevance-偏低时-怎么区分是-53f8e53f": {
+      "content_hash": "8d7a80a0b0660475ffb4f3a8855e237de36d717a3602a4505433982e60a0a2dd",
+      "embedding_hash": "b12bc88dc873be356f7e22d6e6c9a7bef367ada5970f71d0cc1f4255bb6f5ea6"
+    },
+    "evaluation-怎么理解-vibe-coding-你有哪些实践经验-084645a4": {
+      "content_hash": "4fc71af63b8c5adf0cb7879b384bca52c016515d46c588cb6929472122f40e88",
+      "embedding_hash": "c050a55bfa04227fc9e9d494bf28fdb73def70d784d56cb0d241ab1a4b2be389"
+    },
+    "evaluation-如何衡量-agent-的-planning-能力-vs-hallucinatio-db16b07f": {
+      "content_hash": "fe948525fb0feadbd1e194f8186ae5b805c403ad2645919b57b2f5034943e6ba",
+      "embedding_hash": "3b62c1e522ce9a5266cd9f2ef2d365fb7eebedd815da4ad71babd6e7213b37a4"
+    },
+    "evaluation-设计一个电商客服-agent-的评测方案-商品咨询-售后处理-投诉安抚三类任务如-2caf8050": {
+      "content_hash": "95e661e36aa8bb5048ebf835d222e077dba0b2fce69433f06759899480edeaf0",
+      "embedding_hash": "6328e26f4ee1878ef81e44173f15fd03a2b0fbbeb78eca36d58f06ca54a47197"
+    },
+    "evaluation-用户在线反馈怎么收集-不同模型和-prompt-的-ab-测试怎么设计-a2932d4c": {
+      "content_hash": "e1c6cb563b904c6b4c976b94d4fe3b39e3ddc45287a8bf640c85b34467f23de3",
+      "embedding_hash": "6e24e7ec217d6942bc4557cb1a18402ee70123b27bd40f572f703ab17f939196"
+    },
+    "evaluation-ai-写代码越来越强-算法工程师的角色会怎么变-0605b980": {
+      "content_hash": "8b1f2834c41f0d91489c35793f65613e85394822ee391d8728c40185987d6600",
+      "embedding_hash": "68dc1773d2ec8eb29abb290c4b233bf85eb758b05139c2e6479afdbc48e473dd"
+    },
+    "evaluation-哪些类型的-agent-产品在未来-2-年内最可能被淘汰-e7ffd927": {
+      "content_hash": "f4530e341ff910fe87e191494e90bc4878c473d86fb514e03c03efb7be255737",
+      "embedding_hash": "b4a8e71491329b17509aaa4d0d775983b4085e21325f71758a355e5c1e7cb647"
+    },
+    "evaluation-你怎么看-agent-后续的发展-哪些场景你觉得更容易落地-bcc9ad58": {
+      "content_hash": "44db0b8825a319a2773be446aa10d132e6ff95b4c53b34aa83754d35435fa97b",
+      "embedding_hash": "c52340bd78f85ddae8b2b8d81d825055bb73f1044fc6d8ca97ebfbbce4b5a733"
+    },
+    "evaluation-面试最后的反问环节-怎么提出有深度的问题-8b64db42": {
+      "content_hash": "e321fafb44b804829c5a49b2254c0e20f68dece141c881db6289e9780468980b",
+      "embedding_hash": "ebf072c60bc5e059ccd57cc0914c58911654b169be36cacc41eb00e92568b547"
+    },
+    "evaluation-text2sql-系统的准确性怎么评测-用户反馈-sql-不可用时-系统怎么回流-c33c4d55": {
+      "content_hash": "39afabf5ea4160bf3d0ffde29b9bf213760136345a420053af3eb3269b9c64c5",
+      "embedding_hash": "1654dda5eb39e1f4018f125c4bd2ffb3bbca979f1afdbcbb6885fedbdb0fe2cc"
+    },
+    "evaluation-rag-召回链路的监控怎么做-怎么判断召回漂移-a973e79e": {
+      "content_hash": "51aa271d753893690b5834f98566109c4a59a337c45254513aecb8d24ac5e2cf",
+      "embedding_hash": "202e5e1d18c2e3490b6f2bb463fdc80b39694ba7cb30c5d666c82efa16e087d7"
+    },
+    "evaluation-线上-log-是海量的-怎么转化成有限的线下评测集-随机抽样为什么不行-4d53368c": {
+      "content_hash": "7f690ba9ab21cc8ff55a8cfa2c796f43f6ec672840cf3fc263f11641ab511ad9",
+      "embedding_hash": "6d24fb60388bdb2c67fd035ff2f2b4d227060984e449e907828b35407a31cbae"
+    },
+    "evaluation-能不能不走-线上转线下评测集-直接对线上-case-做无-gt-的打分和效果观测-42e4b965": {
+      "content_hash": "cbbd349006309fe426723fe7b6ac21e6f0a8bac11c2b180b905748ab90b84c81",
+      "embedding_hash": "d943fb49eee48770d95341d22e596ae382a963b5491a3f8653a5debc9c89f38f"
+    },
+    "evaluation-agent-自进化闭环如何设计-怎样判断沉淀出的经验值得进入系统-707de41f": {
+      "content_hash": "39628ab78aa4481554d78c2d27462e47b268d41acda23f93320970295a42c0cf",
+      "embedding_hash": "6f81aa307f29fe435af179f99d2c1ccb2cad27060ebed38596affd8a7924f140"
+    },
+    "evaluation-如何证明-agent-的最终答案真正使用了工具或检索证据-而不是凭模型常识猜中-8f837e88": {
+      "content_hash": "9ee98e07e0b7384b251c18f6b995a18067b02743891523da5a9fbcf43b305436",
+      "embedding_hash": "85e5878f56ae83cdde4e9cc7ad509f0db26034d528e9f21654fd23c6a422bdfa"
+    },
+    "evaluation-skill-路由应该如何构造测试集并评估-2fcbf17e": {
+      "content_hash": "e324cb24c88d8193d28dcf279a0e337f56b066d997abce1a2b919f1f8cc7b297",
+      "embedding_hash": "a69e907a161470d21adf65185b200c33c6017b3dd38250bb76e7e15f282fb960"
+    },
+    "evaluation-multi-agent-出现-badcase-时-如何定位责任-agent-并判-26bba81d": {
+      "content_hash": "1438131570dd7b5ba948303ce63475179d47ce07091585d3260e2f5230bdcddf",
+      "embedding_hash": "67186429de2c31765e4d299bcd7ca430e232e88d6472f1e60755267902556789"
+    },
+    "evaluation-skill-的调用量-token-成本和效果埋点应该放在哪一层-8ac4cbc3": {
+      "content_hash": "a822ab16feaa90fb3007533202ef709b4ad44ebd3a2da628306c1ef03c378dbe",
+      "embedding_hash": "07287d33deea3319c9ab21e48030db0d532365beec33ff7d59705df8a189951b"
+    },
+    "evaluation-独立-verifier-和-llm-as-judge-应该如何分工-c4095148": {
+      "content_hash": "d2fed0d4e1a02b3f0de251e18eba5bb75e328cbc2fe93a5432d41c7949aede47",
+      "embedding_hash": "e09ee939ae81cae9a91044501bb10288a599626026c976f05d202b5e24c74615"
+    },
+    "evaluation-供应商不返回-usage-时-如何核算-agent-的-token-和成本-5893befd": {
+      "content_hash": "4eb376f1dcae9edbcee8779193ba1c4528b1f022eac6543f491a5b8e0b912aeb",
+      "embedding_hash": "af8242da589b9db6444ef569e6c041dd13ce0945e01a6437a0c2b860f6db2ea8"
+    },
+    "evaluation-什么是-ai-native-团队-如何判断团队离-ai-first-还有多远-bc01af26": {
+      "content_hash": "28d8c38922648c518f354b3ad513ab28afde8c32b5335e9d1cd771867a66f813",
+      "embedding_hash": "e1aba386082d81964460c90b81204cb30826753c41610ae4b07bd84b7e2e766d"
+    },
+    "evaluation-如何判断用户反馈真的让-agent-变好-而不是噪声或选择偏差-ded4d49c": {
+      "content_hash": "8e713f8df7ede6fc0bf36fd6921e6838003d9056162451cd25c141145f66b92f",
+      "embedding_hash": "12d586aec5767e8540638e5549acb7588e84d9e8c0f49bbc958f7966cb2c0da4"
+    },
+    "evaluation-评审-agent-为什么要左移-应该左移到需求-设计还是编码阶段-efc508e8": {
+      "content_hash": "83032873b1ad6677258cb19711a9a9c7459857f9a320b333e7310bc463f23c6a",
+      "embedding_hash": "87f39a6316991c1e1f3c9bee90f5282ebde44555c73d3364f08b9935c379534b"
+    },
+    "evaluation-树形意图识别和逐层路由应该如何设计-并构造评测集避免误差级联-0547d53a": {
+      "content_hash": "c92af9aadaea0c279cb4dc222cdc52cee383793c6617b0aa54bb8e904182e6c6",
+      "embedding_hash": "31b753a945d4d56dfb6b7d2ebdc1c39613d1cd40f3abc326cdad61fc69b4ff1d"
+    },
+    "multi-agent-多智能体怎么协作-比如一个写代码一个审查-1ece87d9": {
+      "content_hash": "5479db6c8921fc8f818fb02ef1aa2a148affcecba3fb29dc376fe3e8ba9155c9",
+      "embedding_hash": "d8c31811fd5caf2a8445ed1a4a68b34aba530aa35c468c5e3472548869e157f4"
+    },
+    "multi-agent-多-agent-系统里-怎么防止-agent-之间-踢皮球-或死循环-90d0faff": {
+      "content_hash": "060351d30c9c6f784874650cd94de12e3c00b6d295cba4fe3ee46f7f8d66b22a",
+      "embedding_hash": "ed485a972e7cedf35db6d950433b2081a75c57d2731b1e1d1e19b0ba8b8c49d7"
+    },
+    "multi-agent-多-agent-之间需要共享状态吗-怎么设计-f9dfc594": {
+      "content_hash": "7fdc52494d3762e077f8f417d2684a0ea3b5c80d979c8383a307d9e0ed9db63f",
+      "embedding_hash": "1c27cca9f1742fac1ffe0eafe4e98d87c52a47c7674c02fa6ef89e50dafcbad4"
+    },
+    "multi-agent-怎么判断一个-agent-该做成单-agent-还是多-agent-178fe4ec": {
+      "content_hash": "9ebfb7f904ffe3a8afda5a5aa247e73bf9bd10850a4a3c78d69191def0c21887",
+      "embedding_hash": "6953b1f911888b2ab19bd649ff25b2a9f9dc70b0f3415075d9b6d293f43b0b81"
+    },
+    "multi-agent-在多-agent-协作系统中-记忆应该如何共享-是全局共享还是每个-agent--ad259d4e": {
+      "content_hash": "968fb9e96d2a6e5f3a65d228530effa234e210dbb02404b04bf612edf1d811d7",
+      "embedding_hash": "7c0ab5c9a1071e124d67bf19939aeab10507596e06a8a22b32ed4fd9e3efb20d"
+    },
+    "multi-agent-单-agent-还是多-agent-的-子-agent-的任务是什么-23ac6e1e": {
+      "content_hash": "7fc6c49f606662cdb4d4afc151eabeb3750a353302cf0a57534f035f779dee5f",
+      "embedding_hash": "bad7905c16e4eee53b6952b4c1a3f04850dab3381d88b07903a3356456e2698c"
+    },
+    "multi-agent-多-agent-设计里-按-职能拆分-和按-阶段拆分-各有什么优缺点-d3de6ba5": {
+      "content_hash": "24cde1fe5085eadfb0b28e60a462f84f26f95a2e80d362504b88df6be7175b21",
+      "embedding_hash": "f518caf4c59e5ffa89e6a4a39ac88ee11b3825b71ca65b7bcd07bc2b9197f47b"
+    },
+    "multi-agent-handoff-的核心难点是什么-是路由问题-状态传递问题-还是权限边界问题-04f3ed34": {
+      "content_hash": "269257a705928ea687ff6666309b791303658266a585473becc394b520316237",
+      "embedding_hash": "fc17ccc489da043f57e0dbac10b5d5cc14c589d656a6d4146f8c4c5613e5fc4b"
+    },
+    "multi-agent-mcp-和-a2a-分别解决什么层面的问题-如果系统同时用了两者-架构上怎么分工-905c578f": {
+      "content_hash": "0e87aa7a30778255c7f5d296108dd42f8f37fe8255bc1c6a078ac6acbb4c4174",
+      "embedding_hash": "5615a9b09c376a1225ff47435d3de8071b026378a4a8559b90a21a4cd0d424ee"
+    },
+    "multi-agent-什么时候该用-subagent-为什么工具调用多就倾向用-subagent-99865bfe": {
+      "content_hash": "13a3bf73bd723d4e6c51a593dd085f9fe805c8f6aad1f1cd935bbea94562b7e1",
+      "embedding_hash": "c98b387ad935a37eae70aee8c71e0c78d4adf50b1207c06fd16bcd7308abfc30"
+    },
+    "multi-agent-任务简单但工具调用多-用-subagent-是否浪费-token-怎么解决-6b858f98": {
+      "content_hash": "3a24865c43ae5db94fd3889b87e170a3fb3c6b2a1f1874c462223c65f21a5d3b",
+      "embedding_hash": "97d33b5fb68453e44f3a95faa17c4839bee47b84e06163d6bd32db666becc38d"
+    },
+    "multi-agent-图片信息怎么在-subagent-之间流转-d2b4fedd": {
+      "content_hash": "231c6b4400a6ec62955a50dd6b406d149cf02351efacf8161181b3ba4294ffe7",
+      "embedding_hash": "1e267133746294a20feec65fb444f94770bfed65e948a270136fcf57476ba473"
+    },
+    "multi-agent-multi-agent-系统中-router-节点依据什么规则把任务分给子-ag-b5fbcd16": {
+      "content_hash": "de9ffd1b0981be6e24d44168f3cc1bef09de582fcacd8fc025a054e9727984ce",
+      "embedding_hash": "3850413b34b1f068b089973939a676248ad96adf12d41e98de09be920c2c9cf9"
+    },
+    "multi-agent-多-agent-怎么编排的-用的什么编排模式-909e24ac": {
+      "content_hash": "3e8e0b8bef1549d1b62829b92c5d16f20d10eb64c9b97c6f2e254879015972d4",
+      "embedding_hash": "404867c9d2b0f141924d03407977ec6caa211b77750752385e7ca8d196a8d940"
+    },
+    "multi-agent-multi-agent-中心化编排模式-vs-点对点架构-核心区别和优势是什么-9ce13177": {
+      "content_hash": "a56f7b7bbe6a458e06863887dc3e67bf71cf21610bbd6c2158a43ceb3aaf3f87",
+      "embedding_hash": "2d4829067ab9bfff967afe232e3ecff72b440ae6229da490a22801b27b86cd42"
+    },
+    "multi-agent-详细介绍多智能体协同策略-三层-agent-root-main-fallback-ef895c17": {
+      "content_hash": "e6465c5b634654992452585b907386f9ec977403b48448906af449b9549c0104",
+      "embedding_hash": "ae8a18a8ee5fee19f26c40745786b9cd4c8e98ff8b48f0ea07a906fb37c595c8"
+    },
+    "multi-agent-为什么大家都在用-multi-agent-从一开始到现在原因是否有变化-0fa07cb9": {
+      "content_hash": "4ea86a4902f2c7a56d44dbc078ffcaa15f5522766cc17e9d505bc163308f23d8",
+      "embedding_hash": "9fe6983bae8568267eeb2ebe663142fb6c45f59bb92e5b056a35c8761f811ae5"
+    },
+    "multi-agent-multi-agent-如何通信-不同项目分别用了哪些通信方法-6b07a598": {
+      "content_hash": "121edb5769899cbb44a66df37341de0969ff1ddd2cc3d8a06d2b3da72d636103",
+      "embedding_hash": "ad50ea907e5fedec3eddedf97adde0a01a83793b9fd377fbe05b29227b691695"
+    },
+    "multi-agent-如果让两个不同的-agent-产品进行对话-比如-claude-code-和-c-e73789c0": {
+      "content_hash": "3babd65f8699d6ebbde925520dcde5b462f2cd40a054f16d74774c8a91e2b6f1",
+      "embedding_hash": "592379b2fb00360af81c08c0a741b85b8d638293246eee09b3baa689938a4015"
+    },
+    "multi-agent-智能体可信通信怎么实现-4c81e57d": {
+      "content_hash": "5122be71d028044b095bc0f2d621d6b9e626bf91c880b912a87ee007987bcbeb",
+      "embedding_hash": "0a3e3dfb84ff301bfc46cf62b53c9d5caf73c907703d29774b622d56f3c1d5d7"
+    },
+    "multi-agent-子-agent-之间的上下文怎么传递-传什么-不传什么-71f62022": {
+      "content_hash": "adad7ed02a294f624c4a5e0785074a544b36c3308c4259f9c845da31b5f2e640",
+      "embedding_hash": "cd6ba6aa882aadf01662f698995a708bfa5d7b32037ae0e759b037ebe33f3d2e"
+    },
+    "multi-agent-多-agent-协作常见模式有哪些-各自适合什么任务类型-0e45cbe4": {
+      "content_hash": "940a93acac872d35fb137c8fbaeb061fbca5209be07ce8c52031b7342ad66810",
+      "embedding_hash": "c39960321dc9bdea9ad13f351e304912ca1eb7078724bbd5611cf3e8ab058fc2"
+    },
+    "multi-agent-主-agent-与子-agent-的通信和进度同步怎么做-是推还是拉-3b690fb4": {
+      "content_hash": "75f0c75bc371dafd8eef71de9fcee87ff9f87192191dc0328bda15e1bf2554cc",
+      "embedding_hash": "22d06d98f9b2b04fe0977ff54ab469a7d366b3e70acf570819c9cb91a5b578c4"
+    },
+    "multi-agent-多个-agent-并发操作数据库或文件-这种并发怎么处理-1b0c33fd": {
+      "content_hash": "76c4b1abd93fb2a63e4cd6bb57a1279d2dd77f85284d6710e114bc32932cf6ae",
+      "embedding_hash": "b664f6c4cbdd8b05c235ba9a8d7a55cc3f88b6915496b889274b27a7fc367d05"
+    },
+    "multi-agent-大规模-multi-agent-如何做调度-背压和资源隔离-调度器崩溃或-lea-1c6f3fd9": {
+      "content_hash": "8fac536cbb28df6f8038a8782ce233e34cd3afe8b442884e4ca1d548617cf672",
+      "embedding_hash": "02f58e760c6b9888766dec6fb3c978265671cd7872365b1e6af2ca47b5ef1078"
+    },
+    "multi-agent-多个-agent-并行跑的时候状态竞争怎么避免-78ce887c": {
+      "content_hash": "784dfdab2bf9c4bddcdd4e6be89c6c0d548f1f885b08de836b8ad2e8a05d2eed",
+      "embedding_hash": "ccae1932f29961984e9ede104b88fbbb6b589c7a630331b9543d5ea315d1e1f0"
+    },
+    "multi-agent-如果拆成感知-推理-校验-agent-哪些能并行哪些要顺序-什么时候需要反向通信-4810533a": {
+      "content_hash": "6e7b3d582023f50e26b15a26fbb97775a3802a0f0c7f9f1210ecda96f5d6f973",
+      "embedding_hash": "f57f262ca9e10cebc26124253c187be4a20e8218081c3cf95ea9200fb1658ee3"
+    },
+    "multi-agent-校验-agent-和推理-agent-结论冲突时怎么处理-70e0878e": {
+      "content_hash": "ace3d66b38cb5dbdc78408a8ce34482020e02a66156e48aba5dd6b7b379a2651",
+      "embedding_hash": "245b2b0a4cb4df064e975364d4794240093128e89ba18a73255bcf8c36a4443f"
+    },
+    "multi-agent-在-a2a-场景下-如何防止两个-agent-陷入递归对话-4de6f9af": {
+      "content_hash": "aaa1baaefa4f265e5236a638ceec54614eb970126d32cdc28925bad0c526391c",
+      "embedding_hash": "15cfc9bed0de1d0950a294417a52be68c2607032f37c708403759ea42b7e0e7f"
+    },
+    "multi-agent-业务模块增删时-如何治理-multi-agent-能力拓扑-避免-agent-增-698e6d4e": {
+      "content_hash": "62d0480d53c603419e2a372b086ab5d69d4cf23a6ecc05dacb53747fd0b7a3c6",
+      "embedding_hash": "e4c39bc6b675aa8fcbf75207bccec6223911aeef794ba008dc24c7554c8f8b47"
+    },
+    "multi-agent-如何按租户-任务和-agent-层级设置分层并发预算-f940d80d": {
+      "content_hash": "a935701d1d30a1341451acfc26d9950cea6eb338c14f98bb6d4a9dbf27ee845c",
+      "embedding_hash": "089e7bdae694772bb8057a5f703bd604bc11f7b31e993d9ba4609ac180c87328"
+    },
+    "multi-agent-如何保证多-agent-通信结果明确-可验证-而不是自然语言互相猜-70353e1e": {
+      "content_hash": "e3e09d4ced0c0ab85fae37fdcaee2344e45b43f94464cf7dc7cd990e128482b9",
+      "embedding_hash": "929bb00e1d32b8a986a4276daa1f01a2a1e5913011e0a85795a3e94ceccd93a2"
+    },
+    "multi-agent-复杂-agent-为什么拆成-langgraph-子图而不是单条-pipelin-768f915b": {
+      "content_hash": "8194497179f891438acb65451967eb635c1838c388068683341707f63128ee73",
+      "embedding_hash": "8a10df43165fa13bd63e2684df539cbab712c2a91c014315a51ea846b7c7a50d"
+    },
+    "multi-agent-多-agent-执行策略如何根据任务动态选择-并在运行中安全切换-72873a05": {
+      "content_hash": "8cd18f8c9ecbf2aa7f208aa85c3e879f1816244da6326e70ba1c60931e02174f",
+      "embedding_hash": "ef739c7ee693173f21cc16ef775927a12434f04721f830ce1b434aadbe09f9f8"
+    },
+    "engineering-pitfalls-agent-的成本怎么控制-线上烧钱太快怎么办-914ed6a4": {
+      "content_hash": "c80e95defb567e212f8f1a71030637c859ce83ab44eb3393fd891ea0c463b5a7",
+      "embedding_hash": "706ec0ef098062aeaa445c41a51355f1937b4427135312627882f64b891b41e3"
+    },
+    "engineering-pitfalls-为什么很多-agent-demo-很惊艳-但一上线就不稳定-e1ca48b1": {
+      "content_hash": "c20c3a84fbdd5dadde1b26229e0407fd137d40c0966c8d1a42e6dee92c967af8",
+      "embedding_hash": "f9dfb03cc3ccb8af635988343c709beb68c2707998d595419f56cb63698f25f9"
+    },
+    "engineering-pitfalls-开发-agent-时踩过什么坑-51c1650e": {
+      "content_hash": "664c8fefc2893b8b0c61abbfb3930485927d1acba4fd010ac7f7a4404c0f9dfc",
+      "embedding_hash": "ff59d0e421eecd64eac534333116503d5d8f4b00d395aae647db3e375c00d3ec"
+    },
+    "engineering-pitfalls-用过哪些-code-agent-有什么优缺点-e8608f26": {
+      "content_hash": "dab19317f59586099f71fae03df0ff98871d8481ff355976a72c0fb635d83554",
+      "embedding_hash": "2baa7a6a5df2a0cfc61fe47532080b267a15aec8028222a94cccab85d2f62e6d"
+    },
+    "engineering-pitfalls-平时写的代码有多少是-ai-生成的-怎么保证质量-14b09385": {
+      "content_hash": "d529d2900cb154a25bae122c33a8124c5b58c8fe9cfc5740b70026243aa310d4",
+      "embedding_hash": "cf0059f0dc43fb6d8b1f1bf69a40ea8cdcbf6781d220e6feb7ef20e62ab64358"
+    },
+    "engineering-pitfalls-平时用过哪些-ai-agent-工具-fb788403": {
+      "content_hash": "7f284b88d02c010e8cc4730974ac8d30c8e23da8b7611ec1e5cce81705259984",
+      "embedding_hash": "f011b42788672d5ffcdcaf26e0b6816c79680865532df42d5682533784e6542c"
+    },
+    "engineering-pitfalls-你熟悉的-agent-框架-在架构设计上有什么优势-5ab5261e": {
+      "content_hash": "811a07cccd2b22680da70df99412635558e942c47b67e4676d19531180f4c8a1",
+      "embedding_hash": "f64a1b509cda0369c6d170c5f1877f388e4b0bf8acbcb30044c6bbefb15ed2bb"
+    },
+    "engineering-pitfalls-自己做-agent-时-踩过最大的坑是什么-f44665c0": {
+      "content_hash": "88a5c5e31b3244dbe9adbb3018a6a1ab6ec77f120f85ba0dcc0f35f8b3b75dd8",
+      "embedding_hash": "6911b4e84c01af01636cdbc1bf3b56119f0b27b71fd9584926d128cd1af30e57"
+    },
+    "engineering-pitfalls-如何解决大模型-api-服务的响应延迟问题-0a831dd4": {
+      "content_hash": "2e87d04fe9093012550aab547c50a8bd295e55c4df04ad9571519f1df018478c",
+      "embedding_hash": "78097804b050569f11def143e694d17fc8535414de7251c15bfb2e95b8b53f2a"
+    },
+    "engineering-pitfalls-ai-coding-产品怎么测试-从-demo-到生产可交付还差什么-a66fc731": {
+      "content_hash": "ef208db40a60bd194a27952c7b786229551b437ad6963094c71ae1e18b15ecf5",
+      "embedding_hash": "55d9f39ac13ce4520ac685c57e1f1b0879ea0dc714f2ea393b02681857aa1fe0"
+    },
+    "engineering-pitfalls-什么是-sdd-spec-driven-development-它和-skill-34598598": {
+      "content_hash": "9d2cc654326216cd2d5c9ffa7c54d5f9cb0c203202a1fd8264653373fc6881eb",
+      "embedding_hash": "194ab9b06fe89780a166f803b223c71f0a23f59863e969f9ef41fe067bc09097"
+    },
+    "engineering-pitfalls-如何保证-ai-代码生成的质量与掌控性-e67273e6": {
+      "content_hash": "0db48ae6903b9b73bb46ca85da2cf502bc63f07437127dde88f237614cedeeaf",
+      "embedding_hash": "50f401cfe57342d3eda54b04ef34bf40d789b6b1c5697a1823e02be57d1b3de2"
+    },
+    "engineering-pitfalls-langgraph-定义的搜索节点做不到并发执行吗-怎么做-42e31ebd": {
+      "content_hash": "3897caf76ccd8ac749c883128d38532273c4b84dccd2b38149c999108dff757f",
+      "embedding_hash": "a9451988f42ec2d6d8b69dfd0c1e116dfd4c0c39f8a0d362d5c6fa368d3b3cf1"
+    },
+    "engineering-pitfalls-postgresql-的索引结构是什么-索引如何优化查询速度-在-checkpo-875bbbea": {
+      "content_hash": "af7f3ec2d54458f85b06619d6c4b8e06b0626db1a78f96284dfaf4e863cefd4b",
+      "embedding_hash": "85798b8afd0f0c94310cf4ba1900f02bf4b68151f80f7e2c87f3e855658a9a8e"
+    },
+    "engineering-pitfalls-用-claude-code-做一个比较长的任务-如果遇到单次-session-跑-f71ee725": {
+      "content_hash": "ffab2c011e279000db6b88184c647bd55487c52065ed78361ab8347702e48033",
+      "embedding_hash": "dabbf2482c0d26a2aa41743408af31cd3c542a2d1d4dca124ba95264de27e77b"
+    },
+    "engineering-pitfalls-分布式限流算法-令牌桶-漏桶-滑动窗口的区别和实现-532ee4df": {
+      "content_hash": "29e0d4d307664b1d57bdbc0c6a3855393958d352440e23d63995de0836b6646d",
+      "embedding_hash": "52e9acad871d4b29b6ee66374b1631019b0992e8ba65913b409240b9250c7d41"
+    },
+    "engineering-pitfalls-布隆过滤器的原理-会出现什么问题-如何控制误判率-3f04747e": {
+      "content_hash": "50fa225b4fad24fa2e45208218964e76ed83ab5f0cefe0e8cbf935c2a9851105",
+      "embedding_hash": "64c73e4ed6e89360081c7245dc27546c68565d92e2827693c2d3b4bb871ebcc3"
+    },
+    "engineering-pitfalls-数据库索引失效的常见场景-like-查询会不会导致索引失效-b7dcdfe2": {
+      "content_hash": "19f0a3ab978733fc1ed72a8d5d7262c31647585b34a91fe642c7608aedbcaf44",
+      "embedding_hash": "c3dc15ec2ddf12f0e7863d244fa57632ad1ab8bbc7b4a8526ae0e0c35fd51674"
+    },
+    "engineering-pitfalls-大规模数据处理场景设计-从千条到百万级如何扩展-67ab206c": {
+      "content_hash": "eb2b42e5c2e283124a892d500b139e2d08ecfc46b570e532d8cd0fd509d154e8",
+      "embedding_hash": "e2979cc199bc90b7d5463183d468af1596d81b50f29d27438d5780e7b1a7a6ec"
+    },
+    "engineering-pitfalls-针对包含-3-个以上工具调用且高频请求的任务-通过什么方式可以压低系统整体的端到-4ed45a9e": {
+      "content_hash": "817974f4d091583516a0e12084e60d561729dea9c45b4bb9f62787b97fa3affe",
+      "embedding_hash": "4e619a8cb3caa952059d9cafe9b990ec61527b3362ea0f6cbc6d4ff920b6266a"
+    },
+    "engineering-pitfalls-任务执行远大于单次-token-限制时-如何设计以支持断点继续生成-9e4f73ec": {
+      "content_hash": "7200677fc9b465e696b70c6c677469cfc261736c047dbbe83ce346b4c377cc2f",
+      "embedding_hash": "e075adb9a85532b130b9895efaaa09ae18cd49e0166c45246445a22ff7251923"
+    },
+    "engineering-pitfalls-开发-agent-的时候-你用的是什么开发流程-为什么选这个流程-a1f5ed83": {
+      "content_hash": "e0bdc46f0b32f366a50ae325187a18a572f7f4f975921637c4a698757bdb6e16",
+      "embedding_hash": "950152cdfd9e5348335a2f84198267c9192890658a7621b0904b0d292437c527"
+    },
+    "engineering-pitfalls-ai-应用的前端资源缓存怎么配的-1798da86": {
+      "content_hash": "761cf57794d2208e6db24ea58bf7fad14013441dd88761812ea67c2e1a3de992",
+      "embedding_hash": "41d50b975b38a4ba91096b60aef5e981ca1ec5ae30ac85b9dcb35e7b6531bf85"
+    },
+    "engineering-pitfalls-ai-应用中-sse-流式数据怎么处理-数据格式是什么-a4c5ef1f": {
+      "content_hash": "946d18db7dde519176d5a7adffea969dc72661ab1a5ff8a56848e67fd5d48100",
+      "embedding_hash": "789c34309a9b8b19ada33414e8639a961bcf82c695e875a2ef8239369963e984"
+    },
+    "engineering-pitfalls-数据量和-qps-增大后-agent-架构怎么改进-需要什么硬件-rt-要求高时-4cee5ab5": {
+      "content_hash": "819ad120e380417a2ed90d33adad61ff5fe245bc3fdda57b7513e4293841a708",
+      "embedding_hash": "1a31e1f61d15cc3129021e09440412006df0c2525527eb31d77c441e8e0a9835"
+    },
+    "engineering-pitfalls-使用-langgraph-开发-agent-遇到最大的困难是什么-14c3aac9": {
+      "content_hash": "ccc715591dc1fa14ee940233d4e45de38eaece4d4161d75674f260b5e8d3b923",
+      "embedding_hash": "6e4b4c5cf212c3b7c4a20df57a65ced504de0eed5c994ed2cc6a3a152676f59c"
+    },
+    "engineering-pitfalls-ai-coding-检查错误的时间比自己写还长-怎么提效-34a0f8e8": {
+      "content_hash": "e1f34e5cc91ebc1ea05d4b232b79f5701c5d14737b915f98fef59a16304504cc",
+      "embedding_hash": "21b51b99a7c5c5479837e42ad99731bbde1788143f88a8a85286785f0b862d2f"
+    },
+    "engineering-pitfalls-agent-系统的缓存选型-本地缓存-vs-redis-怎么选-8d572773": {
+      "content_hash": "ec92cc57128671bc39bb87fac0538f3fc6059f35a8e9de2c2d11e3718f093d04",
+      "embedding_hash": "9b3c821f49f58a94f5ae14a1fba6946cf411006c9d61a5a6f66e7115dedef03d"
+    },
+    "engineering-pitfalls-模型离线-auc-很高但上线后效果暴跌-怎么排查-f3835405": {
+      "content_hash": "d2d69a6d58988501deee9de32e4532a36a126b93feabf0f82d38b230b353fca2",
+      "embedding_hash": "dd8aec31e801f37b6682fee705e5919a9c23a7a8f295a8fd9e2184aea02bf87d"
+    },
+    "engineering-pitfalls-高并发场景下同时调-10-个-embedding-接口-asyncio-gath-8b84ed91": {
+      "content_hash": "e664034bc25e30b869bd41df57967caf0f09e3f5e9d4ccf785020544c6553fc1",
+      "embedding_hash": "331fdc1ebfc17a018ce04088d609e8d81734db55632d9e131c9f3d59d43434f9"
+    },
+    "engineering-pitfalls-agent-异步任务管线中引入消息中间件-如-kafka-会不会反而变慢或成为瓶-4aa2a2cf": {
+      "content_hash": "ab2615ee67f512ced25a61505c9ed2625d72a0e8410d4b3d105171576c94cff6",
+      "embedding_hash": "aec21d8b5992fbb6df401fdf290eae8a3c63477a7c9ce423a5afdddd3e540ac4"
+    },
+    "engineering-pitfalls-用-ai-coding-工具写代码达不到预期怎么办-4c456d60": {
+      "content_hash": "aa767e1a7f8d805191522b5a807017d2916a1e2f1faccbdecd125cf138f8a01f",
+      "embedding_hash": "34c3bc1fcd5c7aca2165d12183b66c1d44c5f1e6bef13a14628e8fb660bb6f8b"
+    },
+    "engineering-pitfalls-langgraph-的-state-snapshot-状态快照-机制是怎么实现的-08ed7d99": {
+      "content_hash": "a521b181b22ed55d84b3010e83bbf72a503d7635e880d9d5ef0cfcaf6797a453",
+      "embedding_hash": "cb97d9323a8aafd755670a2d88c66cb329c23b7f03b5e321611d89aa092d93fc"
+    },
+    "engineering-pitfalls-agent-系统可观测性设计-怎样的结构才能更好地追踪整个-trace-bf61c0f9": {
+      "content_hash": "a79fac2d827c77d0199df27edb5b803cf19071f14b4a7e0cc0810767130fefdc",
+      "embedding_hash": "80b37451ff110f8345e8dd8c195ee988d36627171bcaa5fd6dcd6a59642ebc6e"
+    },
+    "engineering-pitfalls-sse-流式输出中断后如何保证之前的输出不丢失-51b6b9f3": {
+      "content_hash": "56ca12ee63c5dd5f788b6d219e3ea009387bcc647555668796cfa5a8ef20908f",
+      "embedding_hash": "c7e6ce38272260565bebf52c7571f98406a81da7f2d5cc65b5c2f3dcf5d54456"
+    },
+    "engineering-pitfalls-产品的用户量-每日-token-消耗和底层模型选型怎么估算-9f32f487": {
+      "content_hash": "d7cca0099ef04203b76d9f62c05bb5b9f3c7951b67bc26aaa0243c93b2676666",
+      "embedding_hash": "e1035a8f8779e9fab33521261bb39d6ab396fa30e25e68f9b5dececfb3e555d7"
+    },
+    "engineering-pitfalls-agent-如何做版本管理与灰度-89123706": {
+      "content_hash": "10d113ef93ba5868e4042ce8807fabd49cd3682691cbe574df315f8d0391ae18",
+      "embedding_hash": "c08f4c88b0672539ad65367f37e3258ac965e80a405bcc7611bc65ca89c93924"
+    },
+    "engineering-pitfalls-怎么设计一个大模型网关系统-21b8cf23": {
+      "content_hash": "6719084b99802ffe67826db96505fae7ed0931a58e5d3f0f0c7ed9ef2bb5a21e",
+      "embedding_hash": "92ed01fbecc33d0a71ec5252efc6670b55ecf4bde2b4044f5996970f568efa50"
+    },
+    "engineering-pitfalls-claude-code-用久了感觉响应越来越慢-这是什么原因-怎么解决-7e52aed4": {
+      "content_hash": "195848df201d7c4c827aa2bfe7cb31d1b52b44aa42df664d378274cf97c9f8d6",
+      "embedding_hash": "fa7e3afb72f7e4163b3287ff4c2a066e9e1d6e514e8761678a3ac9149129ea81"
+    },
+    "engineering-pitfalls-高并发场景下-如何设计-agent-服务的弹性伸缩策略-5618de84": {
+      "content_hash": "7c0a2a7e57bd9769429da4d192ac2d02222b9048fdec5c5cc9ac295cd6a335af",
+      "embedding_hash": "a86e7ebafdb46dd693d2a2b507bd09d0fb395b4437ab4a08d63b89e01643e713"
+    },
+    "engineering-pitfalls-如何设计-agent-的流式输出以提升用户体验-特别是包含工具调用和多次大模型交-faf782dd": {
+      "content_hash": "826f2ecc54a0e57951c10bea468434129f9afe0dfb13db02a69e0db499c83ee0",
+      "embedding_hash": "b49bc1d18d69f9771a1f8ffaaae99199daa54b038d3e6d80147d5bea42168bd6"
+    },
+    "engineering-pitfalls-流式返回时-如何插入非文本事件-工具调用标记-思考过程-错误提示-分段标识-且不-c3381ed7": {
+      "content_hash": "37e940d6fdce317da83dca255a14eeba6565ec76f38982c3007d4d1d3e292556",
+      "embedding_hash": "d3c19415698fae30c67ef2c197f95c062192b0c42cb64268ef05494839932b16"
+    },
+    "engineering-pitfalls-sse-和-websocket-单次调用的区别是什么-agent-场景该怎么选-afa50eca": {
+      "content_hash": "dd517785d5a0df03dee8aeaf18268585e7c271ab5e93b29c867e15540d4378ba",
+      "embedding_hash": "4209668adb9859d6145dbada7bb96e624e784636e34ef7aa0cbbb0ce31a6ed3a"
+    },
+    "engineering-pitfalls-agentstate-的作用是什么-为什么不使用全局变量-9422bff5": {
+      "content_hash": "39366d8948243f964d06c481a4b36e8c22aaa56de857e037b51e328ff632fb78",
+      "embedding_hash": "1e93835badfe450db8fefb74a755940614920e593baae3d9fb93408e432a8994"
+    },
+    "engineering-pitfalls-从原始诉求到可执行-prd-spec-谁负责清洗-如何判断需求完备-质量门禁放在-cfc94a05": {
+      "content_hash": "07e9672947a814335651a4d664b02e60b29a205c2a2c2fac8a12ec12d8abdb46",
+      "embedding_hash": "ab046c29e7496687765c7ca005d437a6ec15a7eb96f872172439605dd777a61c"
+    },
+    "engineering-pitfalls-如何记录-agent-的非确定性边界-实现可重复的故障回放-15454174": {
+      "content_hash": "897f12b9ec28d861f06844a4fef963eb37f4822cf03993ae6c612bbd651bca10",
+      "embedding_hash": "080b92d70917e8101466ea6cb10040c7cd5ad0f0e3aed97900f5cb3d61360ec3"
+    },
+    "engineering-pitfalls-系统里多租户隔离是怎么实现的-119cdc9b": {
+      "content_hash": "9d5472013190b69a0b59acb0319a5cad2450822103af8083d20dcf8acde15db2",
+      "embedding_hash": "f008ee93d04cab146f7c2b0119846e8a939c47ffcde9b230030c4b2454ddaaae"
+    },
+    "engineering-pitfalls-了解-kubernetes-吗-在-agent-项目里有没有实际用到-da05fd28": {
+      "content_hash": "a79e4b49a70d360b2c7adc00270eb27de1727c2fc91d570933ca2218f4049f3a",
+      "embedding_hash": "b5ffeb62f942057bc489b01d987388eb0f4e3e05da2894ed27823868f13ebd6c"
+    },
+    "engineering-pitfalls-进程-线程-协程有什么区别-什么场景下协程更有优势-bbbeebcd": {
+      "content_hash": "f13f741f74473b8a21f21277cc49b01bb33483c51494a6b1588039381cb914e2",
+      "embedding_hash": "61816a0bc797ae96505ad691ad387adbab57d2ab4d420c9b81d1442cef71aaac"
+    },
+    "engineering-pitfalls-子-agent-和工具调用的-token-用量统计缺失-怎么做容错补偿-用户断连-ba3bdb6e": {
+      "content_hash": "3d59923f8df9923750e4b565660ef360eb10bf734689712e6c22ada8715b5cf3",
+      "embedding_hash": "08eb3e1029802eb7992ead776eaf44ee7c1064f00f2a3b7d67e3588a0dfa73d3"
+    },
+    "engineering-pitfalls-多个子-agent-延迟退出-同时更新同一对话的-token-统计数据-线程竞争-81f503db": {
+      "content_hash": "08464d875767f3e7937bc163b3d9dcf81b7dba3c103efb645ee3f0688ca3ca8a",
+      "embedding_hash": "d96a94cc3b2717db6cc6ec87ef1f629e876b6569c263acd5e4da0f305a0cf57a"
+    },
+    "engineering-pitfalls-agent-框架如何实现流式并行-了解-claude-code-的流式并行是怎么-47abf990": {
+      "content_hash": "9847955324ea92360ec3d92a38c8b450d4a2d1b99298a5983453f22ba29e3202",
+      "embedding_hash": "0c48fb95f1f35e851713995e0cd651421d9e96d7ffdd7bf4927ee98437a6dc5e"
+    },
+    "engineering-pitfalls-langgraph-图状态机里-怎么捕获每个节点的执行结果并实时推前端-a6f9a9e6": {
+      "content_hash": "f4d4c774974fffecd9331c11edf195ac9d39c7c293fb540902446843625e5ea9",
+      "embedding_hash": "d6e06cc8c52c3fc6a219520d3d3a9a3a8180320e7ff9340c80d6763768f442b6"
+    },
+    "engineering-pitfalls-多模型如何动态路由-根据视频特征-任务特征-成本-延迟和效果选模型-e402c5a4": {
+      "content_hash": "a2d46993c0bf627be630ac9001a834acc834e478e57b995a4d750aad76623e8c",
+      "embedding_hash": "ae3f0376641cc8cff5236447f76cdf366f0e64249b17a77a23dc7afc782f6d9f"
+    },
+    "engineering-pitfalls-redis-在-agent-系统中适合承担哪些职责-哪些数据不应只放-redis-96d8e392": {
+      "content_hash": "2a490b899cd547263da0017e54481d4f603cb8ac922da3f4d2ce611b289e97c9",
+      "embedding_hash": "f8143ab3cf9197c776165e0c2e9b4e8782547b1e1369b00f2ab95f36502a4854"
+    },
+    "engineering-pitfalls-什么是死锁-死锁产生的条件-检测和解决方法是什么-ded62609": {
+      "content_hash": "df3b0327da05261c2200fe2d779ff4d005caa724144c9e553cfa39c5ec2340e2",
+      "embedding_hash": "318bb31631574745f97972b6336d3b0f17c1c5f1ccd6479ee533efa85c728d5e"
+    },
+    "engineering-pitfalls-编译器从源代码到可执行程序经历哪些阶段-538b0fc3": {
+      "content_hash": "622242f3dc6d3c970611637d3e61cb50d6585ad66d94b369b897874e23fdecf4",
+      "embedding_hash": "2c869a78d94a09d9bf0b7e802df8c49eb3732efdcd545c48e973aa6b737ee46b"
+    },
+    "engineering-pitfalls-在浏览器输入一个-url-到页面显示-完整经历了哪些过程-71d81fb2": {
+      "content_hash": "9628d48e35362d88968ce7f673415299e0077285500b9d397342eece5dbe558a",
+      "embedding_hash": "0734e7ee8b1da2a5952c4b2edacb6ce145adf8d6646d303093c20519e361334f"
+    },
+    "engineering-pitfalls-云端-agent-的沙盒应该常驻还是按任务创建-如何优化启动和通信开销-e21785f8": {
+      "content_hash": "d014d6a9afa9e3ef6f525493c83247e06e2a6b61004a70ca36d2cf116f39458b",
+      "embedding_hash": "743fae57b24538becf9c9c12e7f2e92e57aa718153672127ecc57afe08aabe28"
+    },
+    "engineering-pitfalls-如何设计同时兼顾吞吐-首-token-延迟和租户公平性的推理调度器-516420c2": {
+      "content_hash": "cb036a66c81694d6c479b9888e10ff0a8f5a5a3e0f8c870f4b21e3d881a322de",
+      "embedding_hash": "87212cf58fef95ce3cb343f409ead1a97c796f6af15306d9671393e4079224d7"
+    },
+    "engineering-pitfalls-agent-的中间与最终交付物应该如何版本化-校验和交接-cc135178": {
+      "content_hash": "5593e448a15123b355c0b729ddfd3500b761eb8c3b8877f2d3389743466f5b68",
+      "embedding_hash": "eea7e7119a8d1802c7b929498427decd9355a989791921448bfaad50971c3e03"
+    },
+    "engineering-pitfalls-多模型供应商如何抽象统一-provider-而不丢失差异能力-6ea88554": {
+      "content_hash": "252048a824ba294e5c459c34cd40003eda4eb284dbf09a253d5c8783392cf643",
+      "embedding_hash": "741d671db01499cb1e061902ef00c38b8b65f9871179e73a411310f7394f2cbd"
+    },
+    "engineering-pitfalls-如何可靠采集-coding-agent-轨迹-避免崩溃或异步退出时丢数据-9edb3865": {
+      "content_hash": "5578341c42c6f4285958294e4b3993679ddaa80ed26fa7d020f3787fba4117b6",
+      "embedding_hash": "b22003fd06377a271426f4c81e26fc5cb4ef4312ba74504bc548f3101027737a"
+    },
+    "engineering-pitfalls-自动回滚阈值如何设置-避免固定阈值误杀或放过回归-13f28974": {
+      "content_hash": "6304751f76a7b8c9988f4d23ab746ad54a7ae8943cc8d4eba0a133a7f8362009",
+      "embedding_hash": "ccd9ec940645efaa3462304bd7369a34c89398a24bcc4e6e2e8c708e033ea813"
+    },
+    "engineering-pitfalls-如何设计类似-langflow-的-agent-工作流可视化编排画布-bd6dd33b": {
+      "content_hash": "b5d96fef5af7207fac917fff185b31994680b03e139a5cb90615c1861449ac28",
+      "embedding_hash": "c6e8d4c5dbfb34789236c6e355d1b3dc30b96106b40f9c01e21fbb18869b9a33"
+    },
+    "engineering-pitfalls-接入多个外部-agent-时-如何用-adapter-统一异构事件-工具调用和生-b6da4566": {
+      "content_hash": "2c1bf9b14158c5e112f2725c20a8e93037a382eeb5dc4fc326b3c2d8ce6592e1",
+      "embedding_hash": "a74fac73ab3dc31beb73f70eaa2d5d549eab428e786d50371957519c6ca44311"
+    },
+    "prompt-engineering-提示词模板是怎么构建的-b1544188": {
+      "content_hash": "5fc6838989b5798fa49ddadd0d65d58adfbad304896eb094e473c69675773644",
+      "embedding_hash": "ea8a6539e198993e387973b1892bf81cd9ff8d718babd1d8bd67d74883da5023"
+    },
+    "prompt-engineering-skills-的原理有没有了解过-怎么实现的-1e3a33d7": {
+      "content_hash": "c4eefdbbee22b9c4833fd9eb741213fe726a4aa8a5eb1a695116555d2e8a0fdb",
+      "embedding_hash": "7157690113e09da40275cbdcbcf67085bc0a17475a46f3bcee8b066d15a46dd7"
+    },
+    "prompt-engineering-claude-code-的架构有什么比较创新的设计-3eac7bb2": {
+      "content_hash": "f4dddece8c609a68d8833ed2886a0bbcfb3d4707d34ed73304fdcac33e72b223",
+      "embedding_hash": "26d646458cfc95829013f30f29c156277b007ebbb7ad87f72ce6e8e5532cd654"
+    },
+    "prompt-engineering-如果让你从零设计一个-skill-系统-需要实现哪些核心能力-a3f23271": {
+      "content_hash": "ca9ceae926c8ab2985e329ed01ee27dc65ae880f2e412035ff2e0a49d707c7fd",
+      "embedding_hash": "d923e4a696ca6fb162572acad3c34cf976cd831d7f71c59a994eb25669d515c1"
+    },
+    "prompt-engineering-一个好的-prompt-和一个差的-prompt-的区别-13801802": {
+      "content_hash": "af97be8353494dae0b683f1c61835d922ab088d399ec57b44b43faa4421b2094",
+      "embedding_hash": "e303168627076ee05b51029b4f0851f7a02ed1c7857960f1bef5aaa365f7a1b9"
+    },
+    "prompt-engineering-为什么已经有了-mcp-anthropic-还要做-skill-skill-里面-8114c9ce": {
+      "content_hash": "26e2adf2fc9f94b253a47cb9bc8b050d8ff82bef1c0fe462a50aa12d2dd1f6a1",
+      "embedding_hash": "4522e795bb1077380cc1c42bce2cc5f9386c4e0d847386ed048d3267d238888a"
+    },
+    "prompt-engineering-lobechat-的插件和-claude-code-的-skills-有什么本质-f447ae03": {
+      "content_hash": "4c2bc29f90b8b47bac5a8cd4764cd1eb3dbb4360825f24b76ba3592a90e6b2b0",
+      "embedding_hash": "78e8b56fe3a00370cb207090fa4984f36ab6a65580f43196c900c2450374e7c1"
+    },
+    "prompt-engineering-通常-prompt-包含哪些结构-705b5bf4": {
+      "content_hash": "ac812f64514aadf4c2f9c060706da2beb9bf74258e7427118a6f488b00779f1e",
+      "embedding_hash": "7c669a6c959c94005495558e100ed0995692bb3fb12260e51f5e9a6a9706f12d"
+    },
+    "prompt-engineering-在调优-prompt-时-你有哪些实战经验-如何利用-ai-辅助自己优化-pro-2a88049e": {
+      "content_hash": "2f9ca5b56f9c2041e64b917591929378342ac316c0410da50a99bdced72a7ef7",
+      "embedding_hash": "0a371dd99f2b1afec88eae8c3bd04e5c39427e9e7cd2424fd66a54bbd83da7da"
+    },
+    "prompt-engineering-harness-engineering-是什么-它如何演进的-f4f98531": {
+      "content_hash": "9ac99a0a82d0f9000a2a7f2addf88909bbcee6b182431c148a6daf2a0490083b",
+      "embedding_hash": "e7987b8327a3fb893f7802964d1cbf55cf466d8cc7c269a43a370b81017554d9"
+    },
+    "prompt-engineering-skill-的渐进式披露-progressive-disclosure-怎么实现-d593823c": {
+      "content_hash": "7d48d542a0c6b7e26644cb52f4d09a5f66932c2531d8d2e1b053d004471c1848",
+      "embedding_hash": "6ffd1961385ae91c923ebd7119ab07b12d1a1a0228fb9437f97a6e0d73624737"
+    },
+    "prompt-engineering-什么是一个好的提示词-如何做好提示词的评估-7d0c5cd0": {
+      "content_hash": "52405bed92c098f5cfa0f9a032b8eab886412615a251786b88caede1180115d6",
+      "embedding_hash": "6327749603c2b8cc23d6a8acc4053be5ba4df6108d34284841efcc945a45a8c4"
+    },
+    "prompt-engineering-用户的某个需求-你会沉淀为-skill-还是长期记忆-判断标准是什么-b30be963": {
+      "content_hash": "f8961f51c6672d4c0fc8e045b1d04b627ecaba427a5539660f84d937ec75fda8",
+      "embedding_hash": "cb2f0ef1b86a7694fb318452cf84dc077d915b6e266eea188066f8365f4bcd5e"
+    },
+    "prompt-engineering-dspy-是什么-它在-agent-提示词优化和流程构建上有什么优势-73d98cb7": {
+      "content_hash": "b41e719197b1353fa065859b4728a89a2d9e4c21fc6f3bd18c82ea8a97a923d9",
+      "embedding_hash": "97451e1c53ed572fdc7b9dd11c476e0217f04cdcf1cef8ea9d4c87bc6595ec0b"
+    },
+    "prompt-engineering-单看-prompt-层面-有哪些办法能让模型回答更快-更稳定-4447930b": {
+      "content_hash": "55bc627207118b28fd0795b3516f2d1bbe73070efbdb0b4e3c2a43d01442e249",
+      "embedding_hash": "86cef85a0754fa293ff4f0e69a6acfe1bf2b07b5816363984a37d5a97f117a5a"
+    },
+    "prompt-engineering-你觉得一个-skill-写得好不好-应该看哪些标准-3eee4eac": {
+      "content_hash": "f7b7d727bca0ca3aa88a2b2a9037893707096e87d0760239209ed85cf837229a",
+      "embedding_hash": "59cbe56bfdfd5112abf8be58b5fb76f7cde481078bb73f680482c46721e319ce"
+    },
+    "prompt-engineering-团队里的-skill-数量持续膨胀-如何治理重复能力-路由冲突和上下文占用-629de695": {
+      "content_hash": "0a4acd87ae05b1c9a5e04594f4cb2b177527ed42f7903af487771d8e98d6a90f",
+      "embedding_hash": "e32b1f96f31399448bfc11344ec467933a5d9ac81a2635f7d55816167f8d0dad"
+    },
+    "prompt-engineering-openspec-spec-驱动开发与普通开发流程有什么区别-如何治理-spec-1b4698cc": {
+      "content_hash": "717c1e4190a2abedb19795c422633082c1beaa366c64d34af5ec39fe60d07aa5",
+      "embedding_hash": "2694d69e5732d03d41b68902fb19f011a094beb6b23c1d027a6ec96b3a188438"
+    },
+    "prompt-engineering-skill-分层体系怎么设计-为什么这么分层-9fa76fb0": {
+      "content_hash": "1146f8d6d3f8ca0c26e45efd1f823526fbb47b7aa1d77a5e7b70653a2b9f3e91",
+      "embedding_hash": "34c65d0f40e1ba2cb7751636cced69dccac11b110c0205a50bfddff423cb81aa"
+    },
+    "prompt-engineering-动态-prompt-和静态-prompt-有什么区别-各自在什么场景下用-9bbbdf5d": {
+      "content_hash": "72f7fd03e9750e8257b24b65ea83506510e552e4b4dcab603416f233bb63b978",
+      "embedding_hash": "d69a1b756e2340144bf8ae688a834a3dfcd36fa28743a267bce27b1363cfd7d5"
+    },
+    "prompt-engineering-如果让你设计一个代码审查的-skill-你会如何设计-c34c2318": {
+      "content_hash": "91bef37c6efcd1c33516e05a96d4ce134228f3dbcc4091212b0791179869bee4",
+      "embedding_hash": "a9b7c40f6b850634cb6c9fe91ca417176392e88db577167d71681ec75555fe27"
+    },
+    "prompt-engineering-如果-agent-挂-100-个-skill-如何提升召回率-准确度-f1-综合-b5a20708": {
+      "content_hash": "f1a36400f4879e4e0b7a70df2f16c3dd34de157c2f4ca334feb577f4f14b6cf5",
+      "embedding_hash": "6c68660e39b35ad578e35fd2f862d6fa5afd097ee16be70de2963bdce4acdfcf"
+    },
+    "prompt-engineering-如何给-agent-工具系统设计动态-skill-而不让版本升级破坏历史任务-cb4c1a5a": {
+      "content_hash": "6a1136ccc40123d00b2166d39917b1b1ce12ea68687aeddca9039d023a764a4e",
+      "embedding_hash": "20cd551e9492c896e342059b1a36b2cf20c7011b91208d4ca21fed4c24e25e92"
+    },
+    "prompt-engineering-skill-和-agent-的关系-为什么不用-skill-而用子-agent-fc1487fb": {
+      "content_hash": "eac9eaa2e66fdbff8868f2e0da649682ef7c106bc93dc87906b857a34cca40cd",
+      "embedding_hash": "11e8f640cc609c1c2f65c2e4a7874982b5f190176351badef1a9cb7544517b6a"
+    },
+    "prompt-engineering-skill-的-prompt-配置上线后出错-如何快速止损和修复-34a1257b": {
+      "content_hash": "64a802996b65f9538b078de8c55cf6b87e6b7ba2c85c447c2a7600cd47d1d27b",
+      "embedding_hash": "327ea23f87d046b6b2ba33621cee602506a7d368b3d4460f17d7c55ae9b1a172"
+    },
+    "prompt-engineering-为什么-coding-agent-的-skills-通常放在-system-上下-b527c088": {
+      "content_hash": "52072296909fad75295e1b8981843739179978680ffdcb5e1f37ed824106a341",
+      "embedding_hash": "62a16044e82359df80effb7bd4e94e3793e407a1a2d622da40d3d62d2e7f3b40"
+    },
+    "prompt-engineering-如何让-agent-自动沉淀-skill-同时保证生成的-skill-准确-无害-10b21890": {
+      "content_hash": "ee14a4113d50eb47ffb6a8b6bf0bbd638020513b3407df4049dda98ad2e04f19",
+      "embedding_hash": "d7807f31fa707c0b3a3ccaefa50ce82b70c45342cd24eb44920e3bd2f58ae629"
+    },
+    "prompt-engineering-为什么一个很短的-skill-也可能有效-如何验证效果来自哪里-ada43cff": {
+      "content_hash": "0682d1922c1eba8f4cb1ee3b0ca1c3fe8cc92be6038e285daea328ad9dd3d863",
+      "embedding_hash": "c9893474db52ef364fe503b96c582f21820bf0618134729b9cf0d6dfbb9d21d1"
+    },
+    "prompt-engineering-可演进能力为什么应封装为-skill-而不是不断塞进-prompt-skill--283e4e19": {
+      "content_hash": "6e86d0f83e0bcf4e81531f26061d199d92894fe9a09c9f93406b10d42d76b7cf",
+      "embedding_hash": "0c8daeab116dbaf419088b01800c9fbac7865f623ca2725ae5b4dfc049b469a7"
+    },
+    "rag-多维度的查询改写是什么-改写遇到需要用户补充信息时怎么设计-09d6d953": {
+      "content_hash": "572cce3e109bd57f585ed31291c359d2bb222297c1290ce95e37c10385089cf7",
+      "embedding_hash": "444f1fea7625b96887c5fdea56914217537846d86a0f9a10af48cccd0e57503e"
+    },
+    "rag-rag-的检索如何实现-bd026eb2": {
+      "content_hash": "58e50ca3caccf34f497a30af50af06d33d0b7314ac9a01fc7b38d6520898fed0",
+      "embedding_hash": "c29fc82406acf964e8c3654978cb08ed6a6a5612fcdad8794e902d7ebc949e3f"
+    },
+    "rag-并行化意图识别是什么-为什么要并行化-如何实现的-6c38fe85": {
+      "content_hash": "ab06c7435e874704267973463d5ac5be20db93d4d020f2dcc43c08dec7c0d2cd",
+      "embedding_hash": "ce313f6344619cc995c0d41e0c2ffb6921e56ce10fa6cc41e399b0d761deba47"
+    },
+    "rag-讲一下项目里召回的流程-9746201b": {
+      "content_hash": "ec581fa071f88ed17eefe614cf3253311ebae924171213c01e743f5c28c21fb3",
+      "embedding_hash": "de8fc5a55cefb8b33dc805a952193dfb8ace66ae7b61a32da50a600cbf3422e0"
+    },
+    "rag-如果-rag-召回了很多相互矛盾的文档-agent-应该怎么处理-而不是直接让模-6047871f": {
+      "content_hash": "f74d25f877e97f81712a942c3b15db9821bf60ac9f779a89fd3902e1d84a44b3",
+      "embedding_hash": "a1afacb6920a3c4c9da6e5aad8ed822dc273ec4701dfffd67c70a0d46ee3272d"
+    },
+    "rag-embedding-和-rerank-模型具体怎么做的微调-75f503bb": {
+      "content_hash": "f0c4f13028602beee124a38819df402fc3fdae37b8257e49b1e38e0931245105",
+      "embedding_hash": "24043ff14cf7ad7cdba4b483b797450c33b89fb3a23fdc61c4a9ece31e6c032f"
+    },
+    "rag-rag-系统检索到的文档很多但回答质量差-怎么排查-92dcff3d": {
+      "content_hash": "60a96f1ef122539e9b2be0f0612fae3f8376bba1b8a0887aa096c3ea19b11119",
+      "embedding_hash": "60ea69ce864a5bf548748f1e4b988eaa9551fe80631f52751e2539606bee3fc8"
+    },
+    "rag-什么是嵌入-embedding-为什么-rag-系统需要将文本转为向量-f245079d": {
+      "content_hash": "a7698cf837c781bcf26e1f278a51af66fa17f64c4b778f29e428d11c3ab5ae2e",
+      "embedding_hash": "aa11672aa07521c84506bbbd4d43ce12fec06d219e3cb198d6de8006be154228"
+    },
+    "rag-双路召回的-topk-k-是如何确定的-有没有试过一个多召回点-一个少召回点-5aff4443": {
+      "content_hash": "90530db89df808fa96da9f525707c5dfb02c5360f43ee856a9ecc09182be10d2",
+      "embedding_hash": "6c9f4b9444fa737e34de0c1230241b8de70ed0e737c8d6c1d57e0fbf23ddfc3a"
+    },
+    "rag-如何用通俗易懂的方式向非技术人员解释-rag-有没有好的类比-8c84eb65": {
+      "content_hash": "a689434f24937c27a4d51d618a5c87cfadf3239ca9d1a928bdaab298a6978039",
+      "embedding_hash": "99de0c613ff3a627572d720fd2c98d81a26f6a0dbae7e2f664936ff61c1df8e9"
+    },
+    "rag-如何快速上手一个没接触过的技术-如向量数据库-7556a2bf": {
+      "content_hash": "3584c3a16af401a101bf72494820637d14f5092231e6cfe1b2a7950c0f06d639",
+      "embedding_hash": "2c91e830fbe6e573a418ca8337e5da2ce926d45376388a055d2594364669887b"
+    },
+    "rag-什么是余弦相似度-在-rag-系统中用来做什么-c71abdaf": {
+      "content_hash": "004ca3804025036e8b85119001d3f89b9c3d72e3fe56577e8a4d60bbb927e456",
+      "embedding_hash": "3d86aa433de2cb16b422e77bb96b63fbac9afcf3ae2ec4d552d92fc706cc5c46"
+    },
+    "rag-rag-中如何提高文档召回率-9081029d": {
+      "content_hash": "f40470e2e415face39a263c7e1bbf9ee8c139f46c012da95b9abc1e9b1a28349",
+      "embedding_hash": "897bf84c41bbd1146ba74b22ee0072a3000aa8c03d94435c764a264e7b0192e4"
+    },
+    "rag-rag-为什么需要向量检索-和传统关键词检索有什么本质区别-4fcbd426": {
+      "content_hash": "305363c9ae6c486615939dd1ddfb704cffe4c031ef2fc680589fcca3e4c96708",
+      "embedding_hash": "4a3ecb3cc138a208b440ae5f94bac2f9157a0554a6fd514d620f5f3433db4725"
+    },
+    "rag-如果用全量生产文档做关联性检索-用户每个问题要交互多少轮-有没有更高效的方案-133b13e0": {
+      "content_hash": "122ac70cdbbcd9e2c65fa221db2ce957ac97dff5e6ca6905a8337b7ac654096e",
+      "embedding_hash": "90ec7df72359ef106eda6068b0190da6b6764520cae98069f85433b319a74078"
+    },
+    "rag-在渐进式披露的架构下-还需要-rag-吗-rag-的角色会怎么变-b772eb19": {
+      "content_hash": "97f8e075a7ff920d92b7c64219bdde036b439dab9620780b65a1a323a6c161c0",
+      "embedding_hash": "634e78f94c929a0420eb73a8c06192dbc240a4376045e29a85352254a2977055"
+    },
+    "rag-rag-在-agent-体系里应该被看成工具-记忆-还是推理前置步骤-a5333b1d": {
+      "content_hash": "e1deb122bc70615f179fbcde436e55f45967661d6e453f6af4628b109b3618b6",
+      "embedding_hash": "580269f7c2849729d5e2ed2f5ad4c9c6f508f7c839f760ae00e81c33742d280a"
+    },
+    "rag-如果检索结果很多但质量参差不齐-你会把控制点放在召回-重排-还是-agent-规-8a585b5a": {
+      "content_hash": "357ee375ed4d92be6010b02d488303ba8f11aad300f6843f677dd08bc4de0d8c",
+      "embedding_hash": "845cf71095831870c8cc683faddaf551dddd1ce03daf103149edbeab7c9b5c00"
+    },
+    "rag-agent-场景下-什么时候该做一次检索-多次使用-什么时候该边执行边检索-e712a992": {
+      "content_hash": "49ea8d233d1e7d01b3277d46b6ba7690646dbb7e57dd58e0a65fba193022c96a",
+      "embedding_hash": "0dbf786c93f5806c113d4543be8607878cc4e486cb504d3e0a6ea511164beec4"
+    },
+    "rag-如果-rag-返回了看似可信但实际过时的信息-你会怎么降低-agent-被误导的-664da53b": {
+      "content_hash": "e44d7656d1ed55691fa464dd56b3cca758a87d53617022aaf5f6faa404a4a1fe",
+      "embedding_hash": "80c3120200425aa77c68ea4bbaf0630241cde3600109292496750769cafcb3f6"
+    },
+    "rag-为什么在检索阶段引入bm25-它和向量检索怎样组合-c89e44d2": {
+      "content_hash": "0051629ac22c47d4039eac05f4497b54c6036a61685563bcdb1ed78ce9cba9c8",
+      "embedding_hash": "cda3d91751b0ee18a5eb5dd57cb56a6730d46f94b3e18f878bc49b62f788bbbd"
+    },
+    "rag-rerank-后一般返回几个块-topk-截断策略怎么设计-f631885d": {
+      "content_hash": "83728eb9b19bf1381859cde589ff6ad795388f35992edafbc3c1819cd909a7e4",
+      "embedding_hash": "a0869c34df6ece7c356bc0b2c0c6e945ca891a022b6a92add48cbe183ffd259b"
+    },
+    "rag-如何系统性提升-rag-的检索相关度与生成效果-20edf03f": {
+      "content_hash": "968d98b541a59f160e77225acc183547c0b95ddcc790909c9e90c8034e052438",
+      "embedding_hash": "f6044620d365813fc13fea2b4c4d0bcb15945e25882661a1152944aa2d5c2e5a"
+    },
+    "rag-rag-中为什么引入父子索引-8529ce6e": {
+      "content_hash": "b0fd76af1d3120c72db2e490e762561384dd6a22113d03aeb443067d132e6c39",
+      "embedding_hash": "f6bcfd695cca6443254c3080be2d4c2e4cfb1419de5ed5eb6f1654b484f494b9"
+    },
+    "rag-rag-系统的端到端性能如何优化-807b5c1d": {
+      "content_hash": "5b6ba6d6d994bcf697602b7d558d534153d6fc559b87c83007eb935c445c27d9",
+      "embedding_hash": "5fec106889aa76e9ac832cbc253dee34ac651f330c49771ac1d5784eeffe71e1"
+    },
+    "rag-graphrag-在处理-agent-复杂关联查询时的优势在哪里-f57ca1a3": {
+      "content_hash": "92419d1fe9e034c539c0ebd62d38caf767bc3ffc33bdc66820bf18f5653abbbb",
+      "embedding_hash": "a6342ad7f42f6b28736957dc946f268f3ae493fc9b40e179de66806a975ecd53"
+    },
+    "rag-分块策略怎么设计-不同策略的优缺点-19dff388": {
+      "content_hash": "78953c4bfd534a0ebb93765651d5aed0cdf2bd202ff6e27d96765ddb215b6291",
+      "embedding_hash": "354587e44c89a56fe540fe357e1bc1130e71f4b9285692628b53db62ce23cea7"
+    },
+    "rag-知识库整体怎么设计-d00ce976": {
+      "content_hash": "feddea609bdbdc6213577f7740612518712fcdbb758461ba21a06931f7873137",
+      "embedding_hash": "2d7f4ff1ff94f9547c4d5ce195b47e1aedd2d6de6f428531dfc09d11d5a13ad5"
+    },
+    "rag-向量数据库怎么选型-不同规模下该用什么方案-5c91c9ce": {
+      "content_hash": "632dc7cf02f8407425b20348152e6815e162965488c1145f67e3a13630d30ac0",
+      "embedding_hash": "badd37e47c10d75b835d50ec4bdb6ba7f26d09e9099a199e7555fa514c1ffd48"
+    },
+    "rag-embedding-模型怎么选-选型时考虑哪些因素-309cc260": {
+      "content_hash": "dc567a4a0fd78795a6f1c06c0eccb277525671b52528f27e6f28d99853178301",
+      "embedding_hash": "9abb0c9dd0ed8165417bfe09354de24b63a8cad8aa26b869be2cdce1b841e58a"
+    },
+    "rag-为什么-claude-code-不用-rag-检索代码-而是直接用-grep-6a79696c": {
+      "content_hash": "db3e1e38897903cf0ad416dcba0f333cc5745f464cd18fa90f57e45aee946405",
+      "embedding_hash": "8b8cad83b6357f1f942b291ab1e976c56277920bdb02f145b61861e1c9f82c5a"
+    },
+    "rag-升级-embedding-模型后-怎么保证索引和检索向量的逻辑一致性-c7ac26cd": {
+      "content_hash": "c2d061818f95be31df340e50d0238ee78f084a3cecd1103ddfc93bae405fdd35",
+      "embedding_hash": "67e8e96b55ed6d119c1693226fbc2ef7bef52214571eb3f97d48711bfbf632e6"
+    },
+    "rag-deep-research-在代码层面是怎么实现的-和普通-rag-有什么区别-1ccc012e": {
+      "content_hash": "d146e9939b0492389224c8d43af558dec63c9bdb7371e7a5f29dd88d8e0955e2",
+      "embedding_hash": "0691e258654e84104b287dfde1fbb23efda07a819ab300d5e6b5ee6510e8cbc7"
+    },
+    "rag-rag-知识库的噪声剔除和文档去重怎么做-02999ca8": {
+      "content_hash": "7ad84d11f0910d277c0e4ce55ede9c33dca3053b088b57124b0c613096947c3b",
+      "embedding_hash": "ab13c0f2443ac425ea5f342a6988966119c32bcc4d732a2fc71b534307e0dcef"
+    },
+    "rag-rag-架构与模型微调-fine-tuning-相比-各自的适用场景和优缺点是什-c12a742e": {
+      "content_hash": "fbee9a16fe864fd33663029fa7a582fcbe21530d173fd7bd754b78bddca99671",
+      "embedding_hash": "84e7f35152dcba473baaa3cdceaa18e5a8b3acf3e7a22c44f54f7018bdfbd8af"
+    },
+    "rag-pdf-解析用什么工具-layout-aware-parsing-是怎么做的-5ab187a6": {
+      "content_hash": "bc520a770942ca4b251ff3eb107afa810812f477777d9d1c877615f23abc150a",
+      "embedding_hash": "ef9d391264d4e93414b569e958e03bcd9e15f6161b30d76b9363a22f5a89b0e6"
+    },
+    "rag-图检索-向量检索-混合检索有什么区别-怎么选-a2cb89bc": {
+      "content_hash": "2d37667459768b43149bf8410018d537d4bbbd03f6c35005d07e79d49fdf2c62",
+      "embedding_hash": "e35a0da3711fd5d338ae5b06f78c5b35b0e149330530002312f98c768366dc9a"
+    },
+    "rag-多模态-embedding-检索中-文本语义与图像视觉特征的权重怎么平衡-用户检-ddb47f79": {
+      "content_hash": "1a251df1494cba6cec303e10145c9433f05071ca7cd8ee1e645ef0654f830fde",
+      "embedding_hash": "090c6dc9d4d4716066a258ae6a9b3beb3f5469e777d1b2f6b5eac790b91b2965"
+    },
+    "rag-向量数据库中需要限定时间范围检索时-标量条件过滤怎么高效实现-d6efc88f": {
+      "content_hash": "4118899fd844cda9efc0383a643d5358f0d1308b0ee66cfb02ed3b488507e19e",
+      "embedding_hash": "a08e0ee9a7d0d3262ee0ee695778bf413c7325aabdcf8de87973067ded4abc36"
+    },
+    "rag-agentic-rag-是什么-和传统-rag-的核心区别-cffb9914": {
+      "content_hash": "e7d7140bb91a0d2a86b5afef3af555feffc68e28b8b6ce0dbee6d80e256d854e",
+      "embedding_hash": "ac2db01a21f03bc22d8e00045d20dd0b10a4555822f79b0575d10dce4102f51f"
+    },
+    "rag-如何处理-rag-过程中的权限隔离和时效性问题-36eed994": {
+      "content_hash": "6836ecd7cc0c7f6ec82ee7c00de080194ca8324fb4bf297308634c693a2a975a",
+      "embedding_hash": "a9c59452acc8319795512ef58311e706b8d935b185377e7c05379158eaddcd73"
+    },
+    "rag-补充检索是如何评估数据质量并触发的-怎么保证二次检索能搜到之前没搜到的内容-f4619631": {
+      "content_hash": "88fc0d005ed79f6993303ed7df8a91a422feb577c45657f1ab95795ed8d5fc18",
+      "embedding_hash": "5ab57dbdca44ab08b36a970d7c4bbd5c0dd3940bb8af41b44bbc59df6b511381"
+    },
+    "rag-向量数据库中-ivf_flat-和-hnsw-索引的区别是什么-各自适合什么场景-f3753d42": {
+      "content_hash": "b72bde8019fdc6c9b4ef5476e2ad3612411b45040ee5fe5f8c6629aa2a20a0f2",
+      "embedding_hash": "ec9a959544465402ea1c1f0281455717f5ebb229a0b35ce2e96f107327e14758"
+    },
+    "rag-rag-检索到的-chunk-不足以回答问题-后续怎么处理-b08b3d26": {
+      "content_hash": "6d5848300b157f2207de5f646c088084c10d01ea545095206fe3ca8f879e0629",
+      "embedding_hash": "efa38fa3c6038d0da59b4269e18e9ae5b8eb04d9dfba7184d53382e9f6e0932b"
+    },
+    "rag-向量数据库里两个同义词是什么关系-完全同义的词会在同一个点上吗-20cb2f66": {
+      "content_hash": "8d98665c58b60f1ebfcf9f342358add4e3d0dd3fd98db52cc42d83611a5df1ae",
+      "embedding_hash": "00e260895544dd7cf7d915ef12cc6ed3b2b938e30310f86e9c62c85adb5e813a"
+    },
+    "rag-rag-过程中如何处理文件里的图片-e81d9164": {
+      "content_hash": "803fd55501e931528755dbdaae0572c272ea9d46bc284b201aba0209fafabc2c",
+      "embedding_hash": "0f6cdde4e1fc4d1cbd4e3c3995a17c0d59ddf8ae4e700d34ec65d738f981c974"
+    },
+    "rag-如何避免模型回复过度依赖检索到的外部知识-导致回答生硬-缺乏共情能力和自然度-eb4db8bd": {
+      "content_hash": "8f0b93e2733b56fdec530995d2c537bebceb2c2d7e1d0bc7b9a307219b8fe0f3",
+      "embedding_hash": "d5731bc15317a1c4d282365d53812ebb8ef52cba9c2846d9968df15563a81bf2"
+    },
+    "rag-随着大模型上下文窗口持续扩容-100k-1m-传统-rag-技术是否会被完全替代-bcc625a5": {
+      "content_hash": "25bfe89552d42c9b861f2d64df0e98ff20fd8e59730f50f5e725f90966dabf31",
+      "embedding_hash": "175819c255cdb10eff6aaa2fd87b21a87a9b6dd0797fc925d0253e7c8566937c"
+    },
+    "rag-如果从-elasticsearch-切换到向量检索-哪些能力会下降-哪些能力会提-d690a21c": {
+      "content_hash": "9b1c81fdd5018e1a663b63bad5a78a9c6d141b2c0ec11c22b3a4e1c24918e135",
+      "embedding_hash": "0878d21ea5845b325ec1675b5be75301b4ee20921d7ab435cf633649d6d695af"
+    },
+    "rag-父文档是怎么得到的-语义切分具体是怎么做的-聚类后怎么区分不同文档-1a2cde8e": {
+      "content_hash": "2f8b6a3f3a678cbdf5c762c07a636687b3d624e58959a0597a6ea29f538b4923",
+      "embedding_hash": "1af392cc179beeef8c2bdabbef513f5df268ae6a620a71785fffbf3a3ac173d6"
+    },
+    "rag-rag-项目里-mysql-和-elasticsearch-的数据一致性怎么保证-1277ff49": {
+      "content_hash": "152215ac10b04bcec4ab75e3b66a5327799d285ead2279964ad3039faabdbdc0",
+      "embedding_hash": "d6a5a4f139c482780b5bccd49e45734d302d34787e84ab9da31206657cb2c19d"
+    },
+    "rag-手动干预切片是怎么做的-为什么需要这一步-f4d8b9db": {
+      "content_hash": "a3438d426f1a5a0b57b88b4bd3391d8eccfd46908aa19999228e847732c4c459",
+      "embedding_hash": "4e4430e3d6643301035d0c1ab6c12325591fec045a0c344b6bee2639be558173"
+    },
+    "rag-text2sql-的-rag-架构里-ddl-层和规则层分别解决什么问题-业务表-36c567e4": {
+      "content_hash": "12dd9b98a576c818077b5956542601f5fcacc6b68164e806e34df760cdf8eda8",
+      "embedding_hash": "cfba1240fb0084c43455ef2977f1e66267f226f3f0ac87b0b232ac9fb5a7d5f8"
+    },
+    "rag-笔试题-多路召回结果合并去重-加权排序-topk-73c50b82": {
+      "content_hash": "59b0ab75c55b26252235596cdb48868a0135d9c8f795db065e530cb0ee4324b2",
+      "embedding_hash": "8f8a02d5cba0a552868f7fff5fd53f9a854572bc35abef486733ae1d41f2997e"
+    },
+    "rag-rag-文档切分中遇到代码块-表格-标题等特殊内容怎么处理-9d2a824a": {
+      "content_hash": "d30674a60143f082454aae6c1c327beb398d27aa50f611ecaff6dcb6d9af7223",
+      "embedding_hash": "4d89b4457e3641adab2a5d5224ca6780335cce5f9d05818713d8050d7e9bca6c"
+    },
+    "rag-处理一万个长文档构建-rag-知识库-工程上怎么做-2c436486": {
+      "content_hash": "331ab818f921c13893c0fc52f5e5fd8d4c451aa9b9e08801c40f82f2bc576a0d",
+      "embedding_hash": "445381e3d1c3ddd6cb748f4b8f6f9ef4f2949870ee99b395ddfbd29f378e4ac5"
+    },
+    "rag-rag-知识库更新怎么不停服-热更新方案怎么设计-5f83c96d": {
+      "content_hash": "d7fb67a6a0ed85f16d70e82df33bfadf983a55cd1598502ba8978facd98cbca5",
+      "embedding_hash": "9c1e1c8ae1574cc13ed94bd3add8ea13a0c13cd08e407e4962ec24f79e0847fd"
+    },
+    "rag-混合检索到底在哪个环节比单独用效果好-a50c14e9": {
+      "content_hash": "3e754aa367aca394ea033024e11da57f2fb9b776373910d36052a63818484f86",
+      "embedding_hash": "9784d7cbaadc5db2006f87daf2b92702c1d9ae4c8995c2b7f9d69889a2a9a4cc"
+    },
+    "rag-mmr-为什么还能提高效果-重排后为什么还要设置-mmr-截断-360cdbbb": {
+      "content_hash": "435aa466bef28b6c544e666e4f92418f3a914c89e114081cccb9d49ad952812a",
+      "embedding_hash": "542a62254e25a22b151d5a772dfa33759ef530987e3615d6af7753a4e593378b"
+    },
+    "rag-基于关键词的命令行代码搜索与基于-embedding-rag-的代码搜索-各有什-cac8ed3a": {
+      "content_hash": "3cef176961b52bfc99966dc6473b4bb04a6f51bf171e0e9d1af97fcdc84b0b8f",
+      "embedding_hash": "3972c79dbfd998b46bb545a7a81df99047d76abfd81f4b340bf79bab92cdc592"
+    },
+    "rag-知识库持续更新时-如何保证一次-rag-回答读取同一逻辑快照-692db151": {
+      "content_hash": "38d0f560b82a0227b7e71349d93f9be4e3ae78de976d2842cea11ac8efcfc6e7",
+      "embedding_hash": "a8b847643961436ca5ca07c77f030680997e39dfbe9d6cdb5825b85aa84b6ae9"
+    },
+    "rag-如何设计支持版本过滤和时间旅行查询的向量索引-56164973": {
+      "content_hash": "fc5c8049cbd7c139ea597f79f305715f7aca86fadec12eeb532d62d7cb091407",
+      "embedding_hash": "90f5d6e6de41cb4af137b665ba4a1488aff78f1c942c4538570c1c42c50208d6"
+    },
+    "rag-rag-如何防止引用漂移和跨版本证据拼接-536fa502": {
+      "content_hash": "036fdda59d74d7d10c42891f45a70ae91d8275b5ffe829db909d6657ee92a8c3",
+      "embedding_hash": "edf5df3cec97c361c2dd4b261ec201d7d022f0b3f5fb748b332baf3e1cfd6ed8"
+    },
+    "rag-rag-前端如何展示长文档-并让引用稳定跳转到原文证据-18251f79": {
+      "content_hash": "42a511ca2c930fec8374d2a88ed4e7fea376d74972469e2957379b6668a30dfb",
+      "embedding_hash": "cd5b0bf5de9364285b552a648e1f75f8113d98af7df565f3fb846ec4e9017470"
+    },
+    "rag-知识图谱如何从文档构建-增量维护-并处理实体与关系冲突-6dd8fb13": {
+      "content_hash": "53f9cf0670a77fc15a3a190da9d75680a96d0b71678ead9f54b3ba66aaeac3a4",
+      "embedding_hash": "2c7bc869dc9c426f868949244b1c67fcef3cbf9d80a9d014a95459e81b9332cb"
+    },
+    "training-构造数据集遇到过什么难点-怎么解决-e9e27290": {
+      "content_hash": "42f587a02d1bcf7c37b3e7c9b68fda567ca23ac3cfc76d0601497bfc5397da17",
+      "embedding_hash": "e6d9566d99714d152af4a8b7af0660e56c3dce81ae79e45bac2c51ac1e5b3fd7"
+    },
+    "training-预训练数据清洗方法-72db035a": {
+      "content_hash": "165e16ed09c8a09461dbd7a59fceab5936650c5bb034b16fb10f62bfb78bdeff",
+      "embedding_hash": "fe840fb7bb14b5e7de8d77da7676d4e2235db05dca6dcacec74af1c51e002981"
+    },
+    "training-agent-工具调用怎么训练-训练集该包含什么-数据怎么来-3ac641fd": {
+      "content_hash": "32f6a62b735494e3c17d1de601bedbc805e3cf607f19957b7e0c4920d11f431b",
+      "embedding_hash": "acb7147d76f1769c257e37bac8de8da035267b9923abcb850ec08b38b6f589ad"
+    },
+    "training-dpo-ppo-grpo-的区别和优缺点-6a72a004": {
+      "content_hash": "afb2d6a001bb52eb75cfc53304c418e82bcb0d787d1e23298d20faa478c8a037",
+      "embedding_hash": "4cc63e087a70594d509c27d2c2ed77e4eb6e9fc617fb0b1b4bba743a07dada22"
+    },
+    "training-微调方法有哪些-lora-和全参数微调的区别-怎么选-f182abbc": {
+      "content_hash": "3b8a253a94d4e8f728b735575dac618494d3007260f9756d570af64d34268ac9",
+      "embedding_hash": "ab8932a71c8d960cae165548c2bef3a47bb34dd6167c1f83f11196c02edb7551"
+    },
+    "training-给定时间序列-如何用-ml-筛选特征-再基于规则建模-69a95d20": {
+      "content_hash": "326e51f0c5b87f0813b124b0b5df71ab58a6714c247a329679fb16f73236065a",
+      "embedding_hash": "7b71c80abafefb780a65d12001f6db69de569276287e477c25cba12dd7592728"
+    },
+    "training-kernel-级别的优化-比如用-cute-dsl-或手写-cuda-做-fus-b52ec4e6": {
+      "content_hash": "7492dcf81df4e3652dda315c00b99237053956dba40ff5935b089e15caf61375",
+      "embedding_hash": "482aeaf55dc93235b8dd0dc2534e73669e8d0b9c7fb1a83e89beb6bd56063b7b"
+    },
+    "training-位置编码的作用是什么-900a453c": {
+      "content_hash": "4d59268b55ff732ae157c20b27b4987bf32481b7e345c764edcb7c0e77a3e91a",
+      "embedding_hash": "f5e7dae2bb7dd2f18eb103fbc7031f028a5172b76f599b367bae844ad9f69b7f"
+    },
+    "training-绝对位置编码和相对位置编码的区别-应用场景有什么不同-cc214cde": {
+      "content_hash": "1bc38b6f662c1021d85587ac63780b912ff6ac0f86949b373efecff3d53322cb",
+      "embedding_hash": "f4457349230bf66f719b6ab53780b27918684cc560289a070ad0d810773cf2ef"
+    },
+    "training-手撕-multi-head-attention-5374e270": {
+      "content_hash": "27436b7a65f7f448a85adc0d2b0d5c81abc0eabfc474be1d9dd3a91dd344cdea",
+      "embedding_hash": "f6254ac7947d4a39ee604831b98f86994dee6f5381b53444d521f9fca78404f0"
+    },
+    "training-常用解决过拟合的方法-68d9f439": {
+      "content_hash": "0a4d511ad3ff65f88589f9be70c4d23477946f498bd2e50d20c13618ed014c80",
+      "embedding_hash": "042b119f250a028040014cb5debc2525eb3ade4874738680fc165241993cae83"
+    },
+    "training-layernorm-和-batchnorm-的区别-应用场景-bd8a281d": {
+      "content_hash": "d36032e8f6207ae0ae51815acf16bf552db8a3b4c1b4e9f69c9d7cac803fa522",
+      "embedding_hash": "51bec114fd23f683454f3bbc8c799f60f04cc414eda36a525550d267bc359e70"
+    },
+    "training-rlhf-中奖励模型-rm-的训练数据如何构建-6b29a4c5": {
+      "content_hash": "952b60fc8fdd4fc77ca7613ba8f1624ea8a58e5143ee1d3546bdefe887a921f8",
+      "embedding_hash": "f0b8eb71d4330869edc6e23ae4321235b47f9893154bed7382bf40819b6c2ecd"
+    },
+    "training-大模型推理加速技术有哪些-a1b49972": {
+      "content_hash": "8036255ac55c9fe141d22d6e02c582e24475bcd9fc246eac78a456e80fea76cd",
+      "embedding_hash": "fe851ee4b6c02225897a6e9abbb1103b779990b566001f7cafe32cfb6b717377"
+    },
+    "training-你了解哪些多模态大模型-各自的特点-33860f46": {
+      "content_hash": "2f575e6e882f462d85a671bc06a6b5e9fe5e4fc3ee1e9414c98d9d7511a07bc3",
+      "embedding_hash": "70d6f486de6503497f6012661548008fbc80bd7182f5ae16b8e56fc8dbb2ce70"
+    },
+    "training-有没有了解过端侧部署的模型-126651ea": {
+      "content_hash": "e4a5faf44e5b3a31ff844ded63b495a40c46dfdc4de5726c41a3b9d47b47f9d2",
+      "embedding_hash": "af5f445a29c052741d93f8e5de957211285c567acd0ef68d7cdb1f1bdbff91a1"
+    },
+    "training-多模态是怎么实现的-图片怎么编码-消耗很大怎么缩减-token-使用-20ce0fcb": {
+      "content_hash": "c3ee2e66cedd5528b6dd02aa89872e3e38f68817a1f2d734bec54395bf61a6c3",
+      "embedding_hash": "7c1d35cc2e2e6e1d0f8b25917a48d957ff88bd075ddd53474a523a8577c2ec9b"
+    },
+    "training-如何优化大模型在长文本生成中的显存占用-02556f0c": {
+      "content_hash": "f50a773c4d8dda10acf1d2f48f781b619a4a0be70870d1b2db5d554f489a308e",
+      "embedding_hash": "f239329a6bc1c3ff4d94d6d1a4a18d618a40fc9e06a26e50f4f9044345d4173a"
+    },
+    "training-transformer-中梯度消失-爆炸是怎么解决的-43f74244": {
+      "content_hash": "38611c5345c9c29467d9776df419177072bf721ddd860fc6ec195f71a0e731ed",
+      "embedding_hash": "9c8b772eadbf204ed2a3f96d3956248fd098f8d01faaa7d708a2095542df1a29"
+    },
+    "training-token-过长导致的-attention-稀释现象为什么会导致-agent-的-f9e2141d": {
+      "content_hash": "9b1b4a14fb0a4b885d540ab747b0bf682c6fd51c6fab327ce9fd5f746525748c",
+      "embedding_hash": "d5fc1877c587b7fd7f9098d97e0508a3dda542ef4c789c869b22e6cdb4900f86"
+    },
+    "training-在-agent-多轮对话任务中-标准-attention-机制的平方复杂度在工程-4e5fcd87": {
+      "content_hash": "655fdde1c94fae11e77c98e4e79259ea812712d2226d150b20792622ebc8c350",
+      "embedding_hash": "2c05dc7b9f0279db7baaf8d13881206a99c74844536ed08023881c156f4c19cd"
+    },
+    "training-sft-蒸馏-grpo-的技术选型-什么时候用什么-014345de": {
+      "content_hash": "e8f52481ea7d42f4715e926b95eb62d2cc4e4478a52e7d1faf5688199581790e",
+      "embedding_hash": "77c8b0bbafcbfdaaa8e7288eb63204b7f4d520965c99135bbd1ffdd467a35df8"
+    },
+    "training-grpo-的-loss-函数-advantages-计算与信用分配机制-7a3b5f40": {
+      "content_hash": "bb7ced3dcadf46e33d96c61ffb18e080c31b90b1653950472228722ca4f8c150",
+      "embedding_hash": "2e3bad58231e7118492c18371520efa5b89414f72b2500d8c46056cab7a7742c"
+    },
+    "training-深度学习网络中的-残差连接-解决了什么问题-其物理含义是什么-87fd198c": {
+      "content_hash": "9fcf2fb519c65da3627ee497c16d073b0a44db5637efcfd04ffb2727c073c71a",
+      "embedding_hash": "30f2cfea45f5eee850db2c4d66f7ef6c171843adc7c19cb30739958ffc9bfb25"
+    },
+    "training-设计一个-text-to-sql-训练集构建方案-500-条样本覆盖-200-查-a3de27ee": {
+      "content_hash": "7f1b447d457ab892159c2ee88088b93eb65abffe5e052a0bb2c97341a5f75ddf",
+      "embedding_hash": "6b21d73e84d17fe74a31633e72b312c960625853990f042db7304e6fc95e8b8a"
+    },
+    "training-dp-ddp-tp-pp-分布式训练并行策略的区别与选型-f425a753": {
+      "content_hash": "4503b74a341399e7818307cbc83c0bba6fcd6774ccd347df8cf4972d08ae11ab",
+      "embedding_hash": "0444f489d3d9613e7d4715b8e5d583bd700baa6295d2959f5d7fd9016b6f63cc"
+    },
+    "training-token-和字符有什么区别-80502872": {
+      "content_hash": "4654cbb64a04036d4e9a0728e5c70499c48d52835fc731cee5372c8288e231d1",
+      "embedding_hash": "a16fe641de902d8759562c00af5e6c36523b6599df7e3578ef5b82f7e28a1a5d"
+    },
+    "training-qlora-的核心设计思想是什么-和标准-lora-有什么区别-a7e4558e": {
+      "content_hash": "83697b2bfa93dcd629f5af7464523df3b86e43fe0fbf3b32e8239e47a8502389",
+      "embedding_hash": "1a9c41d89bf5dd6290da2bcd49f013a18b81946ed22c1c5218558d97e88c6b34"
+    },
+    "training-垂直领域指令微调后-模型通用能力出现退化-怎么解决-017776e3": {
+      "content_hash": "a2b033dbd0c355ce8ccb528128f0db6e8719fc336b6a1c3a95facfd77377c3dc",
+      "embedding_hash": "93e590cb90214193591bb69919c3c4464feaa6e9cece24b7571c41610316e81a"
+    },
+    "training-现有的大模型性能为什么这么好-8d90e5d4": {
+      "content_hash": "83e700d201032bcc3c60e3ed090b88a3c4d2edd75b023320df6a5e5854f59d46",
+      "embedding_hash": "7d9856ab1131d5b9d7dc50aa08803d528b8b941352c6f4858b266f12757cc05b"
+    },
+    "training-vllm-的-pagedattention-原理是什么-解决了什么问题-e4952fa4": {
+      "content_hash": "1409712961142f45e6ca470d6474cecfda2b48117e8b2ab165194fd3530e66d0",
+      "embedding_hash": "fd68190c35f0c5f915a0f6a87eacdc0ac36743646c4de022cb7f50c9e42c823d"
+    },
+    "training-gqa-和-mla-的原理是什么-各自解决什么问题-bab6c7fe": {
+      "content_hash": "47680ce773ca93b4016bfd86daab741e15238c8ddf4473d70cf33662f7e629f2",
+      "embedding_hash": "aa26dbbf1cca8e4c9dbd28130d749cac3c8a7a52aa44a014faf62d1e5fe4dbc5"
+    },
+    "training-moe-架构下为什么参数量大但单-token-推理成本不一定高-139d2202": {
+      "content_hash": "2eca05ec043fb914f82710f480472fd4147b1bc71d9bcbecc6276e69c0efcb7e",
+      "embedding_hash": "b85c722a93399e04eded26154d9df228f1d923f001af7d6e0e9b3ed9de848197"
+    },
+    "training-什么是灾难性遗忘-微调时如何缓解-f134caa2": {
+      "content_hash": "452e8a53c301f0a3194ed555423da80145b3ea751a8e695dd0fdcdc1f95a44e7",
+      "embedding_hash": "36eb6e9ab139e37dc11f7446befe1067d7b5eb5e1fe025de5c87f81b2b171992"
+    },
+    "training-bf16-与-fp32-精度差异及训练推理选型-19b2de84": {
+      "content_hash": "d5c93a7b90357df3e79643584096a0b2b551f799054640207490e88128bfaae7",
+      "embedding_hash": "d98d50632020a60ec825cc7fe41507bdb26607e2ae4e247b78b614a6089d9ae1"
+    },
+    "training-模型推理慢-排查思路是什么-af07c41c": {
+      "content_hash": "287c2581d27fc24380810736e40dfebd84bed240864020788a91150ad033f12a",
+      "embedding_hash": "c5ae73c310e5cbe0e87fd3fb36317bcd41adfce95ad8fba17b1719e6a85b0b72"
+    },
+    "training-超长上下文是怎么实现的-如-kimi-这类模型-bb922292": {
+      "content_hash": "beaf32bd22ae04adede7b8c3b28148c483944d3944bd9b537a88ac6ce611a111",
+      "embedding_hash": "4929303a00917dfa894fa64af77b077fa9b4513ce40490825b80bb9d779dc272"
+    },
+    "training-agent-在细分场景-比如法律-医疗-落地时-微调策略和通用场景有什么不同-a6c8134d": {
+      "content_hash": "462a07460c8041f9c60caa96637c1bc957b63fbb6d1220bcee95a616b204d3c7",
+      "embedding_hash": "69d22a311e8a4a6a46ac6203937f5528d91122c6c4347d26f11d4f492a764d5a"
+    },
+    "training-为什么要通过微调模型来做代码生成-为什么不用纯-prompt-或-spec-co-5565bb31": {
+      "content_hash": "792d12480bf0abc73ac779b6f1bf1ae3969fb66102e9314886ce7dcf7e42813e",
+      "embedding_hash": "8ece6aaddb885d1affe9b331d3b1225ba10d5444eb4996137e3537ce3665145e"
+    },
+    "training-外部模型参数更大-14b-在-agent-层面会不会不够-fcd1eedf": {
+      "content_hash": "909a2d2004f1e7d1124a8504f1d15eb22645c20ebf841051fa10b65d8058d402",
+      "embedding_hash": "1ae53542ae530ba5a0e8d21143737b1703a92bccac49ebe4e30c40d83a38a3be"
+    },
+    "training-对-rerank-模型进行了蒸馏-蒸馏的数据是什么样的-训练数据大概有多少条-345409a6": {
+      "content_hash": "9d8fb76633151bea6a5c241f9f10b7d5d1fbb0b1306d4dd642a86b5e1024871f",
+      "embedding_hash": "00c017da99718bd6d8b60d10d3a76bf7d2def1b7a576a3c85b7060ff69c79222"
+    },
+    "training-bert-和-gpt-架构的区别是什么-a1115afe": {
+      "content_hash": "372537508beabfdaf7191aa7f7798a732caaa980afe4eb9ce1438617d702af9a",
+      "embedding_hash": "a6cdefcd9ab44c81b8b6c77303abf1f70436c8dd9ef2dfa9aa077f1d8ab4085a"
+    },
+    "training-为什么现在的大模型都是-decoder-only-架构-74d3e34e": {
+      "content_hash": "214a56ade80e8785d3093b2c3a6e9711b6bbc42f4c6abab86aac8817c35420e6",
+      "embedding_hash": "aadc4d5a967aef3d5e04b86ae9452e3978acaaec9acd3123755e410ae6ef7e15"
+    },
+    "training-如果训练一个-ai-coding-agent-是端到端训练还是分阶段训练-838e4f63": {
+      "content_hash": "36cf53821d791cf70ef31040635364381252c675a9fdb64834b097d67be75406",
+      "embedding_hash": "985d7bef92712656874c824dc3d58abf5082e92837ea0718ff34217e6f50c2be"
+    },
+    "training-客服-agent-的奖励函数有-reward-hacking-稀疏-区分度太大--e55d9a9d": {
+      "content_hash": "9a10285eac46a203a22f9cfcdbe161c7089a4f94bbcebd11af8be681bee76a1e",
+      "embedding_hash": "a371fa1c857e052e501865ca3800279a4b101054d82a2452837039c1e08a49f3"
+    },
+    "training-多轮对话-agent-没有现成对话数据-如何从-ui-操作流合成-sft-训练语-77304205": {
+      "content_hash": "e2b9983722615157b8ec49d27c3b382a05d5119a64d5572017af8508a2965323",
+      "embedding_hash": "74b59461860b224b56feacf538a6d21a76b3ff56418336e65e3d643b06c0b046"
+    },
+    "training-多轮-agent-的-rl-reward-怎么设计-turn-级信用分配怎么做-e589f83a": {
+      "content_hash": "6e15bcaba0ce74c28efd56c1f2af86bc04e59e46315f0726797b0caf7f9c394a",
+      "embedding_hash": "dbc252b07548268e7097d9a8981b40a6321095829a5fd38717a628d7b7059d46"
+    },
+    "training-训练后量化的完整流程是什么-粒度-校准方法和离群值如何共同影响精度-30a10eef": {
+      "content_hash": "76ca8bd424b6f60bef88c176385546c0185ad2f08278ab48016b587e1a898a5d",
+      "embedding_hash": "789508a608fc55bd4e39f9d32f50da17543d312a583f6abdca40cdf23e412772"
+    },
+    "training-gptq-awq-smoothquant-与-adaquant-的核心思路有什么-92ea482b": {
+      "content_hash": "62ed2381073154d1858b12d839ae5ebb016253abc88f9da9a9ca32d13fa26ef6",
+      "embedding_hash": "2727849a4549a2b1ebcc5a31cdf6a1e5cfce7e048f17f9c02b01ac4efd06d5ab"
+    },
+    "training-tool-use-sft-训练时-长轨迹采用截断-切分还是掩码-如何避免破坏工具-3290336e": {
+      "content_hash": "d05100619c6e618f54db7f4983683573d1032bf028b2e7089c1b6b4409dc431e",
+      "embedding_hash": "8540af7dffc5b24fce368a62341137f88c394d7f6570a679c682c5273ed043ae"
+    },
+    "training-为什么-step-level-sft-之后再进行-grpo-通常比直接从基座模型-0c6b89fc": {
+      "content_hash": "a9bf7581a218ed16f56a812bdd62f94fe61eb1f25990a5bb59d4cff429ebb48c",
+      "embedding_hash": "82c24ad5928b19a03c1df02086333bf12c31c1e1fdd62c0ae97d368f7c9ea5e6"
+    },
+    "training-grpo-中相对奖励是如何计算的-同一组奖励方差接近零时如何处理-0323596d": {
+      "content_hash": "7802812196d87295b9a1cd4101504baac76086c34a9ac251760c394583a41450",
+      "embedding_hash": "424de5b434a6db9af0530431def40c311826c708fb568609d3c85a52a1baa0ef"
+    },
+    "training-tool-use-轨迹长度与任务复杂度有什么关系-训练数据应如何分布-dc2935df": {
+      "content_hash": "dcc35c7173e2ed8e5e1257e709b272d24ce5ef83d6477ce12f659da390b6d33b",
+      "embedding_hash": "3659fa133d2dbb78abc8d6ad4619b8784adef1fd8929287df09690ac0ea1e9e0"
+    },
+    "training-tool-use-强化学习中的内容奖励应如何设计-2962a768": {
+      "content_hash": "2e31cea62dad6d4865775c5b79f331b8401bd52c6433bdfe4d96432a7849b470",
+      "embedding_hash": "34ed2bcce75460dbab7bccfe5652b4871365724bd2deb03c006329751a12e8c0"
+    },
+    "training-多工具调用存在依赖关系时-reward-应如何做信用分配-038386eb": {
+      "content_hash": "8be9d8af7a73ae0c1275089aa8a3d2f64377bc86fc52ceb9c168638d573a8974",
+      "embedding_hash": "e699da872115cf080bf515ccaad5c578c816d13b92feb288a2d93f4ccd34bb94"
+    },
+    "training-agent-交互轨迹与普通语言模型语料有什么区别-如何仿真高质量轨迹-b2fc21e3": {
+      "content_hash": "59e6e64833cd40f53001e94e6319578bb089f214a0c45280c35c652e4ee512bc",
+      "embedding_hash": "9553f8672e108f3e53dbb16b5d5bb0c6174904a7503c70809716368f88c0b638"
+    },
+    "training-agentic-cpt-sft-rl-三阶段分别训练什么能力-9ae8993a": {
+      "content_hash": "6201f89a12c82efffb2b41468ab0841cfeed8ea9ad33bc3f1c1cc26886917a80",
+      "embedding_hash": "7b3f32524cf5873a219e1e42f9183ea2ef18837e53858b28d5e5b4b3e69d7ccd"
+    },
+    "training-多轮对话-rl-如何设计过程奖励与终局奖励-并避免用户模拟器过拟合-62b2fd59": {
+      "content_hash": "f802c619361ac7696eec993c431af1ecea74d8e7eccf839335e975d41e1bfb8a",
+      "embedding_hash": "d86fd2b8e6eb9bd7248db3c00169121bb6f80af1b53cec0d2ff5be14fbbf10a2"
+    },
+    "training-为什么-sft-后继续做-dpo-ppo-等偏好优化可能导致基础能力退化-0de2290b": {
+      "content_hash": "d864f5f471e90860a3a2e19ce2f83ba4896199fb73f9788080a39574ac54d953",
+      "embedding_hash": "69a2793113d2cfb2cfb96e9eb9f47827b6a997f6b96785a53afe7473664fc696"
+    },
+    "training-lora-应该挂在哪些层-rank-alpha-和-dropout-如何共同影响-06adbf39": {
+      "content_hash": "30470224a3a1c098dd9bd19cfc2d7903fd45c75020053e6c8fe370353734cdec",
+      "embedding_hash": "fa57e67611b22a643debd512880223f50ec5fd0118f5a827668dc6c316bf8529"
+    },
+    "training-kv-cache-block-的哈希和逻辑到物理映射应该怎么设计-2bc3f3c7": {
+      "content_hash": "50d4825025e378a2978421909d8252f701689645200b186ad9ffbbef4842fe92",
+      "embedding_hash": "8dca9d3b0b234701c61ea40ffd8cbf0531b184face619a744a58f2b373e5f1b8"
+    },
+    "training-agent-动作空间过大导致探索低效时-如何裁剪和分层-902e1084": {
+      "content_hash": "126391a3305adb5fa8b1824fbf7c5048e0c66bc239c41a22b81c1fa1de5c07b0",
+      "embedding_hash": "00c78561918c260065fbb897b13150b0e4a13fa019260fa788ee00ec58737402"
+    },
+    "training-agentic-rl-与普通-llm-rl-的核心差异是什么-4695b4b5": {
+      "content_hash": "0ac60d3910a3ad97f960b6eb92cb9c1c3c825c63d25fee8c07ec62dbf1127ebe",
+      "embedding_hash": "1f39fcf94bd34ed8e8d67c3fec5bccb17b0cb56da67783aeb1158655cbeec19d"
+    },
+    "training-agentic-cft-与-sft-rl-的目标有何不同-为什么训练时要-mas-e7eec861": {
+      "content_hash": "54b5af579fd0a7e261afb34517cd08a884e96dbe4f3a90af8cd28841170b1f0c",
+      "embedding_hash": "9e15674dcb776f9ba033bbb021b5486078eca1496e73dcb23656a88c01e3e52b"
+    },
+    "training-训练实验如何对-yaml-配置做规范化哈希-并保证单变量变化可复现-242ff737": {
+      "content_hash": "16dbc1f728081c7d0528125ef7e905f101d6f0ff1890244bdcb993cca83dc5c2",
+      "embedding_hash": "880a907465d8f03ed648c39e33d733d72ff9c69d4e34b974f3fd988663b6a77e"
+    },
+    "training-如何训练模型做高精度抽取式摘要-数据-目标-loss-和评测如何设计-bb2a6fd7": {
+      "content_hash": "92d48a53b850275841aa9bc86609f0d0d4f9789ac60cf5ef9f15beb0b54770aa",
+      "embedding_hash": "a5a22e6bd342ef718aa137c7d02f2c5bb16ffbc2bb93c1af01d15e8de1db4784"
+    },
+    "training-预训练与-sft-在数据-目标函数-计算形态和基础设施上有什么区别-361de09b": {
+      "content_hash": "68f5cf8c04e4b6b6a4c5d57fe46e5efeea0bf5d17701f1d529fc445e06e32a3d",
+      "embedding_hash": "56a8190875c77426f65fa09b084b537038b0969c4d9547b83d47ee8105ed929d"
+    },
+    "ai-code-testing-分支覆盖率是怎么统计的-原理有没有了解过-代码插桩具体是怎么实现的-63274085": {
+      "content_hash": "8eb2c32efba27b292639749a299a4d7edd730eaefb2d7c8f2720fe0df36f6511",
+      "embedding_hash": "37cca0ad7d5a1c5fdc9fed3a4274a5842b160d2b5039c40007284d20ac50de11"
+    },
+    "ai-code-testing-对于代码解析有没有前置分析-有效性判断怎么实现的-未来让你来优化这些指标你会怎么-b795fa46": {
+      "content_hash": "9de575af3a38952bf475bb3066d5ee9debc3b7259f0b6d91a4d834d20536e6c4",
+      "embedding_hash": "4e62b711c97a0b214d79fd5c54c824ef19318ce945f7351ecbad4d6557882712"
+    },
+    "ai-code-testing-有没有思考过哪些代码会让模型生成的准确度和覆盖率降低-这些用-ast-和-lsp-c020316b": {
+      "content_hash": "233b708ed8b137cc99a7163ac01618f1a1e01bb2d77c24c35f43d8e255e4d209",
+      "embedding_hash": "2a92c74b9efa814b6d9a5664199a56371c8b0356c7edd996e19577cfa908e5b5"
+    },
+    "ai-code-testing-如何测试-ai-生成代码的正确性-6c07989b": {
+      "content_hash": "010f13463e2628683eb19b3b33bba14c222a51ca0f12dc3dcf924bd71442d836",
+      "embedding_hash": "f785fbcf917932d4f627f0977ad053c36dc737dd6a5ce9b3405934d951e10ab2"
+    },
+    "ai-code-testing-ai-生成的代码线下测试没问题-上线后出了问题怎么办-cf07f1ce": {
+      "content_hash": "0a820b8b08ed89acd5cf93041a7dbe0e2612d1b7e83f58d12da4d568e0bb6e7a",
+      "embedding_hash": "19f9206085ecb3f1726aa1a69452102edb09b39570ddbb881f4ad03803573837"
+    },
+    "ai-code-testing-工程级-code-agent-处理项目上下文-生成代码时有哪些核心挑战-a3207b77": {
+      "content_hash": "8c931b9344377b8b194dccf5da7099d291a07e7cef2f0544666b7101766d70df",
+      "embedding_hash": "5fd504c51d9ef13ac53ff4f05c4cfea3a2926c73fdcdad482769148a168047dc"
+    },
+    "ai-code-testing-ai-生成代码在哪些场景更具落地价值-应用边界在哪-85ec8760": {
+      "content_hash": "ae6b58377a4b3a384679b16f28f92e1ee4ea690c692f4b787e94278e09fe79e7",
+      "embedding_hash": "fe2699ae883751763aa9ab56a58f10039ab6652301ceb50e407c612b41c3fcf2"
+    },
+    "ai-code-testing-coding-agent-如何执行人工交互测试-例如操作浏览器并验证页面行为-239e4843": {
+      "content_hash": "e0a31620a9f62648ea97c8293a367023f509363fb9cf5899fb93b8e728665cb6",
+      "embedding_hash": "6021ff599b188b1d4d3cad0da199f4c7eb7ae6aa818b25c1d7f6b23ea4cd2876"
+    },
+    "ai-code-testing-ai-测试平台中-人和-ai-的职责边界如何划分-1d0d896f": {
+      "content_hash": "f9344b7fdb661ad2f4cbe3a467ebe249542e7a57351eb361b015db7834f33b32",
+      "embedding_hash": "9c68854f14e74d25025da8ee16b239b9d1f5dc107e03f9d65dd9043621739557"
+    },
+    "ai-code-testing-tdd-如何接入-coding-agent-测试门禁应该放在生成流程的哪个阶段-654af5de": {
+      "content_hash": "e023b5848f8dfb527d8207d77b68e8025aa1aa1a9a26e6694c6a20e5ef4f5647",
+      "embedding_hash": "581e4fe29b505552a26d83fa0cfe6c0063f7e5fea8a39eb989ce5f66ab57f98c"
+    },
+    "ai-code-testing-ai-coding-如何完成多来源账单分析应用-并证明交付结果可信-46bafdc8": {
+      "content_hash": "3aa06a3a9fab3229a63cb72d623fdd6a8a74d35ff4a78e41d05fe03224c2f8e3",
+      "embedding_hash": "77758616c45f2b7e38f04f8da2df9f6e44f10dfd062772e13d54a84fc5f46a14"
+    },
+    "ai-code-testing-coding-agent-如何做增量代码审查-避免大仓库全量逐行扫描-9594db09": {
+      "content_hash": "126c70f0886995285bb0dfc10ee83ace29c32c877cd46df42fdc077c7005acf3",
+      "embedding_hash": "dee8ed5b5455085587cf7ed4bfa554bee94d38ae8261dd2cc2063122ee2789e2"
+    },
+    "ai-code-testing-如何用-agent-自动化测试一个现有软件项目-并划分规划-执行-oracle--4c873bca": {
+      "content_hash": "49115d3939ce7f4313955b1817270ee06acd364a019244284268c49d63852771",
+      "embedding_hash": "c72c35a7e2474c19a759e66bc078f697ea07710b1b406c9728f587b4deec6b28"
+    },
+    "business-ai-时间紧张-快速上线规则方案-和-训练一个更智能的-ai-方案-之间怎么选-3132fd43": {
+      "content_hash": "9c5d0354afc29ecfbad0e93ebee57ba9548c087d515da71097f8434f06071834",
+      "embedding_hash": "61257b7a940b5e31136e2cbb12d1287c72da953e5e9d1c3022e30543856cf244"
+    },
+    "business-ai-设计一个能根据用户行为自适应调整策略的-ai-系统-从技术架构上怎么做-445eeaee": {
+      "content_hash": "3fdd1f4ccab8c809797b972ccc6106fe221fc17fba1ca3fa966ea809439e74fb",
+      "embedding_hash": "1f0f333e82e73a79e9d1e67464929916a17f43b1766a7eb0fc7a8bb77f450ab5"
+    },
+    "business-ai-如何验证-ai-方案确实提升了业务指标-而不是带来了副作用-174bcf43": {
+      "content_hash": "084a8f50bfa77228d4b463f7eebdf1bf4fb04f62dd1fe1d413b3a990c54a635c",
+      "embedding_hash": "bad03fb789e775ddb73ec2808febbeac87417484dd6b2966dbd7994cfb32f122"
+    },
+    "business-ai-业务方反馈-ai-效果差-你怎么系统性定位问题-33fca2d3": {
+      "content_hash": "a0b65a70c69e24afc8920a7e2b19f4469e56bb36b603fc2487ff9c9b6514ed12",
+      "embedding_hash": "c5a1c73b146e4283cae84f6aa832312026fab24dfd1c022a6f8cbc49927a7072"
+    },
+    "business-ai-面向客户的-multi-agent-客服系统-怎么保证用户体验良好-5a2db5a9": {
+      "content_hash": "94d4e8c339b8221dc875ff9ac5d1ee4b802c351d19ec7b69eded0ced0e7d4f5a",
+      "embedding_hash": "1b22df0654f401d5426bfc9fce062603c58d64d122b513c4fc436bb7004a0614"
+    },
+    "business-ai-知识库-rag-和智能客服-agent-系统的成熟方案有哪些-标准方案的优点和局-96fdef34": {
+      "content_hash": "ba2882220d4366c651511fd970a7f89f72f282668f9bf96d6a919ff815cd2e12",
+      "embedding_hash": "40e762d24daa2a02dd550bd6e0304740061a96677ab0d5bf3bef1c289b4345f7"
+    },
+    "business-ai-设计订单客服-agent-时-如何处理转人工和意图识别调优-1275c9a6": {
+      "content_hash": "ce692743e80d74fa4f8be6dcf9f8f42d5c39d502f268878acc67c488001ca46f",
+      "embedding_hash": "85c4ecab85fbf067d871acca3f8886c777d71b86f476351ebe9cd9376ff26f12"
+    },
+    "business-ai-agent-项目如何从-demo-进行企业级落地-从原型到生产需要补全哪些工程能-2f180f56": {
+      "content_hash": "52366b9f1242d6bbc8974a37eb50c8b5d008516baa5e21fd375ea5c34b1ba6bc",
+      "embedding_hash": "485fb8382c90f6e98c084146a0ce089bf2dad7cb28a15d1d69795b1c4ee3c872"
+    },
+    "business-ai-什么时候接入-mcp-是合理设计-什么时候属于过度设计-fd2d8a40": {
+      "content_hash": "e5f4eb3c59ab05bc0b1b7f898bf1ea08b59b98b8600093668e2413d2767ce207",
+      "embedding_hash": "50b602b8e926bb97a99a9a11742f6cebd6f43494596b14bcd2cc7481dd7a29fe"
+    },
+    "business-ai-设计一个群聊-agent-如何同时处理权限-上下文和并行请求-5eb8ff58": {
+      "content_hash": "98c509b406cdf774bcf4d69cff8e38b100be639223076852859800aa0cdabd9e",
+      "embedding_hash": "acacf386a640c8cc35589cabae239869d952682c6e8a657cd83074c6abe3ed87"
+    },
+    "business-ai-长文本内容安全审核如何区分-引用有害内容-与-表达有害立场-2bc6db84": {
+      "content_hash": "cc222ddb1d38677c69942803c038a7aa6210a2687898cc5c90d43b19cf9281da",
+      "embedding_hash": "a72267eefaaf8464112eb646238f687248d1ead68ef7e3b0b1064567f2a6aac8"
+    },
+    "business-ai-如何设计会议转写-agent-的端到端链路并评估质量-2dfe308b": {
+      "content_hash": "de0468a79661992ac38d74fb4e8ec8d72141ef06e27f2f3abf72c16105c1c837",
+      "embedding_hash": "12e04bc7bcef935d0a6e5be1ba097f185bf1fe999a4a5e4c99f3679bb430c7a7"
+    },
+    "business-ai-音视频-agent-如何保护隐私并提供可验证删除-553ba038": {
+      "content_hash": "50d52865f6a6c46916e1eed567e5d3c4e8cb69addb61674e274b76ed1b270f73",
+      "embedding_hash": "71c192914dba269761fe76166c1c29ea4d49ebd377d616efb0723a82553886c6"
+    },
+    "business-ai-医疗-skill-如何与-his-系统协同-同时满足权限和审计要求-752cae2a": {
+      "content_hash": "723ad1673b4a139afb4a2e883112cdb4f2e23ae85fc337c15c527e2bb4a000a8",
+      "embedding_hash": "b48fceeb0b8a58e9c5f0e93e24b1a0159ebae0aa038f083380938a41e15f12ec"
+    },
+    "business-ai-20k-流式长文本安全审核如何兼顾增量响应与全文语义-015fbbcc": {
+      "content_hash": "81b99fb370d521abbea267ead1268a5c6b5add34713116037c72eb6dc1b23c8d",
+      "embedding_hash": "633627ab819bbc938285e7abf9253ef012c121b0841f85f174034e84710dae55"
+    },
+    "business-ai-面向-c-端的-agent-应用应该包含哪些架构和模块-b7f5f44a": {
+      "content_hash": "1b59860e85db33b6784109cc673f619f4b2ebbadbdc60b2f46efaa9f4502cb77",
+      "embedding_hash": "e827050d2b55943b797e6502e1bc5b2635a9e17d7263103b1a3add459c690ea4"
+    },
+    "business-ai-设计一个-输入网站-输出宣发内容-的-agent-完整链路是什么-c258e583": {
+      "content_hash": "38d7b4503299244e1aef35b3e5e75009e47c2e874bfd8171a837c873857fb713",
+      "embedding_hash": "84352e1a0ba23c0083d4a9e7a20839140ed51e984734a39f152aeb070750be6d"
+    },
+    "project-deep-dive-你的-agent-项目用了什么框架-为什么选它-5feb6004": {
+      "content_hash": "d0d496beebd6ad916b6e84312ebf1fe22141e86ca3f9c913c5f18798eeea0ad3",
+      "embedding_hash": "46aa9bd772a6cc1fd52b8b8eac11cebb9ac9d0bd109fd0f70291f4aedf2a1072"
+    },
+    "project-deep-dive-你的-agent-项目有没有真正上线部署-线上效果怎么样-298b1505": {
+      "content_hash": "0d1df41867f941f4391ae9094ee3ce8f786a1a98591a0b4d4735653a58df6c24",
+      "embedding_hash": "6473889156fd2c5c27835516ab173618bc38878a0d44ef267292c8456b10e49f"
+    },
+    "project-deep-dive-你的-agent-有哪些工具-工具是怎么设计的-f5b4fe2c": {
+      "content_hash": "2864763b2f2d23f46a05fe988822c647499233cbbd3ee97d9361d160761477a3",
+      "embedding_hash": "d50f7a2989fffc23bdf07428f545474106f71479c1affa4dafdb0c778595df78"
+    },
+    "project-deep-dive-意图识别模块具体怎么做的-d3ae1649": {
+      "content_hash": "3610fc9501dc2a2e6fe4c9ca7053670fe709faeb806f16dd5e920c06630b4fc7",
+      "embedding_hash": "12a989c05855ff5bfa23bfea55b428a94bedbef657b12337bea296728648c818"
+    },
+    "project-deep-dive-工具调用时怎么保证参数提取准确-f2801139": {
+      "content_hash": "558d5542eb3d7188344f534b1f559ac393915de79a2ef74c606b66b16c3cbf2e",
+      "embedding_hash": "a6d0fc5ab462d9308f1d8d270ac3902eae3521011871f78faa9cf9dc1a4fc2b8"
+    },
+    "project-deep-dive-怎么提升工具调用的正确率-5bd546c2": {
+      "content_hash": "f3022fd98e4421fb221bcc0e1eca097b8bff81c68c3d5f950abe2198e25dc34b",
+      "embedding_hash": "c734eff39a2fd358679881a544daf6981a099c79c2b968918a863732301cfa68"
+    },
+    "project-deep-dive-分块策略是怎么设计的-c2e61399": {
+      "content_hash": "cfce3f27a4bb4e3126ea24877e77339382d0a9ce71989a591babbe12cb8fdfc7",
+      "embedding_hash": "a119e0dce627f92aab3913bb16361a400d79a95b6948e5babbc4292abadffcf5"
+    },
+    "project-deep-dive-构建知识库时如何解析上传的表格或图片文件-3202c389": {
+      "content_hash": "cecd083675b3b4f240195725d1ca7162a9d49c0a04b3938ccdff5a74333ca649",
+      "embedding_hash": "2bb830ffd30f30047465631a3f3575f748016a6d53a89111682a73e56855771d"
+    },
+    "project-deep-dive-知识库是怎么构建的-f718dbbe": {
+      "content_hash": "4288d4626df3a8a488c4bf8998f84120925e40d6c6569ea48fd2adcd3edf3c8d",
+      "embedding_hash": "e54cefa6ea1c3b057a7840e795b3585fa2d4511078ef20bbc92b6e75a715ec42"
+    },
+    "project-deep-dive-知识检索时如何提升模型回答正确率-a16f41d6": {
+      "content_hash": "2351543415aabe68d3ca61ec8137261d582866211ab2906e64156391ad023153",
+      "embedding_hash": "76805583531b9c040ddad092ca330296d21ecae27b8d8409bf48944bad8a1af9"
+    },
+    "project-deep-dive-你的系统有没有用到-react-模式-怎么用的-063e563b": {
+      "content_hash": "a8e6fbccc5fed869adb531dc1b8b25050a4b7f906ae222650edc448042476684",
+      "embedding_hash": "f74d8feb169a3560a4908e68d8ab21a7c4e530980a5383d164662c92cb37a1aa"
+    },
+    "project-deep-dive-langgraph-中的-state-怎么定义和流转-节点多了怎么防止状态膨胀-8b428953": {
+      "content_hash": "01588378fb8f0c1f698306d9f3ce3f6e22abd81b134c6d54903f5753538814e6",
+      "embedding_hash": "5093a638d8841e0c95c6eb7b248b934343bee94b5658c3aa52a68ea7ee930e12"
+    },
+    "project-deep-dive-怎么提升模型回答的性能-4bf1d07e": {
+      "content_hash": "b15ff0e42ea7886481f8d8dfbb184ab6fbc649e0c1e0bb06390ffd79a0ef4944",
+      "embedding_hash": "f91813eadd3445942d7a6bf44b93e6d15bfcc86f407b56e8cc9f70a8748b5137"
+    },
+    "project-deep-dive-你的-agent-系统还有哪些未充分优化的地方-你的改进路线图是什么-f3a2f3ee": {
+      "content_hash": "0b0caaa64f72f1d93054643591dd2826a455f78c35004a54ab8003ff6fbd719d",
+      "embedding_hash": "cdebaa9df144195797c5cab062a08c8c0abc0d1955d85feea3dcf27023ed97aa"
+    },
+    "project-deep-dive-你的-agent-和别人开发的相比-核心差异是什么-4c960f0d": {
+      "content_hash": "8dd63537637babcac41427489266ac8d8ac15ebc6bced1fb13264b46a4c62408",
+      "embedding_hash": "0166f5760fcefb6999294ea23132d95a9185b4047014eb5576ffa4540591aab5"
+    },
+    "project-deep-dive-新闻交易-agent-项目管线如何搭建-agent-响应延迟是多久-新闻到交易完-f792e3c0": {
+      "content_hash": "1a0842398df5b9018717c02df7cd4b4a5589fca404113a42f62ef0f81b687f30",
+      "embedding_hash": "07abf19f15f5f65e910ca9b9d92291c715631ae52d675035d3e8b1ca9aea92f2"
+    },
+    "project-deep-dive-项目为什么选择-e2b-沙箱-选型理由和优势是什么-c9ad7925": {
+      "content_hash": "e487fea6e2d8c92d391cf57649ceddc95e3aae7661891fa5aab0bd0d5e57200d",
+      "embedding_hash": "4a00905be0bd29270252f76f248149c364a1a1f9c3ed13a91c9bc60c4db3b55d"
+    },
+    "project-deep-dive-开发-agent-过程中遇到的最大问题是什么-如果重新设计某一模块会怎么做-4138759a": {
+      "content_hash": "5473d0416540eabfc0a7d9691643284d577a04982ee7832d961cf9f32c9a7306",
+      "embedding_hash": "4a438afdf90f5373ba081cc57cccf03d640a5e2dd99bbc725a53982456559f49"
+    },
+    "project-deep-dive-先做自我介绍-然后简单讲一下自己做过的-agent-项目-d876a018": {
+      "content_hash": "39ee993debe68d9f5b8eacfcecb6fd0c4082b780b36fa4ffa4186bc723c41ac1",
+      "embedding_hash": "794f6174d853708173263c0160ac9e7adf72f21d768e8697c237d1d2cc126bf6"
+    },
+    "project-deep-dive-你做过的不同-ai-项目之间-核心技术差异是什么-18250a58": {
+      "content_hash": "ecfde91b975609746d2ab90cb0a43c6308216fe36755abcc4c162b0279264489",
+      "embedding_hash": "bc14de7f10174831b7092795892a1a9fd27c356f45993a512e61b27f9b807fe2"
+    },
+    "project-deep-dive-跨机票-地铁与导航的地图-agent-如何划定-agent-数据和工具边界-8399b138": {
+      "content_hash": "0ed8c7bf28a068a6a1779a4e8aa033ca706997b6fa57f43de7009e13f9ed3cb1",
+      "embedding_hash": "e9f1a1ed6973fb4368df7a9b63babc7384de9006307d9204347243e1711c151f"
+    },
+    "agent-concepts-harness-engineering-是什么-如果让你构建一个-harness-7ab30953": {
+      "content_hash": "85a228d2e40ca8bedff7191d3306bf2d843c7dab53eefce1d1786b6a3813b872",
+      "embedding_hash": "2454426babd01ba21ce6af7c134a98611610f1997d9bdebfd3195ed2859406be"
+    },
+    "agent-concepts-prompt-engineering-context-engineering-h-dcfd5874": {
+      "content_hash": "26a5e417e3c3b4f38ce35e588734464a9af228a1ac3060cf309358a3e9927c6c",
+      "embedding_hash": "8f22cf1b744e2369a4cf5dd6b9969fe1d507f5556b88679c9a052c55ee57fd45"
+    },
+    "agent-concepts-讲一讲-agent-的发展路线-从以前的架构到现在的-harness-engin-6ddc7fee": {
+      "content_hash": "2da7e9e2e417a4d0b7cc6114e5436bb80e4c3a7bac46fc8e8686ce20efc72de3",
+      "embedding_hash": "7e982d558fc02068de5593bca0ca7e45699302521b322c1614bd7d2c590ddad1"
+    },
+    "agent-concepts-你的项目中体现了哪些-harness-engineering-的思想-04979c64": {
+      "content_hash": "a31256aa5a4b60d9793b5be4e2c707c0fbf3825d1af7f40b28d51cb10a2dd51f",
+      "embedding_hash": "b3c5f062a0deaef4fd94e35a42b17a9eeaa61e70ef7adac4879c209b18100f84"
+    },
+    "agent-concepts-vibe-coding-和-harness-你更偏向哪种路线-为什么-1a0bbead": {
+      "content_hash": "e134637d07e6556a924e7a92307c4768bcd14ad481304a5aceaefc127343fa94",
+      "embedding_hash": "a685ee1b509a4e356d7afab5a45cce5520f51d16c18337dd91580ecc20466265"
+    },
+    "agent-concepts-你会关注-harness-context-engineering-这类行业热点吗-1262b5dd": {
+      "content_hash": "bb49cec5d70f17d96861636e9b937df489bcbc8294163325090d21f89dfb25e7",
+      "embedding_hash": "4d236466646bd18cc8a01288de667e7a5b88c2c738a95fa26d40a6c8b110fb96"
+    },
+    "agent-concepts-harness-hermes-这种比较新的-agent-设计了解吗-0fc1941b": {
+      "content_hash": "fcbe8f4c0587eaff3c3208b106f343e63d2092b5fb98152b71299a241fa8054b",
+      "embedding_hash": "8a07102dcf18c9a879c012074bb8be6146078aff893e7e8b7ef5af66f663dc34"
+    },
+    "agent-concepts-mcp-是什么-它解决了-function-calling-的什么根本问题-140c1cf2": {
+      "content_hash": "9ad560c301ff1e4b5060704f575baf597f8b63b7d90728f0a7875011141d11f3",
+      "embedding_hash": "80cec04a7dc6663ade046fecbe114d9bd0a03fd88404683e44ca3d805474cd86"
+    },
+    "agent-concepts-mcp-和-a2a-分别解决什么层面的问题-为什么需要两个协议-5daf26c3": {
+      "content_hash": "5b394ca7f3e6479b9328b15d621cd7840dccc1ece12b3175132a470ffc139338",
+      "embedding_hash": "9fe10efb7d7420881df54f493e25d9a598d68e81c81c2ece4adf5a2572e1016a"
+    },
+    "agent-concepts-skills-是什么-为什么有了-mcp-和-function-calling--2114fb62": {
+      "content_hash": "515fbac17f6d844139f440dd4f93544ec4a2aff13718f05f7b24056fa7c348a0",
+      "embedding_hash": "02999f922f395dfbed12c3da31fa44d1aa6a8f23e5f2a49ebe498a6565a64527"
+    },
+    "agent-concepts-skill-mcp-rule-三者在-agent-系统中各自扮演什么角色-bddd9344": {
+      "content_hash": "ba14e04272f24e6ddfe882a615136b2297302a459d58a7856f623e624ae11067",
+      "embedding_hash": "743e6abea75e4e5221cf63408064ddfcff8b6355c9d09001d90e94faa392b307"
+    },
+    "agent-concepts-hermes-opencode-claude-code-openclaw-等热门-832f5041": {
+      "content_hash": "d5490c2cdf624fe53d7139f3179b83f54510cf95bb4ac528b1a847f161e0b3f9",
+      "embedding_hash": "a0ca4f25cd55ebbcf4adbc753c72b6cc4672cf44057f2f1906fb3d1754559160"
+    },
+    "agent-concepts-dify-coze-这种低代码工作流平台和-codex-claude-code--e1f06b37": {
+      "content_hash": "91f01c65fc4c510dfb208024290c8714db3c09040fb59dee5d1e2013d555d4ce",
+      "embedding_hash": "17495129706e15a7ef8a869b3bc58069932f97daa7ab0e2a08f10ad03a414bdf"
+    },
+    "agent-concepts-langchain-的传统-chain-和-lcel-有什么区别-lcel-解决-b88c5e8a": {
+      "content_hash": "cf8c7e98d6ed4fb87fec09d4fca90caf16f02bc42c68e738c56697b226f8b285",
+      "embedding_hash": "a0a1803ba8e1bede7cce1f69c14c750f5aafbd3497dd1ab22e9c93bac79828c8"
+    },
+    "agent-concepts-hooks-在-agent-系统中应该拦截哪些阶段-和-prompt-约束有什么-738bcd92": {
+      "content_hash": "295a8477d28bf0683db1ec7f5006a8e7b3860282ae7bffbe8b086133ffce1042",
+      "embedding_hash": "84a2e9a70bc568c875dd4057064d7032783d39c4748cbae527202c19c6af2700"
+    },
+    "agent-concepts-如何比较-coding-agent-通用助手与办公-agent-10fb560a": {
+      "content_hash": "9eaa9589a693572e6cf86cbc73f234e4ab2b4a5351bde3778a38d8861fabe039",
+      "embedding_hash": "3d56fe5b7e83b65d44380ccecb6c640c679753c55c24ccf00ec67fd909fde0de"
+    },
+    "agent-concepts-agent-和-siri-这种传统助手的核心差别在哪-0f47c267": {
+      "content_hash": "678064b12498a958169d144d29615947e68c8c9f480395f373ebe1b55e800501",
+      "embedding_hash": "e512d16484b6c218d69e14663e434d2fdb224f50ce8829b8dee9704328a7b3aa"
+    },
+    "agent-infra-kubernetes-pod-deployment-从提交到就绪经历哪些控制链路-e1d74080": {
+      "content_hash": "970f66249558cffdbe9572af02900cdaeab482f4143a489ac97b8df22ec70d77",
+      "embedding_hash": "237c8eb69ad0de5ef32d8bc1a123aa5d31a4d4198cb2a64262cb892aa37a4b0f"
+    },
+    "agent-infra-agentic-rl-采用同步还是异步-rollout-如何权衡吞吐与稳定性-0f13b842": {
+      "content_hash": "d90e63058480c56185e88ae71e55623d40218e40f1fd347ef4fa2704f8ec881e",
+      "embedding_hash": "46f7fa136c78e330c152f74d477bc94ee9c9ad2b8c64c72c9c28c4cbc4877cb2"
+    },
+    "agent-infra-agent-调用-sandbox-的链路如何容错-sandbox-运行中崩溃后怎-65c2b720": {
+      "content_hash": "37d2b376186b00768e49d1253e0a5ec0e0e9bd7f085af2e35d7b88fd5994a082",
+      "embedding_hash": "84421fa137622c3850e148e4cb5c519b3f0c1124db7f704b46bedd99c1c864a2"
+    },
+    "agent-infra-一次-agent-请求的完整执行链路是什么-93a1c295": {
+      "content_hash": "b5bd2fdeb3e84df2fe6a766a16b12b4e72cb362fb146488ead492a548fb7a264",
+      "embedding_hash": "4cc6eac1d8f4c1622ef64edf22a4286b3cc8bdeec361130fb24da3865da748ec"
+    },
+    "agent-infra-kubernetes-的-request-与-limit-分别怎样影响调度和资源-2671c80e": {
+      "content_hash": "f1db440ec666faebc187c136842491994f71d6d1097da5d4856f160256b20390",
+      "embedding_hash": "c568f1c2d696206e1211c3c4d546c88b4b5a0a1baebee0209654f1a40729a206"
+    },
+    "agent-infra-kubernetes-scheduler-的三个队列如何流转-61315d40": {
+      "content_hash": "b57a7489738aca195bcb3c233c6c4461d289ab570e540961095a73914074d837",
+      "embedding_hash": "605c5899e2abc690ff867b6c38d00943ee1f83c9b47c2e50cf30f4a93485e139"
+    },
+    "agent-infra-agent-worker-或-sandbox-滚动发布时-如何逐步切流并保护长任-8472e54e": {
+      "content_hash": "bad963813e8702c32fbe19186fabc47be910a1e2f2df6b5970697d5b6a0a6eb3",
+      "embedding_hash": "8e5121a8491d2acc617244e59021ce832b95e71086102a52edd28569436c81d2"
+    },
+    "agent-infra-ray-的核心调度链路是什么-节点-oom-或上游故障后如何恢复-e2f77384": {
+      "content_hash": "b2d2e8cc31a34f31d09049fcbbb38fe8f20e0afba2823c03f6c39abcede716fc",
+      "embedding_hash": "cc17d90cc6f96b6007e6dc38372122fc1a5a84738ffff78f98075d59da3ed189"
+    },
+    "agent-infra-agentic-rl-的-rollout-training-与推理引擎如何编排-fdd96747": {
+      "content_hash": "e8602f274ad414ea2a0349db89a7025fa4a16a21fff08cf0511483680cfa6ec0",
+      "embedding_hash": "1a618ca4f63a7ce9b3abd7c6e3d1acb40591f177e3b6ceeafaa857ab389c9739"
+    },
+    "agent-infra-agent-router-应以什么运行形态存在-请求数据流如何设计-aed785e9": {
+      "content_hash": "259767e22bee7d3f46a75728678563630757fb17ff4648bb3712554fdaea754d",
+      "embedding_hash": "045db6d11806d0682c62561048f2803cebe9b3d18053eabd498cce0c0485e1b6"
+    },
+    "agent-infra-agent-infra-为什么能提升-agent-的能力上限和任务成功率-d966f786": {
+      "content_hash": "4122f9e83921c9769adce1071a4c217568b85111ca0172dcbb27e53c5d47ea33",
+      "embedding_hash": "3630fca7dfc70cb224b88bf186dbeb9ee366a72d470cfdc50419ae6341d18fbe"
+    },
+    "agent-infra-如果让你设计一个-agent-runtime-你会怎么拆-b36d40a2": {
+      "content_hash": "4658573b5f22427d1458dc5eb322a762f73adf4a60df494774c8834a5d1c1581",
+      "embedding_hash": "9582f2e3d2cb1dc84d81ec99cbf3a4df7f451f4a0355f9981d9165b1e0fe393d"
+    },
+    "agent-infra-为什么需要-checkpoint-恢复时从哪里继续-7cf77a01": {
+      "content_hash": "a65ba91107a1b31ce58b400430968bd1357862da4b9f406b8ae0c7a2bca235f7",
+      "embedding_hash": "e94c0812f956a48dc4791cedbcb23d58719f5d2d0d8d78ff737b9902606cfda3"
+    },
+    "agent-infra-tool-已成功但-runtime-在写状态前宕机-如何避免重复副作用-c398d650": {
+      "content_hash": "16b4bdaf3cba8ad3c436c9b3e8530b4b55ff056488f405a4b91e9d52508ae008",
+      "embedding_hash": "c0354bd592c0dbecd8101be13f61f93492c0e3fa70a851c0ad26603ecb93db42"
+    },
+    "agent-infra-agent-sandbox-解决什么问题-为什么容器不一定够-11913c5a": {
+      "content_hash": "9941a8d13f547d175758668876d2f0e7b5e717a4cf3f2d2b05dee9fbdde486db",
+      "embedding_hash": "9a38e0cbfd84f3dc65ecd70250cc2005f67785c64b850d416fb6f9e3ecee1ace"
+    },
+    "agent-infra-kubernetes-在-agent-infra-中负责什么-e3f7d783": {
+      "content_hash": "f65c9e65ff024ea285ee834e62998ffd9a4e35d6697bd328235590df262f2dac",
+      "embedding_hash": "2a11579dcd894320958966fc3be7541e0676ebdd052b7a2762f6d051f9a4db18"
+    },
+    "agent-infra-如何支撑几十万并发-agent-task-并把它观测清楚-26fbbdd2": {
+      "content_hash": "a3e9c217d3d93aa49803cb3b2f8f79d0614c7bd775dd426e39d16d005160c8c7",
+      "embedding_hash": "dbc1a6645a4a4404b0b4521f5374df26f3aa493922860d895fc15b895b13ff59"
+    },
+    "ai-infra-cuda-的-thread-warp-block-grid-和-sm-如何映射--b0cc26ca": {
+      "content_hash": "f450e51bab553db9836f8551b40a3e733e649efd647d2b277d73a2a11aa74124",
+      "embedding_hash": "8d70971f77e91e2e39eb6d438a2412c72502d7dfe2e1c631a44eb0a1ba004f0c"
+    },
+    "ai-infra-如何用-roofline-和算术强度指导-cuda-算子优化-从-gemm-分块-ce6b1260": {
+      "content_hash": "d28b890c25fb9d2df97975101446ad8cc4461b779605175e7418bbdff5e98614",
+      "embedding_hash": "c7d1920a371afcf0ca66d8e14bfd59788c543a42660241be36a93e0e33eba2f1"
+    },
+    "ai-infra-如何从模型结构估算参数量-flops-训练显存-推理访存与-mfu-021bff9e": {
+      "content_hash": "408c007028c6dcc2b18f94c37d17b9637a157e463ca5f8b04742cdf4da2c000b",
+      "embedding_hash": "3b34155fb6fabcc2bb58d744976a92147757e62d5eab86ae6db512f1659443ee"
+    },
+    "ai-infra-prefill-与-decode-的算子形态和瓶颈为何不同-matmul-kv--5bd52565": {
+      "content_hash": "03977e74c669c12288395089292b32abefd8527bf07dfb63ec74ab61b08c5a7c",
+      "embedding_hash": "ec14971e00ebd704b6a8b6e1cd725057c7bc0b1e5bb9c6549387a028043a8143"
+    },
+    "ai-infra-如何估算-all-reduce-all-to-all-通信量并实现计算通信重叠--2be3f21b": {
+      "content_hash": "a23276b95944fb54921a9461cf87582d293d7276093f9712722e01db7482390a",
+      "embedding_hash": "84922a01b211db846346954337cc08681503239b13d1e219e8c5f49628737c51"
+    },
+    "ai-infra-moe-的-expert-parallel-如何做-dispatch-combi-22750e48": {
+      "content_hash": "4ff60841037700310e87b0d1c16eab16213a25dcd2236d905446b47e7a8197c0",
+      "embedding_hash": "37e3b6042b7754a2dcef4e4fb97bf738775c92e77264392c05f003298893f864"
+    },
+    "ai-infra-cpu-gpu-与-npu-的体系结构和优化目标有什么差异-如何为训练-推理工作-ffd4ba9d": {
+      "content_hash": "f097b86153ff0d74fa195905ec660c1cadee42c5c3cb7f3543806ccbaf2b7c0b",
+      "embedding_hash": "edf28017a4b347a16b03bb03ce2de81258ed4b5b5486597752efec243cb6ecde"
+    },
+    "ai-infra-fp8-nvfp4-int8-与-w4a16-的数值格式-缩放粒度和硬件执行路径-c80d6600": {
+      "content_hash": "317718d7f281f2028ec88c1c32208e3ce9580ae8be4cb963d9ac6fe57609ed4a",
+      "embedding_hash": "3ea676ff057564d17a8ee386d3583cbfd4779f45663e2f9ace92f44b661c33ef"
+    },
+    "ai-infra-量化后为什么不一定更快-量化-matmul-反量化-prefill-和-deco-c9835af9": {
+      "content_hash": "09fe47d0352526ec0348221dfe73e8a87eb3bb0caeb15c6417abe60e3c7b1f07",
+      "embedding_hash": "6a177b70dbded2132b274a70e4de66995dea9c68daa2719df6adfc46b11316ae"
+    },
+    "ai-infra-gpu-内存层次如何使用-pinned-memory-shared-memory-58b7d60f": {
+      "content_hash": "d00fae26da96b60a46f062625f23eb5281d5aa89344fb4541a52cb62df8d524c",
+      "embedding_hash": "3ef3c35298a8bcf7d507d3c256ecc3e88c23f61f47a2e4f185679bd0c5449d14"
+    },
+    "ai-infra-flashattention-为什么更快-online-softmax-tili-664ade3d": {
+      "content_hash": "823f2c3a8737e0fc7a280db88ba6756e916d77af1df2c0db93bb9be2f62a51ae",
+      "embedding_hash": "13a6c7fa947d4e3b0cc8b780196e604b88e37ff3d42823386d9beee073b1d748"
+    },
+    "ai-infra-流水线并行的-bubble-从哪里来-1f1b-zero-bubble-与-du-97bbc4eb": {
+      "content_hash": "3405ed6823fc11ed4fe26601623baf1423fa6ed5c5b4ac5b7163d7d2ff2a173f",
+      "embedding_hash": "c952cc4db54b4a6b71dc5b129b6d3a12782b4027fdc329b55c2ee2a5af831500"
+    },
+    "ai-infra-cuda-triton-cute-与-mlir-分别位于什么抽象层-算子编译链和-a7674a3b": {
+      "content_hash": "69ddc5f74ae729d6f9a9a515a64dfb37b6e10ef5687906608b88e03857d21011",
+      "embedding_hash": "e375886743f5ac966222a9c225b7bfadfc4b8bc562ad375264536549a2522c69"
+    },
+    "ai-infra-stride-view-contiguous-与-nhwc-nchw-如何影响张-49504638": {
+      "content_hash": "7f0fa4aa0a7938d51a1ddce9d3df2e40d94d7ab5009aa4a1de103e2684927067",
+      "embedding_hash": "9782bbc92450fb4e819b8c1528cfac4455665605a3a7def211bb8e47465c671c"
+    },
+    "ai-infra-attention-与-ffn-的计算量和参数量谁更大-acf6dc91": {
+      "content_hash": "8d5f042f2397b2e373f9609d8990c67db21d18ee3890427657a40cf8dd813a65",
+      "embedding_hash": "fd465698971a7e70258efc5e421c8e6d71bbd75aadf97c895868bcc15020e001"
+    },
+    "ai-infra-kv-cache-占用如何计算-为什么不能只按请求数做容量规划-90be850d": {
+      "content_hash": "ade1877dc7580afd4098f07bae8c69e278a883c688d187371b84ea6bfe3b97d6",
+      "embedding_hash": "090faef2e61b2bc8098fc84829ff099bb7d12e1c06fc62166af8cb9135072d84"
+    },
+    "ai-infra-如何设计大模型在线推理服务-391d5aae": {
+      "content_hash": "c071134e2fe7889023872cec10ed427d0bbf11eaafee25c60eeeb43622699c82",
+      "embedding_hash": "b18ea8a08930530faea9ce014ac3e1858048c99d5c9da215d5e398f93a182ea6"
+    },
+    "ai-infra-cuda-graph-为什么能降低推理开销-为什么可能额外占显存-prefill-e8d18c16": {
+      "content_hash": "c1f43f811a23c1c753e0eb3821e0e43506ecb76814741dc93a1175409a0c9a82",
+      "embedding_hash": "845e3c7c60ae554774e5c479c5300d68bd943d4f92c14e4b61e9ba6ac2d318fc"
+    },
+    "ai-infra-vllm-sglang-的请求调度与-continuous-batching-如-2e283f22": {
+      "content_hash": "4fcc3117d4eb78bb6b1fbbd29d99088b3ff558cca55c20aba6ea4782894b7b76",
+      "embedding_hash": "f4e81322a9d0267bdf3165c0b732b2915c7b628bae32eccaa29a0ea57b6b08e0"
+    },
+    "ai-infra-投机采样中-draft-与-target-模型如何交互-什么时候会加速-什么时候-19cd86ae": {
+      "content_hash": "db7b13c4c09c556e084e262e80e2b9c51085d65e37e04e561ba8f08fe2fa973b",
+      "embedding_hash": "4a0647ca1dd5862f33d48c9f624923946aefecca304610e4311d74da6f827263"
+    },
+    "ai-infra-大模型训练吞吐低时-如何用-mfu-profiler-通信和流水线空泡定位瓶颈-53a5b753": {
+      "content_hash": "b6417c18eaa8a7b1dc548fe5618631c2699f8e36496fac14768bd82aaa7a6a78",
+      "embedding_hash": "7cbcf28d82587c10b04a4639ac54007fcaaa82d7c5d34d301799bb30aa3d5d8c"
+    },
+    "ai-infra-pd-分离解决什么问题-prefill-与-decode-资源比例怎么定-43a9cabd": {
+      "content_hash": "829b3bd8cb0cb7e598d216e6612c00f39f8c89e6980fe27c7936a1f72021bee1",
+      "embedding_hash": "2d82df14cb403fd2fe6cc39dbc56f7ca6c98d333fe5f75e1cb62c979f5be1a7c"
+    },
+    "ai-infra-分布式训练为什么容易失败-如何恢复-cd12c62e": {
+      "content_hash": "79bbaf8c96ab5dd09f9ae9825a00df2247e60c9d29eb62048254d80d9fe83821",
+      "embedding_hash": "e6d752de792ff344714f0c70732e390cd06c7d03d81f720cfcd929c4da4da69e"
+    },
+    "ai-infra-gpu-利用率很低-但请求延迟很高-怎么排查-094ac1b0": {
+      "content_hash": "4ae5dc677fe76af5ee72a4d232d56593167cafa544bb82a8afab677c7ff1d0c2",
+      "embedding_hash": "542c0866783552ff887ff54d05e5e284732a3102e98a393b734f7f16f3f51617"
+    },
+    "ai-infra-ai-infra-和-agent-infra-有什么区别-c9c34341": {
+      "content_hash": "52731f9b55960dab957d71ab48192ee5ded54b1b362110eeb2965c702b82c2a0",
+      "embedding_hash": "74ec17b865b86f594afc9164aab82ac018176a23f0d6d48ed05a542b26fac30a"
+    },
+    "ai-infra-如果让你设计一个生产级-ai-infra-平台-你会怎么拆-84fece6c": {
+      "content_hash": "49b94a336ff47105234f2a0a025321e27a1d9c6b93fd319d3524ea0082c380f3",
+      "embedding_hash": "1d5c2f49a0db4d83abb5cf9b521087e8bf183961a1f91b1357e785e04dc86c1c"
+    },
+    "ai-infra-gpu-调度和普通-cpu-调度有什么不同-bf056de4": {
+      "content_hash": "e6b7327fdeb528b03bf95855bb3128fc99b68182ba8cffd2e9c69837b4fae455",
+      "embedding_hash": "1381efecb5c69a8859fe750f7462a0e43686aa31a19debfef5509c422bbafef4"
+    },
+    "ai-infra-模型版本升级如何做到可观测-可灰度-可回滚-5ca2e4e3": {
+      "content_hash": "1da624e5c70fabee545236dce300aab7897e1416d1537451d6d6b0854d8249b9",
+      "embedding_hash": "5054f31c17f2281d47d51d0f61035c3480ec0ad49d3487d3cd10baf8897c64c7"
+    }
+  },
+  "database_sha256": "f15400ddfbf057dcca709ea8ee8f4f0bb8d562ca2b6c51cb66161e5906147daa",
+  "quality": {
+    "quick_check": "ok",
+    "fts_count": 592,
+    "embedding_count": 592
+  }
+}

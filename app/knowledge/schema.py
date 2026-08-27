@@ -57,6 +57,9 @@ class SearchResult(BaseModel):
     content: str = ""
     dimension: str = ""
     source_file: str = ""
+    snapshot_id: str = Field(
+        default="", description="生成该结果的知识库快照，用于后续一致读取"
+    )
 
 
 class ParseWarning(BaseModel):

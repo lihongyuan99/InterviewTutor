@@ -245,7 +245,7 @@ def manage_memory(state: models.AgentState) -> Tuple[Optional[str], int]:
         history_text += f"{role}: {msg.content}\n"
 
     # 通过 LLM 运行压缩
-    llm = create_chat_model(temperature=0.3)
+    llm = create_chat_model(temperature=0.3, role="maintenance")
 
     prompt = f"""
 你是一名负责维护**Context（上下文）**的精炼记录员。

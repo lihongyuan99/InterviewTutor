@@ -1,5 +1,9 @@
+from __future__ import annotations
+
 import os
 import datetime
+import hashlib
+import json
 from typing import Dict, Any, List, Optional
 from langchain_core.messages import messages_to_dict, messages_from_dict, BaseMessage
 from langchain_core.messages import HumanMessage, AIMessage
@@ -28,6 +32,18 @@ _AUTO_TITLING_TASKS = set()
 # 异步调度用的锁，避免在事件循环中重复创建后台任务
 import threading as _threading
 _auto_title_lock = _threading.Lock()
+
+# 会话快照、指标和后台摘要可能并发写同一个 JSON；按会话串行化写入，
+# 避免共享 ``.tmp`` 文件互相覆盖。
+_session_locks_guard = _threading.Lock()
+_session_locks: Dict[str, _threading.RLock] = {}
+_maintenance_lock = _threading.Lock()
+_MAINTAINING_SESSIONS: set[str] = set()
+
+
+def _get_session_lock(session_id: str) -> _threading.RLock:
+    with _session_locks_guard:
+        return _session_locks.setdefault(session_id, _threading.RLock())
 
 
 def _get_daily_note_path(task_id: str, date: str) -> str:
@@ -98,15 +114,50 @@ def _backup_task_index(max_backups: int = 10):
             pass
 
 
-def list_tasks(status: Optional[str] = None) -> List[Dict[str, Any]]:
-    tasks = _load_task_index()
+def _normalize_task_item(item: Dict[str, Any]) -> Dict[str, Any]:
+    """Return the public task shape without rewriting legacy task data."""
+    normalized = dict(item)
+    normalized.setdefault("kind", "legacy_learning")
+    normalized.setdefault("target_role", None)
+    normalized.setdefault("target_companies", [])
+    normalized.setdefault("interview_date", None)
+    normalized.setdefault("experience_level", None)
+    return normalized
+
+
+def list_tasks(
+    status: Optional[str] = None,
+    kind: Optional[str] = None,
+) -> List[Dict[str, Any]]:
+    tasks = [_normalize_task_item(item) for item in _load_task_index()]
     if status:
         tasks = [item for item in tasks if item.get("status") == status]
+    if kind:
+        tasks = [item for item in tasks if item.get("kind") == kind]
     tasks.sort(key=lambda item: item.get("updated_at", ""), reverse=True)
     return tasks
 
 
-def upsert_task(task_id: str, title: str, icon: str, status: str = "active") -> Dict[str, Any]:
+def get_task(task_id: str) -> Optional[Dict[str, Any]]:
+    for item in _load_task_index():
+        if item.get("id") == task_id:
+            return _normalize_task_item(item)
+    return None
+
+
+def upsert_task(
+    task_id: str,
+    title: str,
+    icon: str,
+    status: str = "active",
+    *,
+    kind: Optional[str] = None,
+    target_role: Optional[str] = None,
+    target_companies: Optional[List[str]] = None,
+    interview_date: Optional[str] = None,
+    experience_level: Optional[str] = None,
+    resume_id: Optional[str] = None,
+) -> Dict[str, Any]:
     now = datetime.datetime.now().isoformat()
     tasks = _load_task_index()
     existing = None
@@ -122,16 +173,26 @@ def upsert_task(task_id: str, title: str, icon: str, status: str = "active") -> 
         }
         tasks.insert(0, existing)
 
-    existing.update(
-        {
-            "title": title,
-            "icon": icon,
-            "status": status,
-            "updated_at": now,
-        }
-    )
+    existing.update({
+        "title": title,
+        "icon": icon,
+        "status": status,
+        "updated_at": now,
+    })
+    if kind is not None:
+        existing["kind"] = kind
+    if target_role is not None:
+        existing["target_role"] = target_role
+    if target_companies is not None:
+        existing["target_companies"] = target_companies
+    if interview_date is not None:
+        existing["interview_date"] = interview_date
+    if experience_level is not None:
+        existing["experience_level"] = experience_level
+    if resume_id is not None:
+        existing["resume_id"] = resume_id
     _save_task_index(tasks)
-    return existing
+    return _normalize_task_item(existing)
 
 
 def update_task_status(task_id: str, status: str) -> Optional[Dict[str, Any]]:
@@ -158,7 +219,34 @@ def update_task(task_id: str, title: Optional[str] = None, icon: Optional[str] =
                 item["icon"] = icon
             item["updated_at"] = now
             _save_task_index(tasks)
-            return item
+            return _normalize_task_item(item)
+    return None
+
+
+def update_task_fields(task_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """Update explicitly supplied task fields, including nullable goal metadata."""
+    allowed = {
+        "title",
+        "icon",
+        "kind",
+        "target_role",
+        "target_companies",
+        "interview_date",
+        "experience_level",
+        "resume_id",
+    }
+    payload = {key: value for key, value in updates.items() if key in allowed}
+    if not payload:
+        return None
+
+    now = datetime.datetime.now().isoformat()
+    tasks = _load_task_index()
+    for item in tasks:
+        if item.get("id") == task_id:
+            item.update(payload)
+            item["updated_at"] = now
+            _save_task_index(tasks)
+            return _normalize_task_item(item)
     return None
 
 
@@ -267,7 +355,7 @@ def _get_note_path(session_id: str, topic: Optional[str] = None) -> str:
     
     return os.path.join(NOTES_DIR, f"{filename}.md")
 
-def save_session(state: AgentState) -> str:
+def save_session(state: AgentState, *, index_for_rag: bool = True) -> str:
     """
     Persist the current agent state to disk (Full Snapshot).
 
@@ -301,7 +389,8 @@ def save_session(state: AgentState) -> str:
 
     # 3. Save Session JSON (Overwrite Mode)
     json_path = _get_session_path(session_id)
-    file_io.save_json(session_data, json_path)
+    with _get_session_lock(session_id):
+        file_io.save_json(session_data, json_path)
 
     # 4. Save Markdown Note (if applicable)
     # Only save note if we are in a concluding state and actually have a note generated
@@ -322,17 +411,167 @@ topic: {state.get("current_topic", "General")}
         file_io.save_text(full_note, note_path)
 
     # 5. [RAG] Index conversation into vector store (if enabled)
-    _index_session_for_rag(
-        session_id=session_id,
-        task_id=state.get("task_id"),
-        messages=serialized_messages,
-        topic=state.get("current_topic", "General")
-    )
+    if index_for_rag:
+        _index_session_for_rag(
+            session_id=session_id,
+            task_id=state.get("task_id"),
+            messages=serialized_messages,
+            topic=state.get("current_topic", "General")
+        )
 
     # 6. 任务自动命名：会话累计足够用户消息且标题仍为占位时，异步生成标题回写
     maybe_auto_title_task(state.get("task_id"), serialized_messages)
 
     return json_path
+
+
+def _message_prefix_digest(messages: List[Dict[str, Any]], end: int) -> str:
+    payload = json.dumps(
+        messages[:end],
+        ensure_ascii=False,
+        sort_keys=True,
+        default=str,
+    )
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _commit_session_summary(
+    session_id: str,
+    *,
+    expected_cursor: int,
+    expected_prefix_digest: str,
+    new_summary: str,
+    new_cursor: int,
+) -> bool:
+    """Apply a background summary without replacing newer chat messages."""
+
+    path = _get_session_path(session_id)
+    with _get_session_lock(session_id):
+        try:
+            current = file_io.load_json(path)
+        except (FileNotFoundError, TypeError, ValueError):
+            return False
+        messages = current.get("messages")
+        if not isinstance(messages, list) or len(messages) < new_cursor:
+            return False
+        if int(current.get("summarized_msg_count", 0) or 0) != expected_cursor:
+            return False
+        if _message_prefix_digest(messages, new_cursor) != expected_prefix_digest:
+            return False
+        current["conversation_summary"] = new_summary
+        current["summarized_msg_count"] = new_cursor
+        file_io.save_json(current, path)
+        return True
+
+
+def _update_learning_profile_from_messages(
+    messages: List[BaseMessage],
+    *,
+    user_id: str,
+) -> None:
+    from app.core import learning_profile, profile_store
+
+    assistant_index = None
+    for index in range(len(messages) - 1, -1, -1):
+        if isinstance(messages[index], AIMessage):
+            assistant_index = index
+            break
+    if assistant_index is None:
+        return
+
+    user_text = ""
+    for index in range(assistant_index - 1, -1, -1):
+        if isinstance(messages[index], HumanMessage):
+            user_text = messages[index].content or ""
+            break
+    assistant_text = messages[assistant_index].content or ""
+    cards = learning_profile.extract_learning_facts(
+        user_text=user_text,
+        assistant_text=assistant_text,
+        source=user_id,
+    )
+    if not cards:
+        return
+    profile = profile_store.load_profile(user_id)
+    profile = learning_profile.upsert_cards(profile, cards)
+    profile_store.save_profile(profile)
+
+
+def run_session_maintenance(
+    session_id: str,
+    *,
+    user_id: str = "local_user",
+) -> bool:
+    """Compress, index and profile a saved reply outside the response path."""
+
+    with _maintenance_lock:
+        if session_id in _MAINTAINING_SESSIONS:
+            return False
+        _MAINTAINING_SESSIONS.add(session_id)
+
+    try:
+        path = _get_session_path(session_id)
+        try:
+            raw = file_io.load_json(path)
+        except (FileNotFoundError, TypeError, ValueError):
+            return False
+
+        serialized_messages = raw.get("messages")
+        if not isinstance(serialized_messages, list):
+            return False
+        messages = messages_from_dict(serialized_messages)
+        expected_cursor = int(raw.get("summarized_msg_count", 0) or 0)
+        state = {
+            "messages": messages,
+            "task_id": raw.get("task_id"),
+            "session_id": raw.get("session_id", session_id),
+            "current_topic": raw.get("topic", "General"),
+            "conversation_summary": raw.get("conversation_summary") or "",
+            "summarized_msg_count": expected_cursor,
+        }
+
+        from app.core import context_rag
+
+        new_summary, new_cursor = context_rag.manage_memory(state)
+        if new_cursor > expected_cursor and new_summary != state["conversation_summary"]:
+            prefix_digest = _message_prefix_digest(serialized_messages, new_cursor)
+            if _commit_session_summary(
+                session_id,
+                expected_cursor=expected_cursor,
+                expected_prefix_digest=prefix_digest,
+                new_summary=new_summary or "",
+                new_cursor=new_cursor,
+            ):
+                print(
+                    f"🧠 Memory Compressed! New summary length: {len(new_summary or '')}, "
+                    f"Cursor: {new_cursor}"
+                )
+
+        # Reload so indexing never misses messages appended while compression ran.
+        try:
+            latest = file_io.load_json(path)
+        except (FileNotFoundError, TypeError, ValueError):
+            return False
+        latest_serialized = latest.get("messages")
+        if not isinstance(latest_serialized, list):
+            return False
+        _index_session_for_rag(
+            session_id=latest.get("session_id", session_id),
+            task_id=latest.get("task_id"),
+            messages=latest_serialized,
+            topic=latest.get("topic", "General"),
+        )
+        _update_learning_profile_from_messages(
+            messages_from_dict(latest_serialized),
+            user_id=user_id,
+        )
+        return True
+    except Exception as exc:
+        print(f"⚠️ 会话后台维护失败（{session_id}）：{exc}")
+        return False
+    finally:
+        with _maintenance_lock:
+            _MAINTAINING_SESSIONS.discard(session_id)
 
 
 def _index_session_for_rag(
@@ -603,7 +842,7 @@ def get_session_messages(session_id: str) -> Optional[Dict[str, Any]]:
         return None
 
     raw_messages = messages_from_dict(data.get("messages", []))
-    normalized: List[Dict[str, str]] = []
+    normalized: List[Dict[str, Any]] = []
 
     for index, msg in enumerate(raw_messages):
         if isinstance(msg, HumanMessage):
@@ -622,11 +861,17 @@ def get_session_messages(session_id: str) -> Optional[Dict[str, Any]]:
                 or ""
             )
 
+        additional_kwargs = getattr(msg, "additional_kwargs", {}) or {}
+        reply_metrics = additional_kwargs.get("reply_metrics")
+        if not isinstance(reply_metrics, dict):
+            reply_metrics = None
+
         normalized.append({
             "message_id": f"{session_id}-{index}",
             "role": role,
             "content": content,
             "timestamp": ts,
+            "metrics": reply_metrics,
         })
 
     resolved_session_id = data.get("session_id", session_id)
@@ -638,6 +883,46 @@ def get_session_messages(session_id: str) -> Optional[Dict[str, Any]]:
         "last_updated": data.get("last_updated", ""),
         "messages": normalized,
     }
+
+
+def attach_reply_metrics(session_id: str, metrics: Dict[str, Any]) -> bool:
+    """Persist metrics on the latest assistant message without re-saving state."""
+
+    path = _get_session_path(session_id)
+    with _get_session_lock(session_id):
+        try:
+            data = file_io.load_json(path)
+        except (FileNotFoundError, TypeError, ValueError):
+            return False
+
+        messages = data.get("messages")
+        if not isinstance(messages, list):
+            return False
+
+        normalized_metrics = {
+            key: max(0, int(metrics.get(key, 0) or 0))
+            for key in (
+                "elapsed_ms",
+                "input_tokens",
+                "output_tokens",
+                "total_tokens",
+                "llm_calls",
+            )
+        }
+        for raw_message in reversed(messages):
+            if not isinstance(raw_message, dict) or raw_message.get("type") != "ai":
+                continue
+            message_data = raw_message.get("data")
+            if not isinstance(message_data, dict):
+                return False
+            additional_kwargs = message_data.get("additional_kwargs")
+            if not isinstance(additional_kwargs, dict):
+                additional_kwargs = {}
+                message_data["additional_kwargs"] = additional_kwargs
+            additional_kwargs["reply_metrics"] = normalized_metrics
+            file_io.save_json(data, path)
+            return True
+        return False
 
 
 def get_daily_note(task_id: str, date: str) -> Dict[str, Any]:

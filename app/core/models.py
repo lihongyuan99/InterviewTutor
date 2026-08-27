@@ -14,7 +14,6 @@ class ExecutionPlan(BaseModel):
     request_summary: bool = Field(description="用户是否要求总结当前的对话内容")
     request_plan: bool = Field(description="用户是否要求制定学习计划")
     is_concluding: bool = Field(description="用户是否想要结束/退出对话")
-    thought_process: str = Field(description="做出此计划的简短思考过程")
 
 class AgentState(TypedDict):
     """
@@ -56,6 +55,10 @@ class AgentState(TypedDict):
 
     # 缓存命中追踪（每轮清零，不持久化）
     _cache_trace: Optional[Dict[str, Any]]
+
+    # 仅本轮使用的路由诊断与快路标记（不持久化）
+    _route_source: Optional[str]
+    _requires_search: Optional[bool]
 
 
 # --- 2. Structured Output Models (LLM的结构化输出) ---

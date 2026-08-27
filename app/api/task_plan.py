@@ -1,7 +1,7 @@
 from typing import List, Optional
 import asyncio
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Literal
 
@@ -41,6 +41,16 @@ class PlanSessionActionRequest(BaseModel):
     action: Literal["resume", "exit"]
 
 
+class TaskPlanProposalRequest(BaseModel):
+    task_id: str
+    source: Literal["goal_setup", "progress", "chat"] = "goal_setup"
+    session_id: Optional[str] = None
+
+
+class TaskPlanProposalRejectRequest(BaseModel):
+    task_id: str
+
+
 @router.post("/task-plan")
 async def generate_task_plan(request: TaskPlanRequest):
     parts = []
@@ -78,10 +88,84 @@ async def generate_task_plan(request: TaskPlanRequest):
     return memory.save_task_plan(task_id=request.task_id, plan=plan)
 
 
+@router.post("/task-plan/propose")
+async def propose_task_plan(request: TaskPlanProposalRequest):
+    """Generate and persist only a draft plan; the formal plan stays unchanged."""
+    task = memory.get_task(request.task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    context_parts = [f"Target role: {task.get('target_role') or task.get('title') or ''}"]
+    companies = task.get("target_companies") or []
+    if companies:
+        context_parts.append(f"Target companies: {', '.join(companies)}")
+    if task.get("interview_date"):
+        context_parts.append(f"Interview date: {task['interview_date']}")
+    if task.get("experience_level"):
+        context_parts.append(f"Current level: {task['experience_level']}")
+
+    messages = []
+    conversation_summary = ""
+    if request.source == "chat" and request.session_id:
+        session_data = memory.load_session(request.session_id) or {}
+        messages = session_data.get("messages", [])
+        conversation_summary = session_data.get("conversation_summary", "")
+    elif request.source == "progress":
+        from app.interview.workflow import get_progress
+
+        progress = get_progress(goal_id=request.task_id)
+        weak = progress.get("weak_dimensions", [])
+        missing_points = []
+        for item in progress.get("wrong_questions", []):
+            missing_points.extend(item.get("missing_points", []))
+        if weak:
+            context_parts.append(
+                "Weak dimensions: "
+                + ", ".join(item.get("dimension_label") or item.get("dimension", "") for item in weak[:5])
+            )
+        if missing_points:
+            context_parts.append("Observed gaps: " + ", ".join(dict.fromkeys(missing_points)))
+
+    existing_plan = memory.get_task_plan_data(request.task_id) or None
+    plan_state = {
+        "messages": messages,
+        "conversation_summary": conversation_summary,
+        "task_id": request.task_id,
+        "session_id": request.session_id or "",
+    }
+    proposal = await asyncio.to_thread(
+        generate_task_plan_from_state,
+        plan_state,
+        "\n".join(context_parts),
+        existing_plan,
+    )
+    memory.save_task_plan(
+        task_id=request.task_id,
+        plan={"draft_plan": proposal},
+    )
+    return {
+        "task_id": request.task_id,
+        "source": request.source,
+        "proposal": proposal,
+    }
+
+
+@router.post("/task-plan/proposal/reject")
+async def reject_task_plan_proposal(request: TaskPlanProposalRejectRequest):
+    if not memory.get_task(request.task_id):
+        raise HTTPException(status_code=404, detail="Task not found")
+    memory.save_task_plan(task_id=request.task_id, plan={"draft_plan": None})
+    return {"task_id": request.task_id, "draft_plan": None}
+
+
 @router.post("/task-plan/confirm")
 async def confirm_task_plan(request: TaskPlanConfirmRequest):
     plan = dict(request.plan or {})
     plan["task_id"] = request.task_id
+    task = memory.get_task(request.task_id)
+    if task and task.get("kind") == "interview_goal":
+        plan["taskTitle"] = task.get("title") or task.get("target_role") or "面试目标"
+        plan["taskIcon"] = task.get("icon") or "🎯"
     plan.pop(PLAN_SESSION_KEY, None)
     plan.pop("draft_plan", None)
     if not plan.get("_plan_sig"):

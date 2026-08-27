@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="896"
+     height="896"
+     viewBox="64 64 896 896"
+     fill="none">
+  <title>无白边紫色渐变双聊天气泡图标</title>
+  <desc>紧贴紫色圆角方形边界裁切的可编辑矢量图标；圆角外透明，不含白色画布层。</desc>
+
+  <defs>
+    <linearGradient id="backgroundGradient"
+                    x1="64" y1="64" x2="923" y2="994"
+                    gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#594DFF"/>
+      <stop offset="1" stop-color="#7E2EF1"/>
+    </linearGradient>
+
+    <linearGradient id="rearBubbleGradient"
+                    x1="292" y1="328" x2="747" y2="824"
+                    gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.05"/>
+    </linearGradient>
+  </defs>
+
+  <g id="rounded-gradient-background">
+    <rect x="64" y="64" width="896" height="896" rx="240"
+          fill="url(#backgroundGradient)"/>
+  </g>
+
+  <g id="rear-chat-bubble">
+    <path d="
+      M 464 328
+      H 640
+      A 148 148 0 0 1 788 476
+      V 604
+      A 148 148 0 0 1 723 727
+      L 747 807
+      C 752 824 734 831 722 822
+      L 640 766
+      C 635 767 630 768 624 768
+      H 464
+      A 146 146 0 0 1 318 622
+      V 474
+      A 146 146 0 0 1 464 328
+      Z"
+      fill="url(#rearBubbleGradient)"/>
+  </g>
+
+  <g id="front-chat-bubble">
+    <path d="
+      M 348 292
+      H 612
+      A 116 116 0 0 1 728 408
+      V 548
+      A 116 116 0 0 1 612 664
+      H 464
+      L 368 752
+      C 355 765 334 756 334 738
+      V 660
+      C 280 650 232 600 232 548
+      V 408
+      A 116 116 0 0 1 348 292
+      Z"
+      fill="#FFFFFF"/>
+  </g>
+
+  <g id="message-dots" fill="#5B4BFF">
+    <circle id="dot-left" cx="388" cy="478" r="28"/>
+    <circle id="dot-center" cx="480" cy="478" r="28"/>
+    <circle id="dot-right" cx="572" cy="478" r="28"/>
+  </g>
+</svg>

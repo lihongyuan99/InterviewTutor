@@ -21,6 +21,7 @@ from app.interview.models import QuestionProgress
 
 # 进度存储目录（与用户对话记忆 memory/vector_store 物理隔离）
 PROGRESS_DIR = "memory/interview_progress"
+GOAL_PROGRESS_DIR = "memory/interview_goal_progress"
 
 # 等级 -> 复习间隔天数
 _REVIEW_INTERVAL_DAYS = {
@@ -121,3 +122,96 @@ class ProgressStore:
         self._data[question_id] = progress
         _save_all(self.user_id, self._data)
         return QuestionProgress(**progress)
+
+
+def _goal_file(user_id: str) -> Path:
+    safe = user_id.replace("/", "_").replace("..", "_")
+    return Path(GOAL_PROGRESS_DIR) / f"{safe}.json"
+
+
+def _load_goal_data(user_id: str) -> Dict[str, dict]:
+    path = _goal_file(user_id)
+    if not path.exists():
+        return {"schema_version": 2, "goals": {}}
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {"schema_version": 2, "goals": {}}
+    if not isinstance(raw, dict) or not isinstance(raw.get("goals"), dict):
+        return {"schema_version": 2, "goals": {}}
+    return raw
+
+
+def _save_goal_data(user_id: str, data: Dict[str, dict]) -> None:
+    path = _goal_file(user_id)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+class GoalProgressStore:
+    """Goal-scoped v2 progress store; the legacy progress file remains untouched."""
+
+    def __init__(self, user_id: str = "local_user", goal_id: str = ""):
+        if not goal_id:
+            raise ValueError("goal_id is required")
+        self.user_id = user_id
+        self.goal_id = goal_id
+        self._document = _load_goal_data(user_id)
+        goals = self._document.setdefault("goals", {})
+        self._data = goals.setdefault(goal_id, {})
+
+    def get(self, question_id: str) -> Optional[QuestionProgress]:
+        raw = self._data.get(question_id)
+        return QuestionProgress(**raw) if raw else None
+
+    def all(self) -> List[QuestionProgress]:
+        return [QuestionProgress(**raw) for raw in self._data.values()]
+
+    def review_queue(self, limit: int = 20) -> List[QuestionProgress]:
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        due = [p for p in self.all() if p.next_review_at and p.next_review_at <= now]
+        due.sort(key=lambda p: (p.next_review_at, p.mastery))
+        return due[:limit]
+
+    def record_attempt(
+        self,
+        question_id: str,
+        overall_level: int,
+        scores: Dict[str, int],
+        missing_points: List[str],
+        mastery_delta: float = 0.0,
+    ) -> QuestionProgress:
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        existing = self._data.get(question_id, {})
+        attempts = int(existing.get("attempts", 0)) + 1
+        best_level = max(int(existing.get("best_level", 0)), overall_level)
+        old_mastery = float(existing.get("mastery", 0.0))
+        level_mastery = overall_level / 5.0
+        mastery = round(
+            max(0.0, min(1.0, old_mastery * 0.5 + level_mastery * 0.5 + mastery_delta)),
+            3,
+        )
+        progress = {
+            "user_id": self.user_id,
+            "goal_id": self.goal_id,
+            "question_id": question_id,
+            "attempts": attempts,
+            "best_level": best_level,
+            "last_scores": scores,
+            "missing_points": missing_points,
+            "last_reviewed_at": now,
+            "next_review_at": _next_review_at(overall_level),
+            "mastery": mastery,
+        }
+        self._data[question_id] = progress
+        _save_goal_data(self.user_id, self._document)
+        return QuestionProgress(**progress)
+
+
+def list_all_goal_progress(user_id: str = "local_user") -> List[QuestionProgress]:
+    document = _load_goal_data(user_id)
+    result: List[QuestionProgress] = []
+    for entries in document.get("goals", {}).values():
+        if isinstance(entries, dict):
+            result.extend(QuestionProgress(**raw) for raw in entries.values())
+    return result

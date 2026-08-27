@@ -20,8 +20,8 @@ class SummaryGenerator:
     def __init__(self):
         """总结模型在调用时创建，以便即时应用用户的新配置。"""
 
-    def _model(self):
-        return create_chat_model()
+    def _model(self, *, maintenance: bool = False):
+        return create_chat_model(role="maintenance" if maintenance else "summary")
 
     def generate_review_summary(
         self,
@@ -218,7 +218,7 @@ class SummaryGenerator:
 
         prompt_text = TASK_TITLE_PROMPT.format(conversation_text=conversation_text[:2000])
         try:
-            response = self._model().invoke(
+            response = self._model(maintenance=True).invoke(
                 [SystemMessage(content="你是简洁的中文标题生成器。"),
                  HumanMessage(content=prompt_text)]
             )

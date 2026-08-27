@@ -4,6 +4,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 import rehypeRaw from "rehype-raw";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import type { ReactNode } from "react";
 
 import "katex/dist/katex.min.css";
@@ -17,6 +18,23 @@ interface MarkdownPreviewProps {
   invert?: boolean;
   /** 启用内联 HTML 渲染（用于 <sup> 上角标引用等） */
   enableRawHtml?: boolean;
+}
+
+// 先解析原始 HTML，再用白名单净化。默认安全 schema 保留 Markdown
+// 正常生成的标签；额外只允许引用上角标所需的精确 class。
+const SAFE_RAW_HTML_SCHEMA = {
+  ...defaultSchema,
+  attributes: {
+    ...defaultSchema.attributes,
+    sup: [["className", "cite-sup"]],
+  },
+};
+
+function allowCitationSupOnly(text: string): string {
+  return text.replace(/<[^>]*>/g, (tag) => {
+    if (tag === '<sup class="cite-sup">' || tag === "</sup>") return tag;
+    return tag.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  });
 }
 
 /**
@@ -101,7 +119,9 @@ function repairInlineTable(text: string): string {
 }
 
 export function MarkdownPreview({ content, className = "", invert = false, enableRawHtml = false }: MarkdownPreviewProps) {
-  const normalized = repairInlineTable(content);
+  const normalized = repairInlineTable(
+    enableRawHtml ? allowCitationSupOnly(content) : content,
+  );
   return (
     <div
       className={`prose prose-sm max-w-none ${invert ? "prose-invert" : "dark:prose-invert"} ${className}`}
@@ -110,7 +130,7 @@ export function MarkdownPreview({ content, className = "", invert = false, enabl
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={
           enableRawHtml
-            ? [rehypeRaw, rehypeKatex, rehypeHighlight]
+            ? [rehypeRaw, [rehypeSanitize, SAFE_RAW_HTML_SCHEMA], rehypeKatex, rehypeHighlight]
             : [rehypeKatex, rehypeHighlight]
         }
         components={{

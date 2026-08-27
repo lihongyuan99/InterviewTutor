@@ -23,7 +23,7 @@ InterviewPhase = Literal[
     "completed",
 ]
 
-InterviewMode = Literal["practice", "mock", "review"]
+InterviewMode = Literal["practice", "diagnostic", "mock", "review"]
 
 
 class InterviewSession(BaseModel):
@@ -31,6 +31,8 @@ class InterviewSession(BaseModel):
 
     session_id: str
     user_id: str = "local_user"
+    goal_id: Optional[str] = None
+    target_role: Optional[str] = None
     mode: InterviewMode = "practice"
     dimensions: List[str] = Field(default_factory=list)
     companies: List[str] = Field(default_factory=list)
@@ -40,6 +42,14 @@ class InterviewSession(BaseModel):
     current_question_id: Optional[str] = None
     current_question: Optional[str] = None
     question_round: int = 0
+    question_count: int = 1
+    question_ids: List[str] = Field(default_factory=list)
+    answers: List[dict] = Field(default_factory=list)
+    evaluations: List[dict] = Field(default_factory=list)
+    report_id: Optional[str] = None
+
+    # 会话创建时固定知识快照，避免后台更新导致题目与答案跨版本混用。
+    knowledge_snapshot_id: Optional[str] = None
 
     # 出题阶段绝不注入专家答案；用户提交后才注入评分所需的标准答案
     retrieved_knowledge: Optional[dict] = None
@@ -76,6 +86,7 @@ class QuestionProgress(BaseModel):
     """单道题的学习进度记录。"""
 
     user_id: str = "local_user"
+    goal_id: Optional[str] = None
     question_id: str
     attempts: int = 0
     best_level: int = 0
@@ -90,10 +101,12 @@ class QuestionProgress(BaseModel):
 
 class StartRequest(BaseModel):
     user_id: str = "local_user"
+    goal_id: Optional[str] = None
     mode: InterviewMode = "practice"
     dimensions: List[str] = Field(default_factory=list)
     companies: List[str] = Field(default_factory=list)
     difficulty: int = 0
+    question_count: Literal[1, 3, 5, 8] = 1
 
 
 class AnswerRequest(BaseModel):
@@ -104,3 +117,32 @@ class AnswerRequest(BaseModel):
 class FollowupAnswerRequest(BaseModel):
     session_id: str
     answer: str
+
+
+class InterviewQuestionResult(BaseModel):
+    question_id: str
+    question: str
+    answer: str
+    overall_level: int
+    scores: Dict[str, int] = Field(default_factory=dict)
+    strengths: List[str] = Field(default_factory=list)
+    missing_points: List[str] = Field(default_factory=list)
+
+
+class InterviewReport(BaseModel):
+    report_id: str
+    session_id: str
+    user_id: str = "local_user"
+    goal_id: Optional[str] = None
+    mode: Literal["diagnostic", "mock"]
+    completed: bool = True
+    question_count: int
+    answered_count: int
+    overall_level: float = 0.0
+    scores: Dict[str, float] = Field(default_factory=dict)
+    strengths: List[str] = Field(default_factory=list)
+    missing_points: List[str] = Field(default_factory=list)
+    question_results: List[InterviewQuestionResult] = Field(default_factory=list)
+    study_recommendations: List[str] = Field(default_factory=list)
+    plan_adjustment_points: List[str] = Field(default_factory=list)
+    created_at: str

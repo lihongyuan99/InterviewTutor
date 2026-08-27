@@ -4,10 +4,12 @@ Task Plan Agent - Dialog Manager
 import asyncio
 import json
 import logging
+import re
 import time
 from typing import Any, Dict, List, Optional
 
-from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -32,24 +34,82 @@ def _contains_keywords(text: str, keywords: List[str]) -> bool:
     return any(k in text for k in keywords)
 
 
-def _is_yes(text: str) -> bool:
+_REPLY_SPLIT_RE = re.compile(r"[，,。.!！?？；;：:\n]")
+_REPLY_EDGE_CHARS = " \t\r\n，,。.!！?？；;：:\"'“”‘’"
+
+
+def _reply_candidates(text: str) -> set[str]:
+    """Normalize the full text and complete clauses of a short command.
+
+    Matching complete clauses prevents words such as ``行列式`` and
+    ``生成式`` from being mistaken for the replies ``行`` and ``生成``.
+    """
     if not text:
+        return set()
+    stripped = text.strip()
+    clauses = _REPLY_SPLIT_RE.split(stripped)
+    candidates = set()
+    for value in (stripped, *clauses):
+        normalized = "".join(value.split()).strip(_REPLY_EDGE_CHARS)
+        if normalized:
+            candidates.add(normalized)
+    return candidates
+
+
+def _is_yes(text: str) -> bool:
+    candidates = _reply_candidates(text)
+    if not candidates:
         return False
-    text = text.strip()
-    if any(k in text for k in NO_KEYWORDS):
+    no_replies = {"".join(item.split()) for item in NO_KEYWORDS}
+    if candidates & no_replies:
         return False
-    return any(k in text for k in YES_KEYWORDS)
+    yes_replies = {"".join(item.split()) for item in YES_KEYWORDS}
+    yes_replies.update({"好", "好啊", "可以的", "需要的", "没问题"})
+    return bool(candidates & yes_replies)
 
 
 def _is_no(text: str) -> bool:
-    if not text:
-        return False
-    text = text.strip()
-    if any(k in text for k in NO_KEYWORDS):
-        return True
-    if any(k in text for k in YES_KEYWORDS):
-        return False
-    return False
+    candidates = _reply_candidates(text)
+    no_replies = {"".join(item.split()) for item in NO_KEYWORDS}
+    no_replies.update({"不了", "不必", "不需要了"})
+    return bool(candidates & no_replies)
+
+
+def _is_resume_plan_intent(text: str) -> bool:
+    candidates = _reply_candidates(text)
+    return bool(
+        candidates
+        & {
+            "继续",
+            "继续计划",
+            "继续调整计划",
+            "继续制定计划",
+            "恢复计划",
+            "恢复调整计划",
+            "继续规划",
+            "继续调整",
+        }
+    )
+
+
+def _is_plan_confirm_intent(text: str) -> bool:
+    candidates = _reply_candidates(text)
+    return bool(
+        candidates
+        & {
+            "确认",
+            "确认计划",
+            "保存",
+            "保存计划",
+            "就这样",
+            "按这个执行",
+            "开始执行",
+            "计划没问题",
+            "没问题",
+            "可以",
+            "好的",
+        }
+    )
 
 
 def _is_exit_intent(text: str) -> bool:
@@ -57,10 +117,29 @@ def _is_exit_intent(text: str) -> bool:
     if not text:
         return False
     trimmed = text.strip()
+    if _is_resume_plan_intent(trimmed):
+        return False
+    if _reply_candidates(trimmed) & {"不结束", "不退出", "继续", "先继续"}:
+        return False
     # 如果明确在提更新/时间细节，不视为退出
     if _has_update_points(trimmed):
         return False
-    return any(k in trimmed for k in EXIT_PLAN_KEYWORDS)
+    explicit_plan_exits = (keyword for keyword in EXIT_PLAN_KEYWORDS if "计划" in keyword)
+    if any(keyword in trimmed for keyword in explicit_plan_exits):
+        return True
+    return bool(
+        _reply_candidates(trimmed)
+        & {
+            "先不弄了",
+            "算了",
+            "算了吧",
+            "停一停",
+            "停一停吧",
+            "先不",
+            "不调整了",
+            "先不调整了",
+        }
+    )
 
 
 def _is_update_intent(text: str) -> bool:
@@ -98,6 +177,19 @@ def _build_plan_dialogue_text(plan_session: Dict[str, Any]) -> str:
     return "\n".join(parts)
 
 
+def _build_plan_user_text(plan_session: Dict[str, Any]) -> str:
+    """Combine user-authored plan context for deterministic slot checks."""
+    parts: List[str] = []
+    for key in ("context_messages", "messages"):
+        for item in plan_session.get(key, []) or []:
+            if item.get("role") != "user":
+                continue
+            content = (item.get("content") or "").strip()
+            if content:
+                parts.append(content)
+    return "\n".join(parts)
+
+
 def _extract_recent_dialogue(history_messages: Optional[List[Any]], limit: int = 12) -> List[Dict[str, str]]:
     if not history_messages:
         return []
@@ -120,7 +212,18 @@ def _has_time_signal(text: str) -> bool:
     hints = _extract_plan_hints(text)
     if hints.get("target_days") or hints.get("daily_hours"):
         return True
-    return _contains_keywords(text, TIME_KEYWORDS)
+    if any(phrase in text for phrase in ("每天", "每周", "每月", "时长", "周期", "多久")):
+        return True
+    # Bare characters and domain terms such as “今天 / 周围 / 时间复杂度”
+    # are not schedule constraints. “时间” only counts with a nearby
+    # planning qualifier.
+    return bool(
+        re.search(
+            r"(?:(?:学习|可用|空闲|投入|安排|调整|规划|限制|有|没).{0,4}时间"
+            r"|时间.{0,4}(?:安排|投入|有限|充足|紧|约束|限制|不变|调整|改))",
+            text,
+        )
+    )
 
 
 def _has_depth_or_goal(text: str) -> bool:
@@ -133,7 +236,7 @@ def _has_depth_or_goal(text: str) -> bool:
 
 def _has_update_points(text: str) -> bool:
     return (
-        _contains_keywords(text, TIME_KEYWORDS)
+        _has_time_signal(text)
         or _contains_keywords(text, CONTENT_KEYWORDS)
         or _contains_keywords(text, DEPTH_KEYWORDS)
         or _contains_keywords(text, INTENSITY_KEYWORDS)
@@ -142,12 +245,18 @@ def _has_update_points(text: str) -> bool:
 
 def _has_enough_info(text: str, mode: str) -> bool:
     hints = _extract_plan_hints(text)
-    goal = (hints.get("user_goal") or "").strip()
-    has_time = _has_time_signal(text)
-    has_goal = bool(goal) or _has_depth_or_goal(text) or _contains_keywords(text, CONTENT_KEYWORDS)
     if mode == "update":
         return _has_update_points(text)
-    return has_goal and has_time
+    has_goal = (
+        _has_depth_or_goal(text)
+        or _is_learn_intent(text)
+        or _contains_keywords(text, CONTENT_KEYWORDS)
+    )
+    has_duration = hints.get("target_days") is not None
+    has_effort = hints.get("daily_hours") is not None or bool(
+        re.search(r"每周\s*\d+\s*(?:天|次)", text)
+    )
+    return has_goal and has_duration and has_effort
 
 
 def _next_default_question(mode: str, turns: int) -> str:
@@ -214,22 +323,29 @@ def _normalize_plan_session(plan_session: Optional[Dict[str, Any]]) -> Dict[str,
     base.setdefault("pending_mode", "")
     base.setdefault("draft_plan", None)
     base.setdefault("exit_from", "")
+    base.setdefault("paused_from", "")
     base.setdefault("context_messages", [])
     return base
 
 
+class PlanReadinessDecision(BaseModel):
+    ready: bool = False
+
+
 def _is_exit_confirm_yes(text: str) -> bool:
-    if not text:
-        return False
-    trimmed = text.strip()
-    return any(k in trimmed for k in ["结束", "退出", "是的", "确认结束", "确定"])
+    candidates = _reply_candidates(text)
+    return bool(
+        candidates
+        & {"结束", "退出", "是的", "确认", "确认结束", "确定", "确定结束"}
+    )
 
 
 def _is_exit_confirm_no(text: str) -> bool:
-    if not text:
-        return False
-    trimmed = text.strip()
-    return any(k in trimmed for k in ["继续", "不结束", "不退出", "继续调整", "先继续"])
+    candidates = _reply_candidates(text)
+    return bool(
+        candidates
+        & {"继续", "不结束", "不退出", "继续调整", "继续计划", "先继续", "取消退出"}
+    )
 
 
 def _should_exit_plan_by_keywords(user_message: str) -> bool:
@@ -269,7 +385,7 @@ async def _generate_followup_question(
         _t0 = time.perf_counter()
         response = await model.ainvoke(
             [
-                HumanMessage(content=sys_prompt),
+                SystemMessage(content=sys_prompt),
                 HumanMessage(content=user_prompt),
             ]
         )
@@ -308,14 +424,6 @@ async def handle_plan_chat(
 
     # Awaiting exit confirmation
     if status == "await_exit_confirm":
-        if _is_exit_confirm_yes(user_message):
-            session.update({"status": "idle", "mode": "", "turns": 0, "pending_mode": "", "messages": [], "exit_from": ""})
-            return {
-                "handled": True,
-                "reply": "好的，已结束学习计划规划。需要时随时告诉我。",
-                "plan_proposal": None,
-                "plan_session": session,
-            }
         if _is_exit_confirm_no(user_message):
             session["status"] = session.get("exit_from") or "collecting"
             session["exit_from"] = ""
@@ -325,9 +433,52 @@ async def handle_plan_chat(
                 "plan_proposal": None,
                 "plan_session": session,
             }
+        if _is_exit_confirm_yes(user_message):
+            session.update({"status": "idle", "mode": "", "turns": 0, "pending_mode": "", "messages": [], "exit_from": ""})
+            return {
+                "handled": True,
+                "reply": "好的，已结束学习计划规划。需要时随时告诉我。",
+                "plan_proposal": None,
+                "plan_session": session,
+            }
         return {
             "handled": True,
             "reply": "是否结束学习计划规划？回复“结束”或“继续”。",
+            "plan_proposal": None,
+            "plan_session": session,
+        }
+
+    # A paused plan remains resumable from natural language as well as the UI.
+    if status == "paused":
+        if _is_resume_plan_intent(user_message):
+            restored_status = session.get("paused_from") or "collecting"
+            session["status"] = restored_status
+            session["paused_from"] = ""
+            return {
+                "handled": True,
+                "reply": "好的，已恢复学习计划规划。请继续补充或调整计划信息。",
+                "plan_proposal": None,
+                "plan_session": session,
+            }
+        if _is_exit_intent(user_message):
+            session.update(
+                {
+                    "status": "idle",
+                    "mode": "",
+                    "turns": 0,
+                    "pending_mode": "",
+                    "messages": [],
+                    "paused_from": "",
+                }
+            )
+            return {
+                "handled": True,
+                "reply": "好的，已结束学习计划规划。需要时随时告诉我。",
+                "plan_proposal": None,
+                "plan_session": session,
+            }
+        return {
+            "handled": False,
             "plan_proposal": None,
             "plan_session": session,
         }
@@ -444,6 +595,32 @@ async def handle_plan_chat(
                 "plan_proposal": None,
                 "plan_session": session,
             }
+        if _is_plan_confirm_intent(user_message) and not _has_update_points(user_message):
+            confirmed_plan = session.get("draft_plan")
+            if not isinstance(confirmed_plan, dict):
+                return {
+                    "handled": True,
+                    "reply": "当前没有可确认的计划草案，请先生成或调整计划。",
+                    "plan_proposal": None,
+                    "plan_session": session,
+                }
+            session.update(
+                {
+                    "status": "idle",
+                    "mode": "",
+                    "turns": 0,
+                    "pending_mode": "",
+                    "messages": [],
+                    "draft_plan": None,
+                }
+            )
+            return {
+                "handled": True,
+                "reply": "学习计划已确认并保存，可以按计划开始执行了。",
+                "plan_proposal": None,
+                "plan_session": session,
+                "confirmed_plan": confirmed_plan,
+            }
         # If user 提出新诉求，回到更新流程
         if _is_update_intent(user_message) or _is_learn_intent(user_message) or _has_update_points(user_message):
             session.update(
@@ -465,18 +642,9 @@ async def handle_plan_chat(
                 "plan_session": session,
                 "suggested_replies": _build_suggested_replies(question, "update"),
             }
-        # 用户拒绝或想退出
-        if _is_exit_intent(user_message):
-            session.update({"status": "idle", "mode": "", "turns": 0, "pending_mode": "", "messages": []})
-            return {
-                "handled": True,
-                "reply": "好的，已取消学习计划。需要时随时告诉我。",
-                "plan_proposal": None,
-                "plan_session": session,
-            }
         return {
             "handled": True,
-            "reply": "如果你需要调整计划，直接告诉我你想改哪些内容。",
+            "reply": "你可以回复“确认”保存计划，或直接告诉我想调整哪些内容。",
             "plan_proposal": None,
             "plan_session": session,
         }
@@ -501,38 +669,40 @@ async def handle_plan_chat(
         if session.get("max_turns", 0) <= 0:
             session["max_turns"] = 5 if mode == "init" else 3
 
-        dialogue_text = _build_plan_dialogue_text(session)
         async def _should_generate_plan_llm(text: str) -> bool:
             try:
                 from app.core.task_plan.generator import _get_chat_model
                 model = _get_chat_model()
+                readiness_model = model.with_structured_output(PlanReadinessDecision)
                 sys_prompt = (
                     "你是学习计划信息判断器。"
                     "判断当前对话是否已经足够生成完整学习计划。"
                     "关注目标/范围、时间周期、日常投入、重点主题或约束。"
-                    "只回答 READY 或 NOT_READY。"
+                    "只有目标与时间投入足以形成可执行计划时，ready 才为 true。"
                 )
-                user_prompt = f"对话内容:\n{text}"
+                user_prompt = f"用户已经明确提供的信息（不要把缺失项当作已提供）:\n{text}"
                 _t0 = time.perf_counter()
-                response = await model.ainvoke(
-                    [HumanMessage(content=sys_prompt), HumanMessage(content=user_prompt)]
+                decision = await readiness_model.ainvoke(
+                    [SystemMessage(content=sys_prompt), HumanMessage(content=user_prompt)]
                 )
                 logger.info(
                     "[计时] _should_generate_plan_llm 信息判断 LLM 耗时 %.2fs",
                     time.perf_counter() - _t0,
                 )
-                content = (getattr(response, "content", "") or "").strip().upper()
-                return "READY" in content
+                if isinstance(decision, dict):
+                    return bool(decision.get("ready", False))
+                return bool(getattr(decision, "ready", False))
             except Exception:
                 return False
 
         # 先用纯规则快速判断信息是否已足够，避免每轮都调用一次 LLM 判断。
         # 规则认为够了就直接生成；规则不确定时才回退到 LLM 判断。
-        rule_says_enough = _has_enough_info(user_message, mode)
+        user_plan_text = _build_plan_user_text(session)
+        rule_says_enough = _has_enough_info(user_plan_text, mode)
         if rule_says_enough:
             should_generate = True
         else:
-            should_generate = await _should_generate_plan_llm(dialogue_text)
+            should_generate = await _should_generate_plan_llm(user_plan_text)
         should_generate = should_generate or session["turns"] >= session["max_turns"]
 
         if should_generate:
@@ -583,7 +753,7 @@ async def handle_plan_chat(
                 "plan_session": session,
             }
 
-        time_missing = mode == "init" and not _has_time_signal(dialogue_text)
+        time_missing = mode == "init" and not _has_time_signal(user_plan_text)
         require_time = time_missing and session["turns"] >= (session["max_turns"] - 1)
         question = await _generate_followup_question(
             mode,

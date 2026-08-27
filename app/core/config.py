@@ -25,6 +25,11 @@ class Settings(BaseSettings):
         os.getenv("RAG_SIMILARITY_THRESHOLD", "0.8")
     )
 
+    # Chat latency controls
+    CHAT_FAST_ROUTE_ENABLED: bool = True
+    CHAT_ROUTER_TIMEOUT_SECONDS: float = 10.0
+    CHAT_BACKGROUND_MAINTENANCE: bool = True
+
     # Knowledge Base Configuration (面试知识库，独立于对话记忆 RAG)
     KNOWLEDGE_DB_PATH: str = os.getenv("KNOWLEDGE_DB_PATH", "data/knowledge.db")
     KNOWLEDGE_EMBEDDING_BASE_URL: str = os.getenv(
@@ -35,6 +40,29 @@ class Settings(BaseSettings):
     )
     KNOWLEDGE_EMBEDDING_API_KEY: str = os.getenv("KNOWLEDGE_EMBEDDING_API_KEY", "local")
     KNOWLEDGE_EMBEDDING_DIM: int = int(os.getenv("KNOWLEDGE_EMBEDDING_DIM", "1024"))
+
+    # Dynamic knowledge synchronization.  The GitHub token is optional for the
+    # public upstream and is never returned by the settings API.
+    KNOWLEDGE_SYNC_ENABLED: bool = os.getenv(
+        "KNOWLEDGE_SYNC_ENABLED", "true"
+    ).strip().lower() not in {"0", "false", "no", "off"}
+    KNOWLEDGE_SYNC_INTERVAL_SECONDS: int = int(
+        os.getenv("KNOWLEDGE_SYNC_INTERVAL_SECONDS", "21600")
+    )
+    KNOWLEDGE_SYNC_RUNTIME_DIR: str = os.getenv(
+        "KNOWLEDGE_SYNC_RUNTIME_DIR", "data/knowledge_runtime"
+    )
+    KNOWLEDGE_MANIFEST_PATH: str = os.getenv(
+        "KNOWLEDGE_MANIFEST_PATH", "data/knowledge_manifest.json"
+    )
+    KNOWLEDGE_SOURCE_REPOSITORY: str = os.getenv(
+        "KNOWLEDGE_SOURCE_REPOSITORY", "ranxi2001/zero2Agent"
+    )
+    KNOWLEDGE_SOURCE_REF: str = os.getenv("KNOWLEDGE_SOURCE_REF", "main")
+    KNOWLEDGE_SOURCE_PATH: str = os.getenv(
+        "KNOWLEDGE_SOURCE_PATH", "learn-agent-interview"
+    )
+    KNOWLEDGE_GITHUB_TOKEN: str = os.getenv("KNOWLEDGE_GITHUB_TOKEN", "")
 
     # Constants
     MODE_ACTIVE: str = "active"

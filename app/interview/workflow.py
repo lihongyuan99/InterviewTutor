@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import uuid
+from datetime import datetime
 from typing import List, Optional
 
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -26,8 +27,11 @@ from app.interview.models import (
     InterviewSession,
     StartRequest,
 )
-from app.interview.progress import ProgressStore
+from app.core import memory
+from app.interview.progress import GoalProgressStore, ProgressStore, list_all_goal_progress
+from app.interview.report_store import get_report, list_reports, save_report
 from app.interview.session_store import delete_session, load_session, save_session
+from app.interview.models import InterviewQuestionResult, InterviewReport
 
 
 def _pick_question(
@@ -35,6 +39,8 @@ def _pick_question(
     companies: List[str],
     difficulty: int,
     exclude_ids: Optional[set] = None,
+    exclude_dimensions: Optional[set] = None,
+    snapshot_id: Optional[str] = None,
 ) -> Optional[dict]:
     """从知识库选题。
 
@@ -43,7 +49,7 @@ def _pick_question(
     """
     from app.knowledge import KnowledgeRepository
 
-    repo = KnowledgeRepository()
+    repo = KnowledgeRepository(snapshot_id=snapshot_id)
     try:
         params: list = []
 
@@ -69,6 +75,9 @@ def _pick_question(
         if exclude_ids:
             sql += " AND id NOT IN ({})".format(",".join("?" * len(exclude_ids)))
             params.extend(exclude_ids)
+        if exclude_dimensions:
+            sql += " AND dimension NOT IN ({})".format(",".join("?" * len(exclude_dimensions)))
+            params.extend(exclude_dimensions)
         sql += " ORDER BY RANDOM() LIMIT 1"
 
         row = repo.conn.execute(sql, params).fetchone()
@@ -81,11 +90,20 @@ def _pick_question(
         repo.close()
 
 
-def _pick_review_question(user_id: str, done_ids: set) -> Optional[dict]:
+def _progress_store(user_id: str, goal_id: Optional[str] = None):
+    return GoalProgressStore(user_id, goal_id) if goal_id else ProgressStore(user_id)
+
+
+def _pick_review_question(
+    user_id: str,
+    done_ids: set,
+    goal_id: Optional[str] = None,
+    snapshot_id: Optional[str] = None,
+) -> Optional[dict]:
     """从复习队列选题：取到期待复习、且属于已做过的题。"""
     from app.knowledge import get_question
 
-    store = ProgressStore(user_id)
+    store = _progress_store(user_id, goal_id)
     due = store.review_queue(limit=50)
     if not due:
         return None
@@ -93,7 +111,7 @@ def _pick_review_question(user_id: str, done_ids: set) -> Optional[dict]:
     due.sort(key=lambda p: p.mastery)
     for p in due:
         if p.question_id in done_ids:
-            q = get_question(p.question_id)
+            q = get_question(p.question_id, snapshot_id=snapshot_id)
             if q:
                 d = q.model_dump()
                 d.pop("id", None)
@@ -127,32 +145,262 @@ async def _call_structured(system_prompt: str, user_prompt: str) -> EvaluationRe
     return result
 
 
+def _resolve_goal_filters(req: StartRequest) -> tuple[List[str], List[str]]:
+    dimensions = list(dict.fromkeys(req.dimensions))
+    companies = list(dict.fromkeys(req.companies))
+    if not req.goal_id:
+        return dimensions, companies
+    task = memory.get_task(req.goal_id)
+    if task and task.get("kind") == "interview_goal":
+        if not companies:
+            companies = list(task.get("target_companies") or [])
+        if not dimensions and req.mode in {"diagnostic", "mock"}:
+            dimensions.extend(_role_dimension_hints(task.get("target_role") or ""))
+    if req.mode in {"diagnostic", "mock"} and not dimensions:
+        weak = get_progress(req.user_id, goal_id=req.goal_id).get("weak_dimensions", [])
+        dimensions = [item["dimension"] for item in weak[:5] if item.get("dimension")]
+    elif req.mode in {"diagnostic", "mock"}:
+        weak = get_progress(req.user_id, goal_id=req.goal_id).get("weak_dimensions", [])
+        dimensions = list(dict.fromkeys(
+            [item["dimension"] for item in weak[:5] if item.get("dimension")] + dimensions
+        ))
+    return dimensions, companies
+
+
+def _role_dimension_hints(target_role: str) -> List[str]:
+    """Map common role language to knowledge dimensions used for candidate selection."""
+    role = target_role.lower()
+    mappings = [
+        (("agent", "智能体"), ["agent-concepts", "tool-management", "memory-context", "multi-agent"]),
+        (("rag", "检索"), ["rag", "evaluation", "prompt-engineering"]),
+        (("前端", "frontend", "全栈", "full stack"), ["full-stack", "engineering", "architecture"]),
+        (("模型", "算法", "训练", "llm"), ["model", "training", "evaluation"]),
+        (("测试", "质量"), ["ai-code-testing", "engineering-pitfalls", "evaluation"]),
+    ]
+    result: List[str] = []
+    for keywords, dimensions in mappings:
+        if any(keyword in role for keyword in keywords):
+            result.extend(dimensions)
+    return list(dict.fromkeys(result))
+
+
+def _question_count(req: StartRequest) -> int:
+    if req.mode == "diagnostic":
+        return 3
+    if req.mode == "mock":
+        return req.question_count if req.question_count in {3, 5, 8} else 5
+    return 1
+
+
+def _select_question(session: InterviewSession, *, done_ids: set) -> Optional[dict]:
+    excluded = set(done_ids) | set(session.question_ids)
+    excluded_dimensions = set()
+    if session.mode == "diagnostic":
+        excluded_dimensions = {
+            item.get("dimension")
+            for item in session.answers
+            if item.get("dimension")
+        }
+    question = _pick_question(
+        session.dimensions,
+        session.companies,
+        session.difficulty,
+        exclude_ids=excluded,
+        exclude_dimensions=excluded_dimensions,
+        snapshot_id=session.knowledge_snapshot_id,
+    )
+    if question is None and session.mode in {"diagnostic", "mock"} and session.dimensions:
+        # Role/weakness filters are preferences. Fall back to the broader bank so
+        # a multi-question session can still complete with distinct questions.
+        question = _pick_question(
+            [],
+            session.companies,
+            session.difficulty,
+            exclude_ids=excluded,
+            exclude_dimensions=excluded_dimensions,
+            snapshot_id=session.knowledge_snapshot_id,
+        )
+    if question is None and session.mode in {"diagnostic", "mock"} and session.companies:
+        question = _pick_question(
+            [],
+            [],
+            session.difficulty,
+            exclude_ids=excluded,
+            exclude_dimensions=excluded_dimensions,
+            snapshot_id=session.knowledge_snapshot_id,
+        )
+    if question is None and done_ids:
+        question = _pick_question(
+            session.dimensions,
+            session.companies,
+            session.difficulty,
+            exclude_ids=set(session.question_ids),
+            exclude_dimensions=excluded_dimensions,
+            snapshot_id=session.knowledge_snapshot_id,
+        )
+    if question is None and done_ids and session.mode in {"diagnostic", "mock"}:
+        question = _pick_question(
+            [],
+            [],
+            session.difficulty,
+            exclude_ids=set(session.question_ids),
+            exclude_dimensions=excluded_dimensions,
+            snapshot_id=session.knowledge_snapshot_id,
+        )
+    return question
+
+
+async def _activate_question(session: InterviewSession, question: dict) -> str:
+    from app.knowledge.schema import InterviewQuestion
+
+    session.current_question_id = question["id"]
+    if question["id"] not in session.question_ids:
+        session.question_ids.append(question["id"])
+    # 将当前题的完整结构化内容存入会话。即使后台切换并清理了
+    # 对应 release，当前题仍能完成评分和复盘。
+    session.retrieved_knowledge = InterviewQuestion.model_validate(question).model_dump()
+    ask_prompt = prompts.INTERVIEWER_ASK_PROMPT.format(question=question["question"])
+    role_context = f"\n目标岗位：{session.target_role}" if session.target_role else ""
+    question_text = await _call_llm(
+        prompts.INTERVIEWER_SYSTEM_PROMPT.format(
+            question=question["question"],
+            dimension_label=question["dimension_label"],
+            difficulty=session.difficulty,
+        ) + role_context,
+        ask_prompt,
+    )
+    session.current_question = question_text or question["question"]
+    session.question_round = len(session.question_ids)
+    session.phase = "awaiting_answer"
+    return session.current_question
+
+
+def _session_question(session: InterviewSession):
+    """优先读取会话内固定的完整题目，兼容旧会话数据。"""
+    from app.knowledge import get_question
+    from app.knowledge.schema import InterviewQuestion
+
+    cached = session.retrieved_knowledge or {}
+    if cached.get("id") == session.current_question_id:
+        try:
+            return InterviewQuestion.model_validate(cached)
+        except ValueError:
+            pass
+    try:
+        return get_question(
+            session.current_question_id or "",
+            snapshot_id=session.knowledge_snapshot_id,
+        )
+    except FileNotFoundError:
+        # 旧版会话未缓存完整题目，且所指快照已被清理时，尝试当前库。
+        return get_question(session.current_question_id or "")
+
+
+def _unique_strings(values: List[str], limit: int = 8) -> List[str]:
+    result: List[str] = []
+    for value in values:
+        cleaned = str(value).strip()
+        if cleaned and cleaned not in result:
+            result.append(cleaned)
+        if len(result) >= limit:
+            break
+    return result
+
+
+def _build_report(session: InterviewSession, *, completed: bool) -> InterviewReport:
+    score_keys = ["correctness", "depth", "tradeoff_reasoning", "engineering_evidence", "clarity"]
+    evaluations = session.evaluations
+    scores = {
+        key: round(sum(float(item.get(key, 0)) for item in evaluations) / len(evaluations), 1)
+        for key in score_keys
+    } if evaluations else {key: 0.0 for key in score_keys}
+    overall = round(
+        sum(float(item.get("overall_level", 0)) for item in evaluations) / len(evaluations),
+        1,
+    ) if evaluations else 0.0
+    strengths = _unique_strings([
+        value for item in evaluations for value in item.get("strengths", [])
+    ])
+    missing = _unique_strings([
+        value for item in evaluations for value in item.get("missing_points", [])
+    ])
+    question_results = []
+    for answer, evaluation in zip(session.answers, evaluations):
+        question_results.append(InterviewQuestionResult(
+            question_id=answer.get("question_id", ""),
+            question=answer.get("question", ""),
+            answer=answer.get("answer", ""),
+            overall_level=int(evaluation.get("overall_level", 0)),
+            scores={key: int(evaluation.get(key, 0)) for key in score_keys},
+            strengths=evaluation.get("strengths", []),
+            missing_points=evaluation.get("missing_points", []),
+        ))
+    report = InterviewReport(
+        report_id=uuid.uuid4().hex,
+        session_id=session.session_id,
+        user_id=session.user_id,
+        goal_id=session.goal_id,
+        mode=session.mode,
+        completed=completed,
+        question_count=session.question_count,
+        answered_count=len(question_results),
+        overall_level=overall,
+        scores=scores,
+        strengths=strengths,
+        missing_points=missing,
+        question_results=question_results,
+        study_recommendations=[f"针对「{item}」安排专项复习" for item in missing[:5]],
+        plan_adjustment_points=missing[:5],
+        created_at=datetime.now().isoformat(),
+    )
+    save_report(report)
+    session.report_id = report.report_id
+    session.phase = "completed"
+    save_session(session)
+    return report
+
+
 async def start_session(req: StartRequest) -> dict:
     """开始一次刷题训练，返回题目（不含答案）。
 
-    支持三种模式：
+    支持四种模式：
     - practice：普通刷题，随机选题（排除已做过的题）。
     - review：复习模式，从复习队列（到期待复习的题）中选题。
-    - mock：模拟面试（与 practice 相同，仅标记语义不同）。
+    - diagnostic：固定三题、不同维度，逐题简评并生成能力基线。
+    - mock：连续 3/5/8 题，过程中隐藏评分，最后统一生成报告。
     """
+    from app.knowledge.snapshot import snapshot_manager
+
     session_id = uuid.uuid4().hex
+    knowledge_snapshot_id = snapshot_manager.resolve().snapshot_id
+    dimensions, companies = _resolve_goal_filters(req)
     session = InterviewSession(
         session_id=session_id,
         user_id=req.user_id,
+        goal_id=req.goal_id,
+        target_role=(memory.get_task(req.goal_id) or {}).get("target_role") if req.goal_id else None,
         mode=req.mode,
-        dimensions=req.dimensions,
-        companies=req.companies,
+        dimensions=dimensions,
+        companies=companies,
         difficulty=req.difficulty,
         phase="asking",
         question_round=1,
+        question_count=_question_count(req),
+        knowledge_snapshot_id=knowledge_snapshot_id,
     )
 
     # 已做过的题（排除，避免重复出题）
-    done_ids = {p.question_id for p in ProgressStore(req.user_id).all()}
+    store = _progress_store(req.user_id, req.goal_id)
+    done_ids = {p.question_id for p in store.all()}
 
     question = None
     if req.mode == "review":
-        question = _pick_review_question(req.user_id, done_ids)
+        question = _pick_review_question(
+            req.user_id,
+            done_ids,
+            req.goal_id,
+            snapshot_id=session.knowledge_snapshot_id,
+        )
         if not question:
             return {
                 "session_id": session_id,
@@ -161,9 +409,7 @@ async def start_session(req: StartRequest) -> dict:
                 "message": "暂无待复习题目，先去刷几道新题吧！",
             }
     else:
-        question = _pick_question(
-            req.dimensions, req.companies, req.difficulty, exclude_ids=done_ids
-        )
+        question = _select_question(session, done_ids=done_ids)
         if not question:
             return {
                 "session_id": session_id,
@@ -172,36 +418,19 @@ async def start_session(req: StartRequest) -> dict:
                 "message": "知识库中没有符合条件的题目，请调整维度或公司筛选。",
             }
 
-    session.current_question_id = question["id"]
-    session.current_question = question["question"]
-    # 仅保存出题所需的最小上下文（不含专家答案）
-    session.retrieved_knowledge = {
-        "question_id": question["id"],
-        "dimension": question["dimension"],
-        "dimension_label": question["dimension_label"],
-        # 专家答案留空，评分阶段再补齐
-    }
-
-    # 出题阶段：只传题目，不传答案
-    ask_prompt = prompts.INTERVIEWER_ASK_PROMPT.format(question=question["question"])
-    question_text = await _call_llm(
-        prompts.INTERVIEWER_SYSTEM_PROMPT.format(
-            question=question["question"],
-            dimension_label=question["dimension_label"],
-            difficulty=req.difficulty,
-        ),
-        ask_prompt,
-    )
-
-    session.phase = "awaiting_answer"
+    question_text = await _activate_question(session, question)
     save_session(session)
 
     return {
         "session_id": session_id,
         "phase": session.phase,
         "round": session.question_round,
+        "question_count": session.question_count,
         "question": question_text or question["question"],
         "dimension": question["dimension"],
+        "mode": session.mode,
+        "goal_id": session.goal_id,
+        "knowledge_snapshot_id": session.knowledge_snapshot_id,
     }
 
 
@@ -217,10 +446,8 @@ async def submit_answer(req: AnswerRequest) -> dict:
     question_id = session.current_question_id
     session.last_answer = req.answer
 
-    # 从知识库补齐标准答案（此阶段才接触专家答案）
-    from app.knowledge import get_question
-
-    full = get_question(question_id)
+    # 从会话内的快照题目补齐标准答案（此阶段才接触专家答案）。
+    full = _session_question(session)
     if not full:
         return {"error": "题目信息缺失", "phase": "completed"}
 
@@ -250,7 +477,7 @@ async def submit_answer(req: AnswerRequest) -> dict:
     session.evaluation_result = evaluation.model_dump()
 
     # 更新学习进度
-    store = ProgressStore(session.user_id)
+    store = _progress_store(session.user_id, session.goal_id)
     progress = store.record_attempt(
         question_id=question_id,
         overall_level=evaluation.overall_level,
@@ -264,6 +491,57 @@ async def submit_answer(req: AnswerRequest) -> dict:
         missing_points=evaluation.missing_points,
         mastery_delta=evaluation.mastery_delta,
     )
+
+    answer_record = {
+        "question_id": question_id,
+        "question": full.question,
+        "answer": req.answer,
+        "dimension": full.dimension,
+    }
+    session.answers.append(answer_record)
+    session.evaluations.append(evaluation.model_dump())
+
+    if session.mode in {"diagnostic", "mock"}:
+        if len(session.answers) >= session.question_count:
+            report = _build_report(session, completed=True)
+            response = {
+                "session_id": session.session_id,
+                "phase": "completed",
+                "round": len(session.answers),
+                "question_count": session.question_count,
+                "report": report.model_dump(),
+            }
+            if session.mode == "diagnostic":
+                response["evaluation"] = evaluation.model_dump()
+                response["progress"] = progress.model_dump()
+            return response
+
+        done_ids = {p.question_id for p in store.all()}
+        question = _select_question(session, done_ids=done_ids)
+        if not question:
+            report = _build_report(session, completed=False)
+            return {
+                "session_id": session.session_id,
+                "phase": "completed",
+                "round": len(session.answers),
+                "question_count": session.question_count,
+                "report": report.model_dump(),
+                "message": "符合条件的题目不足，已根据完成部分生成报告。",
+            }
+        next_question = await _activate_question(session, question)
+        save_session(session)
+        response = {
+            "session_id": session.session_id,
+            "phase": "awaiting_answer",
+            "round": session.question_round,
+            "question_count": session.question_count,
+            "question": next_question,
+            "dimension": question.get("dimension"),
+        }
+        if session.mode == "diagnostic":
+            response["evaluation"] = evaluation.model_dump()
+            response["progress"] = progress.model_dump()
+        return response
 
     # 生成追问（针对缺失点）
     followup = ""
@@ -301,9 +579,7 @@ async def review(session_id: str) -> dict:
         return {"error": "会话不存在或已过期", "phase": "completed"}
 
     question_id = session.current_question_id
-    from app.knowledge import get_question
-
-    full = get_question(question_id)
+    full = _session_question(session)
     if not full:
         return {"error": "题目信息缺失", "phase": "completed"}
 
@@ -334,10 +610,56 @@ def get_session(session_id: str) -> Optional[InterviewSession]:
     return load_session(session_id)
 
 
-def get_progress(user_id: str = "local_user", limit: int = 20) -> dict:
-    store = ProgressStore(user_id)
-    due = store.review_queue(limit=limit)
-    all_progress = store.all()
+def get_session_view(session_id: str) -> Optional[dict]:
+    session = load_session(session_id)
+    if not session:
+        return None
+    result = {
+        "session_id": session.session_id,
+        "goal_id": session.goal_id,
+        "mode": session.mode,
+        "phase": session.phase,
+        "round": session.question_round,
+        "question_count": session.question_count,
+        "question": session.current_question if session.phase == "awaiting_answer" else None,
+        "answered_count": len(session.answers),
+        "report_id": session.report_id,
+        "knowledge_snapshot_id": session.knowledge_snapshot_id,
+    }
+    if session.phase == "completed" and session.report_id:
+        report = get_report(session.report_id)
+        result["report"] = report.model_dump() if report else None
+    return result
+
+
+def end_session(session_id: str) -> dict:
+    session = load_session(session_id)
+    if not session:
+        return {"error": "会话不存在或已过期", "phase": "completed"}
+    if session.mode not in {"diagnostic", "mock"}:
+        return {"error": "当前会话不支持提前结束", "phase": session.phase}
+    if not session.answers:
+        delete_session(session_id)
+        return {"session_id": session_id, "phase": "cancelled", "report": None}
+    report = _build_report(session, completed=False)
+    return {"session_id": session_id, "phase": "completed", "report": report.model_dump()}
+
+
+def get_progress(
+    user_id: str = "local_user",
+    limit: int = 20,
+    goal_id: Optional[str] = None,
+) -> dict:
+    if goal_id:
+        store = GoalProgressStore(user_id, goal_id)
+        all_progress = store.all()
+        due = store.review_queue(limit=limit)
+    else:
+        all_progress = ProgressStore(user_id).all() + list_all_goal_progress(user_id)
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        due = [item for item in all_progress if item.next_review_at and item.next_review_at <= now]
+        due.sort(key=lambda item: (item.next_review_at, item.mastery))
+        due = due[:limit]
 
     # 按维度聚合掌握度（通过知识库反查 question_id -> dimension）
     dimension_stats = _aggregate_dimension_stats(all_progress)
@@ -345,6 +667,7 @@ def get_progress(user_id: str = "local_user", limit: int = 20) -> dict:
     weak_dimensions = _aggregate_weak_dimensions(dimension_stats)
 
     return {
+        "goal_id": goal_id,
         "review_queue": [p.model_dump() for p in due],
         "total_attempted": len(all_progress),
         "average_mastery": round(

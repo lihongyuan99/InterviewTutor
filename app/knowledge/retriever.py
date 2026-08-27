@@ -122,6 +122,7 @@ class KnowledgeRetriever:
                     dimension=row["dimension"],
                     source_file=row["source_file"],
                     content=row["question"],
+                    snapshot_id=getattr(self.repo, "snapshot_id", ""),
                 )
             )
         return results
@@ -161,6 +162,7 @@ class KnowledgeRetriever:
                     dimension=row["dimension"],
                     source_file=row["source_file"],
                     content=row["question"],
+                    snapshot_id=getattr(self.repo, "snapshot_id", ""),
                 )
             )
         return results
@@ -177,6 +179,12 @@ class KnowledgeRetriever:
         被切成「么做」「做红」这类跨词边界的噪声词。
         """
         keywords: List[str] = []
+        stopwords = {
+            "怎么", "如何", "什么", "为什么", "哪些", "一个", "进行", "可以",
+            "这个", "那个", "的", "了", "是", "在", "有", "和", "与", "或",
+            "做", "么", "样", "怎", "帮", "我", "写", "首", "诗", "呢", "啊",
+            "吗", "吧", "你", "他", "她", "它", "们", "就", "都", "还", "也",
+        }
 
         # 1) 英文/数字词整体保留
         keywords.extend(re.findall(r"[A-Za-z][A-Za-z0-9\-]*", text))
@@ -188,22 +196,28 @@ class KnowledgeRetriever:
             zh_segments = re.findall(r"[\u4e00-\u9fff]+", text)
             for seg in zh_segments:
                 keywords.extend(jieba.lcut(seg))
-        except ImportError:  # 兜底：无 jieba 时退回 2-gram
+        except ImportError:
+            # jieba 是正式依赖；精简环境缺失时保留清理后的连续语义片段，
+            # 不再退回会制造「么做」「做红」等跨词边界噪声的滑窗 2-gram。
+            boundary_fillers = ("为什么", "怎么", "如何", "什么", "哪些", "这个", "那个", "帮", "我", "你", "做", "写", "的", "了", "是", "吗", "呢", "啊", "吧")
             zh_segments = re.findall(r"[\u4e00-\u9fff]+", text)
             for seg in zh_segments:
-                if len(seg) <= 4:
+                changed = True
+                while changed and seg:
+                    changed = False
+                    for filler in boundary_fillers:
+                        if seg.startswith(filler):
+                            seg = seg[len(filler) :]
+                            changed = True
+                            break
+                        if seg.endswith(filler):
+                            seg = seg[: -len(filler)]
+                            changed = True
+                            break
+                if seg:
                     keywords.append(seg)
-                else:
-                    for i in range(len(seg) - 1):
-                        keywords.append(seg[i : i + 2])
 
         # 去重 + 过滤（长度、无意义虚词/单字）
-        stopwords = {
-            "怎么", "如何", "什么", "为什么", "哪些", "一个", "进行", "可以",
-            "这个", "那个", "的", "了", "是", "在", "有", "和", "与", "或",
-            "做", "么", "样", "怎", "帮", "我", "写", "首", "诗", "呢", "啊",
-            "吗", "吧", "你", "他", "她", "它", "们", "就", "都", "还", "也",
-        }
         seen = []
         for kw in keywords:
             kw = kw.strip()

@@ -25,10 +25,11 @@ import {
 } from "./ui/sheet";
 import { API_BASE_URL, extractErrorMessage } from "../../lib/api";
 import { EVENT_LLM_SETTINGS_UPDATED, emitAppEvent } from "../../lib/events";
+import { KnowledgeSettingsPanel } from "./KnowledgeSettingsPanel";
 
 type Protocol = "openai_compatible" | "anthropic" | "openai_responses";
 type TutorStyle = "socratic" | "direct" | "interactive" | "custom";
-type SettingsSection = "teaching" | "models";
+type SettingsSection = "teaching" | "models" | "knowledge";
 
 interface ModelEntry {
   id: string;
@@ -439,17 +440,17 @@ export function SettingsPage({ open, onOpenChange }: SettingsPageProps) {
             <span>系统设置</span>
           </SheetTitle>
           <SheetDescription className="pl-[52px] text-gray-500 dark:text-gray-400">
-            管理教学风格、模型服务、访问密钥和调用协议
+            管理教学风格、模型服务和知识库更新
           </SheetDescription>
         </SheetHeader>
 
         <div className="flex-1 overflow-y-auto bg-[#f7f8fa] dark:bg-gray-950">
           <div className="mx-auto max-w-3xl p-6">
-            {!isLoading && settings && !draft && (
+            {!draft && (
               <div
                 role="tablist"
                 aria-label="设置分类"
-                className="mb-5 grid grid-cols-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-1 shadow-sm"
+                className="mb-5 grid grid-cols-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-1 shadow-sm"
               >
                 <button
                   type="button"
@@ -485,23 +486,42 @@ export function SettingsPage({ open, onOpenChange }: SettingsPageProps) {
                 >
                   模型服务
                 </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={activeSection === "knowledge"}
+                  onClick={() => {
+                    setActiveSection("knowledge");
+                    setError("");
+                    setNotice("");
+                  }}
+                  className={`rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
+                    activeSection === "knowledge"
+                      ? "bg-gray-950 text-white shadow-sm"
+                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-950 dark:hover:text-gray-100"
+                  }`}
+                >
+                  知识库
+                </button>
               </div>
             )}
 
-            {error && (
+            {error && activeSection !== "knowledge" && (
               <div className="mb-4 flex items-start gap-2 rounded-xl border border-red-200 dark:border-red-900/40 bg-red-50 dark:bg-red-900/20 px-4 py-3 text-sm text-red-700 dark:text-red-400">
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
-            {notice && (
+            {notice && activeSection !== "knowledge" && (
               <div className="mb-4 flex items-center gap-2 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-400">
                 <Check className="h-4 w-4" />
                 <span>{notice}</span>
               </div>
             )}
 
-            {isLoading ? (
+            {activeSection === "knowledge" && !draft ? (
+              <KnowledgeSettingsPanel active={open && activeSection === "knowledge"} />
+            ) : isLoading ? (
               <div className="flex min-h-72 items-center justify-center text-gray-500">
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                 正在读取配置…

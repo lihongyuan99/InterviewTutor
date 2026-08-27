@@ -1,9 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
-import { ArrowLeft, BookOpen, Calendar, TrendingUp, Target, Clock, Edit3, Eye, Pencil, Network } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { ArrowLeft, BookOpen, Calendar, TrendingUp, Target, Clock, Edit3, Eye, Pencil } from "lucide-react";
 import { MarkdownPreview } from "./MarkdownPreview";
-import { KGViewerModal } from "./KGViewerModal";
 import { API_BASE_URL } from "../../lib/api";
+import { goalKeys } from "../../lib/goals";
 
 interface TaskNoteApiResponse {
   task_id: string;
@@ -76,13 +77,15 @@ function fromApi(api: TaskNoteApiResponse | null, taskId: string | undefined): T
 }
 
 export function TaskNotePage() {
-  const { taskId } = useParams<{ taskId: string }>();
+  const { taskId, goalId } = useParams<{ taskId: string; goalId: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const routeTaskId = goalId || taskId;
 
-  const resolvedTaskId = taskId
-    ? taskId.startsWith("task_")
-      ? taskId
-      : `task_${taskId}`
+  const resolvedTaskId = routeTaskId
+    ? routeTaskId.startsWith("task_")
+      ? routeTaskId
+      : `task_${routeTaskId}`
     : "task_default";
   const [taskNote, setTaskNote] = useState<TaskNote | null>(null);
   const [userNotes, setUserNotes] = useState("");
@@ -105,7 +108,6 @@ export function TaskNotePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveHint, setSaveHint] = useState<string | null>(null);
   const [planChecklist, setPlanChecklist] = useState<{ [key: string]: boolean }>({});
-  const [isKgViewerOpen, setIsKgViewerOpen] = useState(false);
 
   // 找到第一个未完成的项目索引
   const firstUncheckedIndex = normalizePlanSteps(taskNote?.plan).findIndex(
@@ -125,7 +127,7 @@ export function TaskNotePage() {
       }
       const data: TaskNoteApiResponse = await response.json();
       if (!cancelled) {
-        const merged = fromApi(data, taskId);
+        const merged = fromApi(data, routeTaskId);
         setTaskNote(merged);
         setUserNotes(merged?.userNotes || "");
         setPlanChecklist(merged?.planChecklist || {});
@@ -143,7 +145,7 @@ export function TaskNotePage() {
         setIsLoading(false);
       }
     }
-  }, [resolvedTaskId, taskId]);
+  }, [resolvedTaskId, routeTaskId]);
 
   // 保存学习计划打勾状态
   const handleSavePlanChecklist = async (checklist: { [key: string]: boolean }) => {
@@ -162,8 +164,7 @@ export function TaskNotePage() {
       if (!response.ok) {
         throw new Error(`保存进度失败（${response.status}）`);
       }
-      // 触发任务计划更新事件，通知其他组件同步状态
-      window.dispatchEvent(new Event("task-plan-updated"));
+      await queryClient.invalidateQueries({ queryKey: goalKeys.plan(resolvedTaskId) });
     } catch (error) {
       console.error("保存学习计划进度失败:", error);
     }
@@ -179,10 +180,6 @@ export function TaskNotePage() {
 
   useEffect(() => {
     void loadTaskNote();
-    window.addEventListener("task-plan-updated", loadTaskNote);
-    return () => {
-      window.removeEventListener("task-plan-updated", loadTaskNote);
-    };
   }, [loadTaskNote]);
 
   const handleSave = async () => {
@@ -204,6 +201,7 @@ export function TaskNotePage() {
         throw new Error(`保存失败（${response.status}）`);
       }
       setSaveHint("已保存");
+      await queryClient.invalidateQueries({ queryKey: goalKeys.plan(resolvedTaskId) });
     } catch (error) {
       const message = error instanceof Error ? error.message : "保存失败";
       setSaveHint(message);
@@ -256,14 +254,6 @@ export function TaskNotePage() {
             </div>
 
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => setIsKgViewerOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-              >
-                <Network className="w-4 h-4" />
-                <span className="text-sm font-medium">查看知识图谱</span>
-              </button>
-
               <button
                 onClick={() => void handleSave()}
                 disabled={isSaving || isLoading}
@@ -505,12 +495,6 @@ export function TaskNotePage() {
         </div>
       </div>
 
-      {/* KG Viewer Modal */}
-      <KGViewerModal
-        taskId={resolvedTaskId}
-        isOpen={isKgViewerOpen}
-        onClose={() => setIsKgViewerOpen(false)}
-      />
     </div>
   );
 }

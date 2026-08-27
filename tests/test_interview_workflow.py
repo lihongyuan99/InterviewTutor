@@ -120,6 +120,7 @@ def test_start_and_answer_flow(monkeypatch, tmp_path):
         "expert_answer": "离线切片 + 在线混合召回 + rerank。",
         "gap_analysis": "新手只说向量数据库，高手讲完整链路。",
         "key_points": ["召回", "重排"],
+        "source_file": "09-rag-retrieval/index.md",
     }
     monkeypatch.setattr(workflow, "_pick_question", lambda *a, **k: fake_question)
 
@@ -211,6 +212,34 @@ def test_session_persistence(monkeypatch, tmp_path):
 
     delete_session("persist-test-001")
     assert load_session("persist-test-001") is None
+
+
+def test_cached_question_survives_snapshot_cleanup(monkeypatch):
+    """当前题完整内容已入会话后，评分/复盘不再依赖 release 目录。"""
+    from app.interview.models import InterviewSession
+    from app.interview.workflow import _session_question
+    from app.knowledge.schema import InterviewQuestion
+
+    question = InterviewQuestion(
+        id="cached-q",
+        dimension="rag",
+        dimension_label="RAG 与检索",
+        question="快照清理后还能评分吗？",
+        expert_answer="使用会话内缓存的结构化题目。",
+        source_file="09-rag-retrieval/index.md",
+    )
+    session = InterviewSession(
+        session_id="cached-session",
+        current_question_id=question.id,
+        knowledge_snapshot_id="deleted-release",
+        retrieved_knowledge=question.model_dump(),
+    )
+    monkeypatch.setattr(
+        "app.knowledge.get_question",
+        lambda *args, **kwargs: (_ for _ in ()).throw(FileNotFoundError()),
+    )
+
+    assert _session_question(session) == question
 
 
 # ---- 选题：公司定向 ----

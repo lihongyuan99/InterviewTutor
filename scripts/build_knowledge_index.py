@@ -19,8 +19,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 
 # 允许以脚本方式直接运行时正确导入项目内模块
@@ -72,6 +74,94 @@ def _print_stats(questions, warnings) -> None:
             print(f"  ... 其余 {len(warnings) - 50} 条省略")
 
 
+def _write_manifest(
+    *,
+    questions,
+    warnings,
+    db_path: Path,
+    output_path: Path,
+    source_sha: str,
+    source_date: str,
+    with_embedding: bool,
+) -> None:
+    from app.core.config import settings
+    from app.knowledge.repository import KnowledgeRepository
+    from app.knowledge.snapshot import atomic_write_json
+    from app.knowledge.sync import (
+        PIPELINE_VERSION,
+        embedding_fingerprint,
+        question_hashes,
+        sha256_file,
+    )
+
+    repo = KnowledgeRepository(str(db_path))
+    try:
+        quick_check = repo.conn.execute("PRAGMA quick_check").fetchone()[0]
+        question_count = repo.count()
+        embedding_rows = repo.list_with_embedding()
+        fts_count = int(
+            repo.conn.execute("SELECT COUNT(*) FROM knowledge_fts").fetchone()[0]
+        )
+    finally:
+        repo.close()
+
+    expected_dimension = settings.KNOWLEDGE_EMBEDDING_DIM if with_embedding else 0
+    for row in embedding_rows:
+        vector = row.get("embedding") or []
+        if len(vector) != expected_dimension or not all(
+            math.isfinite(float(value)) for value in vector
+        ):
+            raise RuntimeError(f"题目 {row['id']} 的 Embedding 校验失败")
+    if quick_check != "ok" or question_count != len(questions) or fts_count != question_count:
+        raise RuntimeError("随包知识库 SQLite 完整性校验失败")
+    if with_embedding and len(embedding_rows) != question_count:
+        raise RuntimeError("随包知识库向量数量与题目数不一致")
+
+    fingerprint = (
+        embedding_fingerprint(
+            settings.KNOWLEDGE_EMBEDDING_MODEL,
+            settings.KNOWLEDGE_EMBEDDING_DIM,
+        )
+        if with_embedding
+        else ""
+    )
+    manifest = {
+        "schema_version": 1,
+        "build_version": 1,
+        "release_id": "bundled",
+        "source": {
+            "repository": settings.KNOWLEDGE_SOURCE_REPOSITORY,
+            "ref": settings.KNOWLEDGE_SOURCE_REF,
+            "path": settings.KNOWLEDGE_SOURCE_PATH,
+            "commit_sha": source_sha,
+            "commit_date": source_date,
+        },
+        "built_at": datetime.now(timezone.utc).isoformat(),
+        "question_count": len(questions),
+        "dimension_count": len({question.dimension for question in questions}),
+        "parse_warning_count": len(warnings),
+        "embedding": {
+            "model": settings.KNOWLEDGE_EMBEDDING_MODEL if with_embedding else "",
+            "dimension": expected_dimension,
+            "pipeline_version": PIPELINE_VERSION,
+            "fingerprint": fingerprint,
+            "reused": 0,
+            "generated": len(embedding_rows),
+        },
+        "question_hashes": {
+            question.id: question_hashes(question) for question in questions
+        },
+        "database_sha256": sha256_file(db_path),
+        "quality": {
+            "quick_check": quick_check,
+            "fts_count": fts_count,
+            "embedding_count": len(embedding_rows),
+        },
+    }
+    atomic_write_json(output_path, manifest)
+    print(f"已写入知识库清单：{output_path}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="构建面试知识索引")
     parser.add_argument("--dir", default="knowledge", help="知识库目录（默认 knowledge）")
@@ -95,6 +185,8 @@ def main() -> int:
         default="data",
         help="JSON 输出目录（默认 data/）",
     )
+    parser.add_argument("--source-sha", default="", help="上游知识库路径提交 SHA")
+    parser.add_argument("--source-date", default="", help="上游提交时间（ISO 8601）")
     args = parser.parse_args()
 
     root = Path(args.dir)
@@ -126,6 +218,18 @@ def main() -> int:
         db_path=args.db,
         with_embedding=not args.no_embedding,
         progress=True,
+    )
+    from app.core.config import settings  # noqa: E402
+
+    db_path = Path(args.db or settings.KNOWLEDGE_DB_PATH)
+    _write_manifest(
+        questions=questions,
+        warnings=warnings,
+        db_path=db_path,
+        output_path=out_dir / "knowledge_manifest.json",
+        source_sha=args.source_sha,
+        source_date=args.source_date,
+        with_embedding=not args.no_embedding,
     )
     print("\n完成！知识库就绪：")
     print(f"  总题数：{stats['total']}")

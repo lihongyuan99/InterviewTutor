@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
 from app.core import memory
+from app.core.reply_metrics import ReplyMetrics
 from app.core.summary.generator import summary_generator
 
 router = APIRouter()
@@ -29,6 +30,7 @@ class ChatMessageOut(BaseModel):
     role: str
     content: str
     timestamp: str
+    metrics: Optional[ReplyMetrics] = None
 
 
 class SessionMessagesResponse(BaseModel):

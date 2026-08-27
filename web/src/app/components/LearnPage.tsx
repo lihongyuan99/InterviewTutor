@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
+import { Link, useOutletContext, useParams } from "react-router";
 import {
   ArrowLeft,
   Send,
@@ -12,10 +12,12 @@ import {
   X,
   ExternalLink,
   FileText,
+  PanelRight,
 } from "lucide-react";
 import { MarkdownPreview } from "./MarkdownPreview";
-import { API_BASE_URL, apiGet } from "../../lib/api";
-import { EVENT_LLM_SETTINGS_UPDATED } from "../../lib/events";
+import { API_BASE_URL } from "../../lib/api";
+import { useGoal } from "../../lib/goals";
+import type { WorkspaceOutletContext } from "./RootLayout";
 
 interface Citation {
   question_id: string;
@@ -23,6 +25,7 @@ interface Citation {
   dimension: string;
   dimension_label: string;
   source_file: string;
+  snapshot_id?: string;
   score: number;
 }
 
@@ -73,11 +76,15 @@ function toSuperscript(text: string): string {
 }
 
 export function LearnPage() {
+  const { goalId = "" } = useParams<{ goalId: string }>();
+  const { data: goal } = useGoal(goalId);
+  const { isPanelOpen, setIsPanelOpen } = useOutletContext<WorkspaceOutletContext>();
   const [messages, setMessages] = useState<QAMessage[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [stage, setStage] = useState<"retrieving" | "generating">("retrieving");
   const [error, setError] = useState("");
+  const [questionCount, setQuestionCount] = useState<number | null>(null);
   const [sourceModal, setSourceModal] = useState<SourceModalState>({
     open: false,
     loading: false,
@@ -90,34 +97,26 @@ export function LearnPage() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const sourceContentRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [activeModel, setActiveModel] = useState<{ modelName: string; providerName: string } | null>(null);
-
-  // 输入框自适应高度（最多 160px）
-  const autoResizeInput = (el: HTMLTextAreaElement) => {
-    el.style.height = "auto";
-    el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
-  };
-
-  useEffect(() => {
-    const fetchActiveModel = async () => {
-      try {
-        const data = await apiGet<{ modelName: string; providerName: string }>(
-          "/llm-settings/active-model",
-        );
-        setActiveModel(data);
-      } catch {
-        setActiveModel(null);
-      }
-    };
-    fetchActiveModel();
-    const handler = () => fetchActiveModel();
-    window.addEventListener(EVENT_LLM_SETTINGS_UPDATED, handler);
-    return () => window.removeEventListener(EVENT_LLM_SETTINGS_UPDATED, handler);
-  }, []);
+  const isComposingRef = useRef(false);
+  const compositionEndedAtRef = useRef(0);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`${API_BASE_URL}/knowledge/status`, { signal: controller.signal })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload) => {
+        const count = payload?.current?.question_count;
+        if (typeof count === "number" && count > 0) setQuestionCount(count);
+      })
+      .catch((loadError) => {
+        if (loadError?.name !== "AbortError") setQuestionCount(null);
+      });
+    return () => controller.abort();
+  }, []);
 
   const ask = async (query: string) => {
     if (!query.trim() || loading) return;
@@ -132,7 +131,7 @@ export function LearnPage() {
       const res = await fetch(`${API_BASE_URL}/interview/ask/stream`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: submitted }),
+        body: JSON.stringify({ query: submitted, goal_id: goalId || null }),
       });
       if (!res.ok || !res.body) {
         throw new Error(`请求失败（${res.status}）`);
@@ -231,9 +230,12 @@ export function LearnPage() {
       error: "",
     });
     try {
-      const res = await fetch(
-        `${API_BASE_URL}/interview/source?source_file=${encodeURIComponent(c.source_file)}&question=${encodeURIComponent(c.question)}`,
-      );
+      const params = new URLSearchParams({
+        source_file: c.source_file,
+        question: c.question,
+      });
+      if (c.snapshot_id) params.set("snapshot_id", c.snapshot_id);
+      const res = await fetch(`${API_BASE_URL}/interview/source?${params.toString()}`);
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data?.detail || `加载失败（${res.status}）`);
@@ -326,26 +328,27 @@ export function LearnPage() {
   }, [sourceModal.open, sourceModal.loading, sourceModal.heading, sourceModal.content]);
 
   return (
-    <div className="flex flex-col h-full bg-slate-50 dark:bg-gray-950">
+    <div className="flex flex-col h-full bg-[#f7f7f8] dark:bg-gray-950">
       {/* 顶部 Header - 始终固定在顶部 */}
       <header className="shrink-0 bg-white dark:bg-gray-900 border-b border-slate-200 dark:border-gray-800 px-6 py-4">
-        <div className="max-w-3xl mx-auto flex items-center justify-between">
+        <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center text-white">
+            <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center text-indigo-600 dark:text-indigo-300">
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-slate-800 dark:text-gray-100">学习模式</h1>
-              <p className="text-xs text-slate-500 dark:text-gray-400">自由提问，基于知识库检索讲解（带引用）</p>
+              <div className="text-[11px] text-gray-400">{goal?.title || "面试目标"} / 学习</div>
+              <h1 className="text-lg font-semibold text-slate-800 dark:text-gray-100">知识学习</h1>
             </div>
           </div>
           <Link
-            to="/interview"
+            to={`/goals/${goalId}/practice`}
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-gray-300 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 hover:bg-slate-100 dark:hover:bg-gray-700 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             返回刷题
           </Link>
+          <button onClick={() => setIsPanelOpen(!isPanelOpen)} className="hidden rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 lg:block" aria-label="目标面板"><PanelRight className="h-4 w-4" /></button>
         </div>
       </header>
 
@@ -370,7 +373,7 @@ export function LearnPage() {
                   向面试知识库提问
                 </h2>
                 <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">
-                  系统会检索 485 道面试题中的相关知识，为你生成带引用的讲解。
+                  系统会检索{questionCount ? `${questionCount} 道面试题` : "当前知识库"}中的相关知识，为你生成带引用的讲解。
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {EXAMPLE_QUESTIONS.map((q) => (
@@ -455,8 +458,11 @@ export function LearnPage() {
       </main>
 
       {/* 底部输入栏 - 始终固定在底部，自然落在 flex-col 末尾 */}
-      <footer className="shrink-0 bg-white dark:bg-gray-900 border-t border-slate-200 dark:border-gray-800 px-4 py-3">
-        <div className="max-w-3xl mx-auto">
+      <footer
+        data-testid="workspace-learn-footer"
+        className="workspace-bottom-dock flex shrink-0 items-center border-t border-slate-200 bg-white px-4 dark:border-gray-800 dark:bg-gray-900"
+      >
+        <div className="mx-auto w-full max-w-3xl">
           {/* 主输入容器：聚焦时渐变边框 + 阴影提升 */}
           <div
             className="relative rounded-2xl border border-emerald-200/80 dark:border-emerald-700/50
@@ -479,16 +485,27 @@ export function LearnPage() {
                 value={input}
                 onChange={(e) => {
                   setInput(e.target.value);
-                  autoResizeInput(e.target);
+                }}
+                onCompositionStart={() => {
+                  isComposingRef.current = true;
+                }}
+                onCompositionEnd={() => {
+                  isComposingRef.current = false;
+                  compositionEndedAtRef.current = Date.now();
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    ask(input);
-                  }
+                  if (e.key !== "Enter" || e.shiftKey) return;
+                  const nativeEvent = e.nativeEvent;
+                  const isImeSelecting = isComposingRef.current
+                    || nativeEvent.isComposing
+                    || nativeEvent.keyCode === 229
+                    || Date.now() - compositionEndedAtRef.current < 150;
+                  if (isImeSelecting) return;
+                  e.preventDefault();
+                  void ask(input);
                 }}
                 placeholder="向面试知识库提问：例如 GraphRAG、Agent 记忆设计..."
-                className="flex-1 resize-none bg-transparent px-1 py-2
+                className="h-10 min-h-10 max-h-10 flex-1 resize-none overflow-y-auto bg-transparent px-1 py-2
                            text-sm text-slate-800 dark:text-gray-100
                            placeholder:text-slate-400 dark:placeholder:text-gray-500
                            focus:outline-none leading-relaxed"
@@ -512,7 +529,7 @@ export function LearnPage() {
           </div>
 
           {/* 底部辅助行：居中布局 - 快捷键 + 模型徽章 + 清空 */}
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs text-slate-500 dark:text-gray-400">
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs text-slate-500 dark:text-gray-400">
             <div className="flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
               <span>按 Enter 发送，</span>
@@ -521,19 +538,6 @@ export function LearnPage() {
               </kbd>
               <span>换行</span>
             </div>
-            {activeModel && (
-              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full
-                              bg-emerald-50/80 dark:bg-emerald-900/30
-                              border border-emerald-200/70 dark:border-emerald-700/50
-                              text-emerald-700 dark:text-emerald-300">
-                <span className="inline-block w-1.5 h-1.5 rounded-full
-                                 bg-gradient-to-br from-emerald-500 to-teal-500
-                                 shadow-[0_0_6px_rgba(16,185,129,0.6)]" />
-                <span className="font-medium">{activeModel.modelName}</span>
-                <span className="text-emerald-400/80">·</span>
-                <span className="text-emerald-500/80">{activeModel.providerName}</span>
-              </div>
-            )}
             {messages.length > 0 && (
               <button
                 onClick={reset}

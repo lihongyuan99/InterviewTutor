@@ -2,9 +2,11 @@ from typing import Dict, Any, Literal, Optional
 import hashlib
 import asyncio
 import logging
+import re
 import time
 
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+from langchain_core.runnables import RunnableConfig
 from langgraph.graph import StateGraph, START, END
 from rich import print as rprint
 
@@ -13,6 +15,7 @@ from langchain_core.messages import ToolMessage
 from app.core.llm_factory import create_chat_model, ensure_text_ai_message, message_text
 from app.core.llm_settings import tutor_style_instruction
 from app.core.models import AgentState, ExecutionPlan
+from app.core.config import settings
 from app.core import prompts, memory
 from app.core import context_rag as context  # RAG enhanced context module
 from app.core.cache import generation_cache, retrieval_cache
@@ -24,7 +27,10 @@ from app.core.task_plan import (
     handle_plan_chat,
 )
 from app.core.task_plan.dialog import (
-    _has_update_points,
+    _has_time_signal,
+    _is_exit_intent,
+    _is_plan_confirm_intent,
+    _is_resume_plan_intent,
     _is_yes,
     _is_no,
 )
@@ -34,6 +40,27 @@ logger = logging.getLogger(__name__)
 
 PERSIST_MESSAGES_LIMIT = 0  # 0 = 不裁剪，保留全量历史
 WORKER_TIMEOUT_SECONDS = 30
+
+_QUESTION_PATTERNS = (
+    re.compile(r"(?:什么是|为什么|为何|怎么|如何|有何区别|区别是什么|原理|含义|作用|用途)"),
+    re.compile(r"(?:解释|介绍|讲讲|说明|分析)一下"),
+    re.compile(r"(?:能否|是否|可不可以|可以吗)"),
+)
+_FAST_ROUTE_BLOCK_PATTERNS = (
+    re.compile(r"(?:学习|复习|备考).{0,4}(?:计划|规划)|(?:制定|调整|修改|继续|结束).{0,6}计划"),
+    re.compile(r"(?:总结|归纳|复盘|学习笔记|结束学习|退出|再见)"),
+    re.compile(
+        r"(?:考考我|测试我|评估|评价|批改|检查我的回答|问我|追问|引导我)"
+        r"|(?:回答|答案).{0,6}(?:对不对|正确|问题|怎么样|如何)"
+        r"|(?:对吗|是不是|对不对|正确吗|理解得对)"
+    ),
+    re.compile(r"(?:我觉得|我认为|我的理解|我理解的是|我的答案|答案是|我选择|我选的是)"),
+)
+_REALTIME_SEARCH_PATTERNS = (
+    re.compile(r"(?:联网|上网|搜索|搜一下|查一下|查一查)"),
+    re.compile(r"(?:最新|实时|刚刚|今日新闻|今天的新闻)"),
+    re.compile(r"(?:今天|当前).{0,8}(?:价格|排名|政策|新闻|版本|数据|汇率|天气|赛程)"),
+)
 
 # --- Cache & Profile Helpers ---
 
@@ -113,36 +140,115 @@ def _should_invalidate_cache(messages) -> bool:
     return False
 
 
-# --- 2. Node Functions (节点逻辑) ---
+def _default_execution_plan(**overrides: bool) -> ExecutionPlan:
+    values = {
+        "needs_tutor_answer": True,
+        "needs_judge": False,
+        "needs_inquiry": False,
+        "request_summary": False,
+        "request_plan": False,
+        "is_concluding": False,
+    }
+    values.update(overrides)
+    return ExecutionPlan(**values)
 
-class PlanExitDecision(BaseModel):
-    exit_plan: bool = False
+
+def _last_assistant_message(messages) -> str:
+    for message in reversed(messages[:-1] if messages else []):
+        if isinstance(message, AIMessage):
+            return message.content or ""
+    return ""
+
+
+def _assistant_is_asking_user(messages) -> bool:
+    text = _last_assistant_message(messages).strip()
+    if not text:
+        return False
+    return text.endswith(("?", "？")) or bool(
+        re.search(r"(?:请回答|你认为|你觉得|你的答案|你会如何|能举个例子吗)", text)
+    )
+
+
+def _requires_realtime_search(text: str) -> bool:
+    normalized = " ".join((text or "").strip().split())
+    return bool(normalized) and any(
+        pattern.search(normalized) for pattern in _REALTIME_SEARCH_PATTERNS
+    )
+
+
+def _high_confidence_tutor_question(messages) -> bool:
+    """Conservatively identify standalone knowledge questions."""
+
+    if not messages or not isinstance(messages[-1], HumanMessage):
+        return False
+    text = " ".join((messages[-1].content or "").strip().split())
+    if not text or _assistant_is_asking_user(messages):
+        return False
+    if _requires_realtime_search(text):
+        return False
+    if any(pattern.search(text) for pattern in _FAST_ROUTE_BLOCK_PATTERNS):
+        return False
+    return text.endswith(("?", "？")) or any(
+        pattern.search(text) for pattern in _QUESTION_PATTERNS
+    )
+
+
+def _is_tutor_only_plan(plan: Optional[ExecutionPlan]) -> bool:
+    return bool(
+        plan
+        and plan.needs_tutor_answer
+        and not plan.needs_judge
+        and not plan.needs_inquiry
+        and not plan.request_summary
+        and not plan.request_plan
+        and not plan.is_concluding
+    )
+
+
+def _remaining_route_budget(deadline: float) -> float:
+    return max(0.0, deadline - time.perf_counter())
+
+
+def _analyzer_updates(
+    plan: ExecutionPlan,
+    *,
+    source: str,
+    requires_search: bool,
+) -> Dict[str, Any]:
+    return {
+        "plan": plan,
+        "should_exit": plan.is_concluding,
+        "tutor_output": None,
+        "judge_output": None,
+        "inquiry_output": None,
+        "summary_output": None,
+        "_route_source": source,
+        "_requires_search": requires_search,
+    }
+
+
+# --- 2. Node Functions (节点逻辑) ---
 
 class PlanRouteDecision(BaseModel):
     plan_related: bool = False
-
-
-async def _should_exit_plan_dialog_llm(
-    user_message: str,
-    plan_session: Optional[Dict[str, Any]],
-    has_plan: bool,
-) -> bool:
-    if not user_message:
-        return False
-    # Only exit plan dialog when user explicitly opts out.
-    normalized = user_message.strip()
-    return normalized == "暂不调整计划"
 
 
 async def _is_plan_related_llm(
     user_message: str,
     plan_session: Optional[Dict[str, Any]],
     has_plan: bool,
-) -> bool:
-    if not user_message:
-        return False
+    *,
+    timeout_seconds: float,
+) -> Optional[bool]:
+    if not user_message or timeout_seconds <= 0:
+        return None
     try:
-        analyzer_model_raw = create_chat_model(temperature=0.1)
+        analyzer_model_raw = create_chat_model(
+            temperature=0.1,
+            max_tokens=64,
+            role="router",
+            max_retries=0,
+        )
         router = analyzer_model_raw.with_structured_output(PlanRouteDecision)
         status = ""
         last_question = ""
@@ -167,16 +273,23 @@ async def _is_plan_related_llm(
             f"UserMessage: {user_message}"
         )
         _t0 = time.perf_counter()
-        result: PlanRouteDecision = await router.ainvoke(
-            [SystemMessage(content=sys_prompt), HumanMessage(content=user_prompt)]
+        result: PlanRouteDecision = await asyncio.wait_for(
+            router.ainvoke(
+                [SystemMessage(content=sys_prompt), HumanMessage(content=user_prompt)]
+            ),
+            timeout=timeout_seconds,
         )
         logger.info(
             "[计时] _is_plan_related_llm 路由判断 LLM 耗时 %.2fs",
             time.perf_counter() - _t0,
         )
         return bool(getattr(result, "plan_related", False))
+    except (asyncio.TimeoutError, TimeoutError):
+        logger.warning("学习计划路由判断超过总意图预算，回退到安全路径")
+        return None
     except Exception:
-        return False
+        logger.warning("学习计划路由判断失败，回退到主 Analyzer", exc_info=True)
+        return None
 
 async def analyzer_node(state: AgentState) -> Dict[str, Any]:
     """
@@ -186,6 +299,10 @@ async def analyzer_node(state: AgentState) -> Dict[str, Any]:
     messages = state["messages"]
     if not messages:
         return {}
+
+    route_started = time.perf_counter()
+    route_budget = max(0.01, float(settings.CHAT_ROUTER_TIMEOUT_SECONDS))
+    route_deadline = route_started + route_budget
 
     _ensure_cache_trace(state)
     recent_context = messages[-3:]
@@ -206,15 +323,20 @@ async def analyzer_node(state: AgentState) -> Dict[str, Any]:
     has_existing_plan = False
     plan_should_pause = False
     plan_force_request = False
+    plan_owns_message = False
+    plan_fallback_to_plan = False
+    had_active_plan_session = False
+    plan_session = None
     try:
         existing_plan = memory_io.get_task_plan_data(task_id)
         draft_plan = existing_plan.get("draft_plan") if isinstance(existing_plan, dict) else None
-        # ?? has_task_plan ?????????????????? await_offer ???
+        # 正式计划或草案均视为已有计划，避免重复进入新建流程。
         has_existing_plan = memory_io.has_task_plan(task_id) or isinstance(draft_plan, dict)
         plan_session = existing_plan.get(PLAN_SESSION_KEY) if existing_plan else None
         status = ""
         if isinstance(plan_session, dict):
             status = str(plan_session.get("status") or "")
+            had_active_plan_session = status not in {"", "idle"}
             # 兼容旧状态 offer_shown
             if status == "offer_shown":
                 plan_session["status"] = "await_offer"
@@ -226,38 +348,27 @@ async def analyzer_node(state: AgentState) -> Dict[str, Any]:
                 except Exception:
                     pass
 
-        if plan_session and status in {"await_confirm", "await_plan_confirm", "collecting"}:
-            exit_plan_dialog = await _should_exit_plan_dialog_llm(
-                user_message=last_user_msg,
-                plan_session=plan_session,
-                has_plan=has_existing_plan,
-            )
-            if exit_plan_dialog:
-                updated_plan = dict(existing_plan or {})
-                updated_plan[PLAN_SESSION_KEY] = {
-                    "status": "idle",
-                    "mode": "",
-                    "turns": 0,
-                    "pending_mode": "",
-                    "messages": [],
-                }
-                try:
-                    memory_io.save_task_plan(task_id, updated_plan)
-                except Exception:
-                    pass
-                plan_session = None
         if plan_session and status == "await_offer":
             # 软引导阶段：下一轮交由 plan 节点处理（若用户未响应，将放行普通对话）
             plan_force_request = True
+        elif plan_session and status == "await_exit_confirm":
+            # 退出确认中的任何回答都必须回到状态机，避免“结束”被理解为结束整个会话。
+            plan_force_request = True
+            plan_owns_message = True
         elif plan_session and status in {"await_confirm", "await_plan_confirm", "collecting", "paused"}:
             if status == "paused":
-                # 挂起后的恢复仅由前端按钮控制
-                plan_should_pause = True
+                if _is_resume_plan_intent(last_user_msg) or _is_exit_intent(last_user_msg):
+                    plan_force_request = True
+                    plan_owns_message = True
+                else:
+                    plan_should_pause = True
             else:
-                # 规则短路：消息明显含计划关键词 / 是-否确认时，直接判为计划相关，
-                # 跳过一次 LLM 路由判断，降低每轮串行 LLM 调用数。
+                # 规则短路：明确的时间约束或确认/退出动作直接判为计划相关；
+                # “模块、基础”等可能出现在普通问答中的词仍交给上下文路由器。
                 rule_hit = (
-                    _has_update_points(last_user_msg)
+                    _has_time_signal(last_user_msg)
+                    or _is_exit_intent(last_user_msg)
+                    or _is_plan_confirm_intent(last_user_msg)
                     or _is_yes(last_user_msg)
                     or _is_no(last_user_msg)
                 )
@@ -268,8 +379,13 @@ async def analyzer_node(state: AgentState) -> Dict[str, Any]:
                         user_message=last_user_msg,
                         plan_session=plan_session,
                         has_plan=has_existing_plan,
+                        timeout_seconds=_remaining_route_budget(route_deadline),
                     )
-                if not is_plan_related:
+                if is_plan_related is True:
+                    # 当前计划状态机比通用 Analyzer 更了解上一轮正在收集的槽位。
+                    plan_force_request = True
+                    plan_owns_message = True
+                elif is_plan_related is False:
                     plan_session["paused_from"] = status
                     plan_session["status"] = "paused"
                     updated_plan = dict(existing_plan or {})
@@ -279,14 +395,61 @@ async def analyzer_node(state: AgentState) -> Dict[str, Any]:
                     except Exception:
                         pass
                     plan_should_pause = True
+                else:
+                    # The lightweight plan router exhausted the shared intent
+                    # budget or failed to parse.  If the main Analyzer also
+                    # fails, preserve the active state machine instead of
+                    # silently abandoning it for a generic Tutor response.
+                    plan_fallback_to_plan = True
     except Exception:
-        pass
+        logger.warning("学习计划状态预判失败，继续主 Analyzer", exc_info=True)
+
+    requires_search = _requires_realtime_search(last_user_msg)
+
+    # 明确属于当前计划状态机的消息无需再做一次通用意图分析。
+    if plan_force_request and plan_owns_message:
+        plan = _default_execution_plan(
+            needs_tutor_answer=False,
+            request_plan=True,
+        )
+        logger.info(
+            "[性能] route_source=plan_rule route_ms=%d",
+            round((time.perf_counter() - route_started) * 1000),
+        )
+        return _analyzer_updates(
+            plan,
+            source="plan_rule",
+            requires_search=requires_search,
+        )
+
+    # 仅在没有活动计划状态时，对非常明确的独立知识问句走零模型快路。
+    if (
+        settings.CHAT_FAST_ROUTE_ENABLED
+        and not had_active_plan_session
+        and not plan_force_request
+        and _high_confidence_tutor_question(messages)
+    ):
+        plan = _default_execution_plan()
+        logger.info(
+            "[性能] route_source=rule route_ms=%d",
+            round((time.perf_counter() - route_started) * 1000),
+        )
+        return _analyzer_updates(
+            plan,
+            source="rule",
+            requires_search=False,
+        )
 
     sys_msg = SystemMessage(content=sys_msg_content)
 
     # 绑定结构化输出
+    route_source = "llm"
     try:
-        analyzer_model_raw = create_chat_model(temperature=0.1)
+        analyzer_model_raw = create_chat_model(
+            temperature=0.1,
+            role="router",
+            max_retries=0,
+        )
         planner = analyzer_model_raw.with_structured_output(ExecutionPlan)
         # Analyzer 也应该看到上下文摘要，否则它可能听不懂关于旧话题的回答
         # 不过为了简单准确，把 Summary 放在 System Prompt 之后比较好
@@ -297,27 +460,39 @@ async def analyzer_node(state: AgentState) -> Dict[str, Any]:
         inputs.extend(recent_context)
 
         _t0 = time.perf_counter()
-        plan: ExecutionPlan = await planner.ainvoke(inputs)
+        remaining_budget = _remaining_route_budget(route_deadline)
+        if remaining_budget <= 0:
+            raise asyncio.TimeoutError("intent routing budget exhausted")
+        plan: ExecutionPlan = await asyncio.wait_for(
+            planner.ainvoke(inputs),
+            timeout=remaining_budget,
+        )
         logger.info(
             "[计时] analyzer_node 意图规划 LLM 耗时 %.2fs",
             time.perf_counter() - _t0,
         )
-    except Exception as e:
-        # Fallback 策略：如果解析失败，默认当作普通提问
-        print(f"Analyzer Error: {e}")
-        plan = ExecutionPlan(
-            needs_tutor_answer=True,
-            needs_judge=False,
-            needs_inquiry=False,
-            request_summary=False,
-            request_plan=False,
-            is_concluding=False,
-            thought_process="Error in planning, defaulting to simple answer."
+    except (asyncio.TimeoutError, TimeoutError) as e:
+        fallback_name = "Plan" if plan_fallback_to_plan else "Tutor"
+        logger.warning(
+            "Analyzer 超过 %.1fs 总意图预算，降级为 %s",
+            route_budget,
+            fallback_name,
         )
+        route_source = "timeout_fallback"
+        plan = _default_execution_plan(request_plan=plan_fallback_to_plan)
+    except Exception as e:
+        # Fallback 策略：活动计划保持在 Plan，其他消息按普通提问处理。
+        print(f"Analyzer Error: {e}")
+        route_source = "error_fallback"
+        plan = _default_execution_plan(request_plan=plan_fallback_to_plan)
 
     # 如果计划已挂起，本轮走普通答疑
     if plan_force_request:
         plan.request_plan = True
+        if plan_owns_message:
+            # “结束计划”只退出计划状态机，不等于结束整个学习会话。
+            plan.is_concluding = False
+            plan.request_summary = False
     if plan_should_pause:
         plan.request_plan = False
         plan.needs_tutor_answer = True
@@ -326,16 +501,18 @@ async def analyzer_node(state: AgentState) -> Dict[str, Any]:
 
     # 返回计划，并重置临时字段，防止污染
     # 如果计划中包含结束意图，设置 should_exit 信号
-    return {
-        "plan": plan,
-        "should_exit": plan.is_concluding,
-        "tutor_output": None,
-        "judge_output": None,
-        "inquiry_output": None,
-        "summary_output": None
-    }
+    logger.info(
+        "[性能] route_source=%s route_ms=%d",
+        route_source,
+        round((time.perf_counter() - route_started) * 1000),
+    )
+    return _analyzer_updates(
+        plan,
+        source=route_source,
+        requires_search=requires_search,
+    )
 
-async def _run_tool_loop(prompt_content, state):
+async def _run_tool_loop(prompt_content, state, *, role: Literal["tutor", "judge"]):
     """
     具体的 ReAct 循环逻辑：
     1. 调用模型 (带工具)
@@ -346,10 +523,14 @@ async def _run_tool_loop(prompt_content, state):
     # 使用 context.build_context 构造包含 Summary + Recent Window 的消息列表
     # 注意：build_context 返回的是 [System, Summary?, RecentMessages...]
     # prompt_content 这里是 system prompt 正文
-    current_messages = context.build_context(state, prompt_content)
+    current_messages = await asyncio.to_thread(
+        context.build_context,
+        state,
+        prompt_content,
+    )
 
     # 每次调用都读取当前活动配置，因此保存设置后无需重启后端。
-    model = create_chat_model()
+    model = create_chat_model(role=role)
     model_with_tools = model.bind_tools([search_tool_v2])
     response = await model_with_tools.ainvoke(current_messages)
 
@@ -404,7 +585,7 @@ async def tutor_node(state: AgentState) -> Dict[str, Any]:
         return {"tutor_output": cached}
 
     _mark_gen_cache(state, "tutor", False)
-    content = await _run_tool_loop(prompt_str, state)
+    content = await _run_tool_loop(prompt_str, state, role="tutor")
     generation_cache.set(cache_key, content, session_id=state.get("session_id"))
     return {"tutor_output": content}
 
@@ -422,7 +603,7 @@ async def judge_node(state: AgentState) -> Dict[str, Any]:
         return {"judge_output": cached}
 
     _mark_gen_cache(state, "judge", False)
-    content = await _run_tool_loop(prompt_str, state)
+    content = await _run_tool_loop(prompt_str, state, role="judge")
     generation_cache.set(cache_key, content, session_id=state.get("session_id"))
     return {"judge_output": content}
 
@@ -452,8 +633,8 @@ async def inquiry_node(state: AgentState) -> Dict[str, Any]:
 
     _mark_gen_cache(state, "inquiry", False)
     # 先构建标准上下文 [System, Summary, Recent]
-    inputs = context.build_context(state, sys_msg_str)
-    response = await create_chat_model().ainvoke(inputs)
+    inputs = await asyncio.to_thread(context.build_context, state, sys_msg_str)
+    response = await create_chat_model(role="inquiry").ainvoke(inputs)
     content = message_text(response)
     generation_cache.set(cache_key, content, session_id=state.get("session_id"))
     return {"inquiry_output": content}
@@ -480,17 +661,26 @@ def _merge_trace(state: AgentState, worker_trace: dict):
 
 
 async def _run_worker_safe(worker_name: str, worker_coro, state: AgentState) -> Dict[str, Any]:
+    started_at = time.perf_counter()
     try:
         result = await asyncio.wait_for(worker_coro, timeout=WORKER_TIMEOUT_SECONDS)
         return result if isinstance(result, dict) else {}
     except Exception as e:
         print(f"⚠️ Worker {worker_name} failed: {e}")
         return {}
+    finally:
+        logger.info(
+            "[性能] node=%s node_ms=%d",
+            worker_name,
+            round((time.perf_counter() - started_at) * 1000),
+        )
 
 
 async def parallel_workers_node(state: AgentState) -> Dict[str, Any]:
+    started_at = time.perf_counter()
     plan = state.get("plan")
     if not plan:
+        logger.info("[性能] node=parallel_workers node_ms=0")
         return {}
 
     updates: Dict[str, Any] = {}
@@ -539,6 +729,10 @@ async def parallel_workers_node(state: AgentState) -> Dict[str, Any]:
             updates.update(inquiry_res)
         _merge_trace(state, inquiry_state.get("_cache_trace", {}))
 
+    logger.info(
+        "[性能] node=parallel_workers node_ms=%d",
+        round((time.perf_counter() - started_at) * 1000),
+    )
     return updates
 
 
@@ -546,6 +740,7 @@ async def plan_node(state: AgentState) -> Dict[str, Any]:
     """
     Plan flow node: reuse Task Plan dialog manager.
     """
+    started_at = time.perf_counter()
     task_id = state.get("task_id", "task_default")
     session_id = state.get("session_id", "")
     user_message = ""
@@ -592,42 +787,6 @@ async def plan_node(state: AgentState) -> Dict[str, Any]:
                 history_messages.append(AIMessage(content=content))
         conversation_summary = ""
 
-    if plan_session and plan_session.get("status") in {"await_confirm", "await_plan_confirm", "collecting"}:
-        exit_plan_dialog = await _should_exit_plan_dialog_llm(
-            user_message=user_message,
-            plan_session=plan_session,
-            has_plan=has_plan,
-        )
-        if exit_plan_dialog:
-            updated_plan = plan_data or {}
-            updated_plan[PLAN_SESSION_KEY] = {
-                "status": "idle",
-                "mode": "",
-                "turns": 0,
-                "pending_mode": "",
-                "messages": [],
-            }
-            try:
-                memory.save_task_plan(task_id, updated_plan)
-            except Exception:
-                pass
-            plan = state.get("plan")
-            if plan and getattr(plan, "request_plan", False):
-                plan.request_plan = False
-            if plan and not any(
-                [
-                    plan.needs_tutor_answer,
-                    plan.needs_judge,
-                    plan.needs_inquiry,
-                    plan.request_summary,
-                ]
-            ):
-                plan.needs_tutor_answer = True
-            return {
-                "plan": plan,
-                "plan_handled": False,
-            }
-
     seed_user_message = None
     if not plan_session or plan_session.get("status") == "idle":
         last_user = None
@@ -652,8 +811,18 @@ async def plan_node(state: AgentState) -> Dict[str, Any]:
         history_messages=history_messages,
         seed_user_message=seed_user_message,
     )
-    if result.get("plan_session"):
-        updated_plan = plan_data or {}
+    confirmed_plan = result.get("confirmed_plan")
+    if isinstance(confirmed_plan, dict):
+        updated_plan = dict(confirmed_plan)
+        updated_plan["draft_plan"] = None
+        if result.get("plan_session"):
+            updated_plan[PLAN_SESSION_KEY] = result["plan_session"]
+        try:
+            memory.save_task_plan(task_id, updated_plan)
+        except Exception:
+            pass
+    elif result.get("plan_session"):
+        updated_plan = dict(plan_data or {})
         updated_plan[PLAN_SESSION_KEY] = result["plan_session"]
         try:
             memory.save_task_plan(task_id, updated_plan)
@@ -663,10 +832,15 @@ async def plan_node(state: AgentState) -> Dict[str, Any]:
         plan = state.get("plan")
         if plan and getattr(plan, "request_plan", False):
             plan.request_plan = False
-        return {
+        update = {
             "plan": plan,
             "plan_handled": False,
         }
+        logger.info(
+            "[性能] node=plan node_ms=%d",
+            round((time.perf_counter() - started_at) * 1000),
+        )
+        return update
 
     if result.get("plan_proposal"):
         try:
@@ -686,11 +860,12 @@ async def plan_node(state: AgentState) -> Dict[str, Any]:
     current_messages = state.get("messages", []) + [ai_reply]
     temp_state = state.copy()
     temp_state["messages"] = current_messages
-    new_summary, new_cursor = context.manage_memory(temp_state)
-    temp_state["conversation_summary"] = new_summary
-    temp_state["summarized_msg_count"] = new_cursor
-    memory.save_session(temp_state)
-    return {
+    await asyncio.to_thread(
+        memory.save_session,
+        temp_state,
+        index_for_rag=False,
+    )
+    update = {
         "messages": [ai_reply],
         "plan_proposal": result.get("plan_proposal"),
         "plan_handled": True,
@@ -698,11 +873,141 @@ async def plan_node(state: AgentState) -> Dict[str, Any]:
         "conversation_summary": temp_state.get("conversation_summary"),
         "summarized_msg_count": temp_state.get("summarized_msg_count"),
     }
+    logger.info(
+        "[性能] node=plan node_ms=%d",
+        round((time.perf_counter() - started_at) * 1000),
+    )
+    return update
 
-async def aggregator_node(state: AgentState) -> Dict[str, Any]:
+
+def _apply_plan_pause_reminder(
+    state: AgentState,
+    final_response: AIMessage,
+    plan: Optional[ExecutionPlan],
+) -> None:
+    try:
+        if state.get("should_exit"):
+            return
+        task_id = state.get("task_id", "task_default")
+        plan_data = memory.get_task_plan_data(task_id)
+        plan_session = plan_data.get(PLAN_SESSION_KEY) if isinstance(plan_data, dict) else None
+        if not plan_session or plan_session.get("status") not in {
+            "await_confirm",
+            "await_plan_confirm",
+            "await_exit_confirm",
+            "collecting",
+            "paused",
+        }:
+            return
+        if plan and getattr(plan, "request_plan", False):
+            return
+        status = plan_session.get("status")
+        suffix = "当前处于计划调整中，继续提问即可；如需退出可回复“暂不调整计划”。"
+        if status == "paused":
+            suffix = "计划已挂起，可在界面上继续调整或结束计划。"
+        final_response.content = (final_response.content or "").rstrip() + f"\n\n{suffix}"
+    except Exception:
+        pass
+
+
+async def _finalize_visible_response(
+    state: AgentState,
+    final_response: Any,
+) -> Dict[str, Any]:
+    """Persist the visible reply; expensive maintenance runs after ``done``."""
+
+    final_message = ensure_text_ai_message(final_response)
+    plan = state.get("plan")
+    _apply_plan_pause_reminder(state, final_message, plan)
+
+    trace = state.get("_cache_trace", {})
+    try:
+        if final_message.additional_kwargs is None:
+            final_message.additional_kwargs = {}
+        final_message.additional_kwargs["cache_trace"] = trace
+    except Exception:
+        pass
+
+    if _should_invalidate_cache(state.get("messages", [])):
+        generation_cache.clear_session(state.get("session_id", ""))
+
+    state_to_save = state.copy()
+    state_to_save["messages"] = state.get("messages", []) + [final_message]
+    state_to_save["conversation_summary"] = state.get("conversation_summary") or ""
+    state_to_save["summarized_msg_count"] = state.get("summarized_msg_count", 0)
+    await asyncio.to_thread(
+        memory.save_session,
+        state_to_save,
+        index_for_rag=False,
+    )
+
+    result = {
+        "messages": [final_message],
+        "conversation_summary": state_to_save["conversation_summary"],
+        "summarized_msg_count": state_to_save["summarized_msg_count"],
+        "_cache_trace": {},
+    }
+    if plan and (plan.request_plan or plan.request_summary):
+        result["plan"] = None
+    return result
+
+
+async def _stream_visible_model(
+    model: Any,
+    inputs: list[Any],
+    *,
+    config: Optional[RunnableConfig] = None,
+) -> AIMessage:
+    """Consume a model stream while retaining one persistable final message."""
+
+    combined = None
+    async for chunk in model.astream(inputs, config=config):
+        combined = chunk if combined is None else combined + chunk
+
+    if combined is None:
+        return AIMessage(content="")
+    return AIMessage(
+        content=message_text(combined),
+        additional_kwargs=dict(getattr(combined, "additional_kwargs", {}) or {}),
+        response_metadata=dict(getattr(combined, "response_metadata", {}) or {}),
+        usage_metadata=getattr(combined, "usage_metadata", None),
+    )
+
+
+async def direct_tutor_node(
+    state: AgentState,
+    config: Optional[RunnableConfig] = None,
+) -> Dict[str, Any]:
+    """Generate the common Tutor-only path without a redundant aggregator."""
+
+    started_at = time.perf_counter()
+    topic = state.get("current_topic", "General Knowledge")
+    prompt_str = _inject_teaching_style(
+        _inject_profile(prompts.TUTOR_WORKER_PROMPT.format(topic=topic), state)
+    )
+    inputs = await asyncio.to_thread(context.build_context, state, prompt_str)
+    final_response = await _stream_visible_model(
+        create_chat_model(
+            role="tutor",
+            streaming=True,
+        ),
+        inputs,
+        config=config,
+    )
+    logger.info(
+        "[性能] node=direct_tutor node_ms=%d",
+        round((time.perf_counter() - started_at) * 1000),
+    )
+    return await _finalize_visible_response(state, final_response)
+
+async def aggregator_node(
+    state: AgentState,
+    config: Optional[RunnableConfig] = None,
+) -> Dict[str, Any]:
     """
     汇总者。将所有 Worker 的输出融合成最终回复。
     """
+    started_at = time.perf_counter()
     tutor_out = state.get("tutor_output") or ""
     judge_out = state.get("judge_output") or ""
     inquiry_out = state.get("inquiry_output") or ""
@@ -762,8 +1067,19 @@ async def aggregator_node(state: AgentState) -> Dict[str, Any]:
         final_response = AIMessage(content=summary_out)
     elif not any([tutor_out, judge_out, inquiry_out, summary_out, plan_out]):
         # 闲聊/低信息量场景：走专用闲聊 Prompt，生成自然回复
-        inputs = context.build_context(state, prompts.CHITCHAT_SYSTEM_PROMPT)
-        final_response = await create_chat_model().ainvoke(inputs)
+        inputs = await asyncio.to_thread(
+            context.build_context,
+            state,
+            prompts.CHITCHAT_SYSTEM_PROMPT,
+        )
+        final_response = await _stream_visible_model(
+            create_chat_model(
+                role="chitchat",
+                streaming=True,
+            ),
+            inputs,
+            config=config,
+        )
     else:
         # 构造 Prompt
         prompt = prompts.AGGREGATOR_SYSTEM_PROMPT.format(
@@ -785,107 +1101,27 @@ async def aggregator_node(state: AgentState) -> Dict[str, Any]:
         if state["messages"]:
             inputs.append(state["messages"][-1])
 
-        final_response = await create_chat_model().ainvoke(inputs)
-
-    final_response = ensure_text_ai_message(final_response)
-
-    
-    # --- Plan pause reminder (soft resume) ---
-    try:
-        if isinstance(final_response, AIMessage) and not state.get("should_exit"):
-            task_id = state.get("task_id", "task_default")
-            plan_data = memory.get_task_plan_data(task_id)
-            plan_session = plan_data.get(PLAN_SESSION_KEY) if isinstance(plan_data, dict) else None
-            if plan_session and plan_session.get("status") in {"await_confirm", "await_plan_confirm", "collecting", "paused"}:
-                if not (plan and getattr(plan, "request_plan", False)):
-                    status = plan_session.get("status")
-                    suffix = "当前处于计划调整中，继续提问即可；如需退出可回复“暂不调整计划”。"
-                    if status == "paused":
-                        suffix = "计划已挂起，可在界面上继续调整或结束计划。"
-                    final_response.content = (
-                        (final_response.content or "").rstrip()
-                        + f"\n\n{suffix}"
-                    )
-    except Exception:
-        pass
-
-# ---------------- 存档与压缩逻辑 (Auto-Save & Compress) ----------------
-    # 模拟“状态更新之后”的效果：我们需要把最新的 AI 回复合并进去才能存到完整的记录
-    
-    current_messages = state["messages"] + [final_response]
-    
-    # 1. 创建即时快照 (用于计算 Memory)
-    temp_state = state.copy()
-    temp_state["messages"] = current_messages
-    
-    # 2. 执行内存压缩 (Maintenance)
-    # 检查是否需要压缩旧消息
-    new_summary, new_cursor = context.manage_memory(temp_state)
-    
-    # 3. 更新要保存的状态
-    state_to_save = temp_state.copy()
-    if new_summary != state.get("conversation_summary"):
-        # 发生了压缩，更新状态
-        state_to_save["conversation_summary"] = new_summary
-        state_to_save["summarized_msg_count"] = new_cursor
-        
-        # (Optional) Print debug info
-        print(f"🧠 Memory Compressed! New summary length: {len(new_summary)}, Cursor: {new_cursor}")
-    
-    # 4. 附加 cache trace 到 AIMessage
-    trace = state.get("_cache_trace", {})
-    try:
-        if isinstance(final_response, AIMessage):
-            if final_response.additional_kwargs is None:
-                final_response.additional_kwargs = {}
-            final_response.additional_kwargs["cache_trace"] = trace
-    except Exception:
-        pass
-
-    # 5. 更新学习画像
-    try:
-        user_id = _get_user_id(state)
-        user_text = ""
-        for m in reversed(state.get("messages", [])):
-            if isinstance(m, HumanMessage):
-                user_text = m.content or ""
-                break
-        assistant_text = message_text(final_response) if isinstance(final_response, AIMessage) else ""
-        cards = learning_profile.extract_learning_facts(
-            user_text=user_text,
-            assistant_text=assistant_text,
-            source=user_id
+        final_response = await _stream_visible_model(
+            create_chat_model(
+                role="aggregator",
+                streaming=True,
+            ),
+            inputs,
+            config=config,
         )
-        if cards:
-            profile = profile_store.load_profile(user_id)
-            profile = learning_profile.upsert_cards(profile, cards)
-            profile_store.save_profile(profile)
-    except Exception:
-        pass
 
-    # 6. 缓存失效检查
-    if _should_invalidate_cache(state.get("messages", [])):
-        generation_cache.clear_session(state.get("session_id", ""))
-
-    # 7. 执行物理存档
-    memory.save_session(state_to_save)
-
-    # 返回给 Graph 的更新 (包括 messages 和 可能更新的 summary/cursor)
-    result = {
-        "messages": [final_response],
-        "conversation_summary": state_to_save["conversation_summary"],
-        "summarized_msg_count": state_to_save["summarized_msg_count"],
-        "_cache_trace": {},
-    }
-    # 如果处理了计划请求或总结请求，清除 plan 标志，让下一轮重新意图识别
-    if plan and (plan.request_plan or plan.request_summary):
-        result["plan"] = None
-    return result
+    logger.info(
+        "[性能] node=aggregator node_ms=%d",
+        round((time.perf_counter() - started_at) * 1000),
+    )
+    return await _finalize_visible_response(state, final_response)
 
 
 # --- 3. Edge Logic (条件路由) ---
 
-def route_from_analyzer(state: AgentState) -> Literal["plan", "parallel_workers", "aggregator"]:
+def route_from_analyzer(
+    state: AgentState,
+) -> Literal["plan", "direct_tutor", "parallel_workers", "aggregator"]:
     plan = state.get("plan")
     if not plan: # Should not happen
         return "aggregator"
@@ -896,13 +1132,18 @@ def route_from_analyzer(state: AgentState) -> Literal["plan", "parallel_workers"
     if plan.request_summary:
         return "aggregator"
 
+    if _is_tutor_only_plan(plan) and not state.get("_requires_search", False):
+        return "direct_tutor"
+
     if any([plan.needs_tutor_answer, plan.needs_judge, plan.needs_inquiry]):
         return "parallel_workers"
     else:
         return "aggregator"
 
 
-def route_from_plan(state: AgentState) -> Literal["end", "parallel_workers", "aggregator"]:
+def route_from_plan(
+    state: AgentState,
+) -> Literal["end", "direct_tutor", "parallel_workers", "aggregator"]:
     if state.get("plan_handled"):
         return "end"
 
@@ -911,6 +1152,8 @@ def route_from_plan(state: AgentState) -> Literal["end", "parallel_workers", "ag
         return "aggregator"
     if plan.request_summary:
         return "aggregator"
+    if _is_tutor_only_plan(plan) and not state.get("_requires_search", False):
+        return "direct_tutor"
     if any([plan.needs_tutor_answer, plan.needs_judge, plan.needs_inquiry]):
         return "parallel_workers"
     return "aggregator"
@@ -927,6 +1170,7 @@ def build_agent():
     builder.add_node("inquiry", inquiry_node)
     builder.add_node("parallel_workers", parallel_workers_node)
     builder.add_node("plan", plan_node)
+    builder.add_node("direct_tutor", direct_tutor_node)
     builder.add_node("aggregator", aggregator_node)
     
     # Start -> Analyzer
@@ -938,6 +1182,7 @@ def build_agent():
         route_from_analyzer,
         {
             "plan": "plan",
+            "direct_tutor": "direct_tutor",
             "parallel_workers": "parallel_workers",
             "aggregator": "aggregator"
         }
@@ -952,12 +1197,14 @@ def build_agent():
         route_from_plan,
         {
             "end": END,
+            "direct_tutor": "direct_tutor",
             "parallel_workers": "parallel_workers",
             "aggregator": "aggregator",
         }
     )
     
     # Aggregator -> End
+    builder.add_edge("direct_tutor", END)
     builder.add_edge("aggregator", END)
     
     return builder.compile()

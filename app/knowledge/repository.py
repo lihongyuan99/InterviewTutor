@@ -102,10 +102,20 @@ def _from_json(value: Optional[str]) -> list:
 class KnowledgeRepository:
     """SQLite 知识库读写与筛选。"""
 
-    def __init__(self, db_path: Optional[str] = None):
-        from app.core.config import settings
+    def __init__(
+        self,
+        db_path: Optional[str] = None,
+        snapshot_id: Optional[str] = None,
+    ):
+        if db_path:
+            self.db_path = Path(db_path)
+            self.snapshot_id = snapshot_id or "external"
+        else:
+            from app.knowledge.snapshot import snapshot_manager
 
-        self.db_path = Path(db_path or settings.KNOWLEDGE_DB_PATH)
+            snapshot = snapshot_manager.resolve(snapshot_id)
+            self.db_path = snapshot.db_path
+            self.snapshot_id = snapshot.snapshot_id
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self.conn = sqlite3.connect(str(self.db_path))
         self.conn.row_factory = sqlite3.Row

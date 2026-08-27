@@ -32,9 +32,23 @@ def test_build_context_formats_citations(monkeypatch):
         source_file="09-rag-retrieval/index.md",
     )
     # learn.py 顶部已绑定 get_question 引用，需 patch learn 命名空间内的引用
-    monkeypatch.setattr(learn, "get_question", lambda qid, **k: fake)
+    requested_snapshots = []
 
-    results = [SearchResult(question_id="q1", score=0.8, dimension="rag", source_file="x")]
+    def get_question(qid, **kwargs):
+        requested_snapshots.append(kwargs.get("snapshot_id"))
+        return fake
+
+    monkeypatch.setattr(learn, "get_question", get_question)
+
+    results = [
+        SearchResult(
+            question_id="q1",
+            score=0.8,
+            dimension="rag",
+            source_file="x",
+            snapshot_id="release-pinned",
+        )
+    ]
     ctx = learn._build_context(results)
 
     assert "[1]" in ctx
@@ -42,6 +56,7 @@ def test_build_context_formats_citations(monkeypatch):
     assert "GraphRAG 是结合知识图谱的 RAG。" in ctx
     assert "RAG 与检索" in ctx
     assert "09-rag-retrieval/index.md" in ctx
+    assert requested_snapshots == ["release-pinned"]
 
 
 def test_ask_returns_fallback_when_no_results(monkeypatch):

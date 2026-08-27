@@ -5,6 +5,7 @@
 web/.env
 web/.env.*
 !web/.env.example
+!web/.env.production
 
 # Python
 __pycache__/
@@ -25,15 +26,23 @@ node_modules/
 web/dist/
 *.tsbuildinfo
 
+# Desktop app build artifacts (含本机绝对路径，不入库)
+/dist/
+
 # Runtime and generated user data
 memory/
 kg_output/
+data/knowledge_runtime/
 *.log
 
 # Local editor / OS files
 .DS_Store
 .idea/
 .vscode/
+
+# Local browser automation artifacts
+/.playwright-cli/
+/output/
 
 # Accidental root lockfile; the frontend lockfile lives in web/
 /package-lock.json

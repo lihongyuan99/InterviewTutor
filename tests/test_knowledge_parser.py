@@ -4,6 +4,7 @@
 维度归一化、以及非题库目录被跳过。
 """
 
+import json
 import sys
 from pathlib import Path
 
@@ -12,6 +13,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.knowledge import KnowledgeParser, parse_knowledge_dir  # noqa: E402
+from app.knowledge.sync import question_hashes, sha256_file  # noqa: E402
 
 KNOWLEDGE_ROOT = Path(__file__).resolve().parent.parent / "knowledge"
 
@@ -23,11 +25,16 @@ def parsed():
 
 
 def test_question_count_within_expected_range(parsed):
-    """题目总数应接近 Handoff 文档提到的约 486 道，且不能为空。"""
-    questions, _ = parsed
-    assert len(questions) > 0
-    # Handoff 文档 §3 提到约 486 个 Q 段落，允许一定偏差但不应静默丢失
-    assert 400 <= len(questions) <= 600, f"题目数量异常：{len(questions)}"
+    """随包源文件的解析结果必须与 manifest 完全对齐。"""
+    questions, warnings = parsed
+    manifest = json.loads(
+        (KNOWLEDGE_ROOT.parent / "data" / "knowledge_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert len(questions) == manifest["question_count"]
+    assert len({question.dimension for question in questions}) == manifest["dimension_count"]
+    assert len(warnings) == manifest["parse_warning_count"]
 
 
 def test_key_fields_present(parsed):
@@ -73,12 +80,34 @@ def test_dimension_normalization(parsed):
     assert rag_files, "应存在 rag 维度题目"
 
 
-def test_single_question_file_parses_expert_answer(parsed):
-    """单题文件（01-architecture/react-loop.md）应能解析出高手答。"""
-    questions, _ = parsed
-    react = [q for q in questions if q.source_file.endswith("01-architecture/react-loop.md")]
-    assert react, "未解析到 react-loop.md"
-    assert any(q.expert_answer for q in react), "react-loop.md 缺少高手答"
+def test_single_question_file_parses_expert_answer(tmp_path):
+    """单题 Markdown 能力由临时夹具覆盖，不再依赖本地补充题。"""
+    dimension_dir = tmp_path / "01-architecture-design"
+    dimension_dir.mkdir()
+    fixture = dimension_dir / "single.md"
+    fixture.write_text(
+        """## Q：Agent 循环如何退出？
+
+> 来源：腾讯 Agent 工程师
+
+**新手答**：设一个次数。
+
+**高手答**：结合成功条件、预算、超时和无进展检测。
+
+**差距在哪**：需要可观测的多重退出条件。
+
+## 考察点
+
+- 资源预算
+- 死循环检测
+""",
+        encoding="utf-8",
+    )
+    questions, warnings = parse_knowledge_dir(str(tmp_path))
+    assert not warnings
+    assert len(questions) == 1
+    assert questions[0].expert_answer.startswith("结合成功条件")
+    assert questions[0].key_points == ["资源预算", "死循环检测"]
 
 
 def test_index_file_parses_multiple_questions(parsed):
@@ -105,14 +134,11 @@ def test_followups_extracted(parsed):
     assert with_followup, "未解析到任何追问"
 
 
-def test_single_file_key_points_section(parsed):
-    """带独立「## 考察点」的单题文件应提取考察点。"""
+def test_new_infrastructure_dimensions_are_normalized(parsed):
     questions, _ = parsed
-    tool_calling = [
-        q for q in questions if q.source_file.endswith("01-architecture/tool-calling.md")
-    ]
-    assert tool_calling, "未解析到 tool-calling.md"
-    assert any(q.key_points for q in tool_calling), "tool-calling.md 应包含考察点"
+    labels = {question.dimension: question.dimension_label for question in questions}
+    assert labels["agent-infra"] == "Agent 基础设施"
+    assert labels["ai-infra"] == "AI 基础设施"
 
 
 def test_gap_analysis_extracted(parsed):
@@ -138,3 +164,17 @@ def test_dimension_label_present(parsed):
     questions, _ = parsed
     for q in questions:
         assert q.dimension_label, f"缺少维度中文名：{q.dimension}"
+
+
+def test_bundled_manifest_hashes_match_sources(parsed):
+    questions, warnings = parsed
+    manifest_path = KNOWLEDGE_ROOT.parent / "data" / "knowledge_manifest.json"
+    db_path = KNOWLEDGE_ROOT.parent / "data" / "knowledge.db"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    assert manifest["source"]["commit_sha"] == "f7c2e45eacb18546dd879a589c12664ef82d2087"
+    assert manifest["question_hashes"] == {
+        question.id: question_hashes(question) for question in questions
+    }
+    assert manifest["parse_warning_count"] == len(warnings)
+    assert manifest["database_sha256"] == sha256_file(db_path)

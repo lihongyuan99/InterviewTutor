@@ -11,6 +11,7 @@ from app.knowledge.service import (
     parse_knowledge,
     search,
 )
+from app.knowledge.snapshot import get_active_snapshot, snapshot_manager
 
 __all__ = [
     "KnowledgeParser",
@@ -24,6 +25,8 @@ __all__ = [
     "SearchResult",
     "parse_knowledge",
     "build_index",
+    "get_active_snapshot",
+    "snapshot_manager",
     "get_question",
     "search",
 ]

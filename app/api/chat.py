@@ -5,17 +5,26 @@ from typing import Optional, Any
 from datetime import datetime
 import asyncio
 import json
+import logging
 import os
 import re
+import time
 from langchain_core.messages import HumanMessage, AIMessage
 
 from app.core.agent_builder import build_agent
 from app.core import memory
 from app.core.config import settings
+from app.core.reply_metrics import (
+    ReplyMetrics,
+    ReplyMetricsCallback,
+    activate_reply_metrics_callback,
+    reset_reply_metrics_callback,
+)
 from app.core.task_plan import PLAN_SESSION_KEY
 from app.core.summary.generator import summary_generator
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 ENABLE_STREAMING = os.getenv("ENABLE_STREAMING", "true").lower() in {"1", "true", "yes", "on"}
 ENABLE_PLAN_PROPOSAL = os.getenv("ENABLE_PLAN_PROPOSAL", "true").lower() in {"1", "true", "yes", "on"}
@@ -25,6 +34,47 @@ agent_graph = build_agent()
 
 # 中断状态管理：session_id -> bool (是否被中断)
 _generation_interrupts: dict[str, bool] = {}
+_background_tasks: set[asyncio.Task] = set()
+
+
+async def _run_reply_maintenance(
+    *,
+    session_id: str,
+    user_text: str,
+) -> None:
+    """Run housekeeping without charging it to visible-reply metrics."""
+
+    metrics_token = activate_reply_metrics_callback(None)
+    try:
+        await asyncio.to_thread(
+            memory.run_session_maintenance,
+            session_id,
+            user_id="local_user",
+        )
+    finally:
+        reset_reply_metrics_callback(metrics_token)
+
+
+async def _dispatch_reply_maintenance(
+    *,
+    session_id: str,
+    user_text: str,
+) -> None:
+    if not settings.CHAT_BACKGROUND_MAINTENANCE:
+        await _run_reply_maintenance(
+            session_id=session_id,
+            user_text=user_text,
+        )
+        return
+
+    task = asyncio.create_task(
+        _run_reply_maintenance(
+            session_id=session_id,
+            user_text=user_text,
+        )
+    )
+    _background_tasks.add(task)
+    task.add_done_callback(_background_tasks.discard)
 
 class ChatRequest(BaseModel):
     task_id: Optional[str] = None
@@ -41,6 +91,7 @@ class ChatResponse(BaseModel):
     plan_proposal: Optional[dict] = None
     plan_status: Optional[str] = None
     suggested_replies: Optional[list[str]] = None
+    metrics: ReplyMetrics
 
 
 class StreamEvent(BaseModel):
@@ -133,6 +184,8 @@ def _build_state(request: ChatRequest, task_id: str, session_id: str):
         "summary_output": None,
         "last_intent": None,
         "plan_handled": None,
+        "_route_source": None,
+        "_requires_search": False,
     }
 
     if not current_state:
@@ -151,11 +204,27 @@ def _build_state(request: ChatRequest, task_id: str, session_id: str):
     return current_state
 
 
-async def _invoke_agent(current_state):
+def _record_model_metrics(event: dict, metrics_callback: ReplyMetricsCallback) -> None:
+    """Collect model usage from LangGraph events when nested callbacks are dropped."""
+    if event.get("event") not in {"on_chat_model_end", "on_llm_end"}:
+        return
+    metrics_callback.record_llm_end(
+        event.get("data") or {},
+        run_id=event.get("run_id"),
+    )
+
+
+async def _invoke_agent(current_state, metrics_callback: ReplyMetricsCallback):
+    metrics_token = activate_reply_metrics_callback(metrics_callback)
     try:
-        final_state = await agent_graph.ainvoke(current_state)
+        final_state = await agent_graph.ainvoke(
+            current_state,
+            config={"callbacks": [metrics_callback]},
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Agent execution failed: {str(e)}")
+    finally:
+        reset_reply_metrics_callback(metrics_token)
 
     messages = final_state.get("messages", [])
     if not messages:
@@ -222,13 +291,34 @@ def _is_greeting(text: str) -> bool:
     return trimmed in greetings
 
 
+_PLAN_OFFER_PATTERNS = (
+    re.compile(
+        r"(?:我)?(?:想|要|希望|打算|准备)"
+        r"(?:系统(?:地)?|深入(?:地)?|从零(?:开始)?|认真)?"
+        r"(?:学习(?!率)|学(?!习率)|掌握|入门|复习)"
+    ),
+    re.compile(r"(?:系统|深入|从零(?:开始)?)(?:学习(?!率)|学(?!习率)|掌握|入门)"),
+    re.compile(r"(?:准备|备战).{0,6}(?:面试|考试|考证|考研)|备考"),
+    re.compile(
+        r"(?:制定|生成|安排|调整|修改|更新|规划).{0,12}(?:学习|复习|备考).{0,4}计划"
+        r"|(?:学习|复习|备考).{0,4}计划"
+        r"|(?:计划|规划).{0,4}(?:学习|复习|备考)"
+    ),
+)
+
+
+def _has_plan_offer_signal(text: str) -> bool:
+    normalized = " ".join((text or "").strip().split())
+    return bool(normalized) and any(pattern.search(normalized) for pattern in _PLAN_OFFER_PATTERNS)
+
+
 def _should_offer_plan(text: str, is_new_session: bool, has_plan: bool, offer_shown: bool = False) -> bool:
-    """检查是否应该提供计划建议（仅在新会话且无计划时）"""
+    """仅对明确的持续学习目标提供计划建议。"""
     if not is_new_session or has_plan or offer_shown:
         return False
     if _is_greeting(text):
         return False
-    return bool(text and text.strip())
+    return _has_plan_offer_signal(text)
 
 
 def _extract_reply_from_state(final_state: dict) -> str:
@@ -256,15 +346,18 @@ async def chat_endpoint(request: ChatRequest):
     if not request.message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty")
 
+    started_at = time.perf_counter()
+    metrics_callback = ReplyMetricsCallback()
+
     task_id = _normalize_task_id(request.task_id, request.session_id)
     session_id, is_new_session = _build_session_id(task_id, request.session_id)
 
     # 调用主 Agent
     current_state = _build_state(request, task_id, session_id)
-    final_state, reply_content, is_concluded = await _invoke_agent(current_state)
-
-    # 知识图谱点亮钩子：用用户消息检索知识库，命中则点亮对应节点（不阻塞主流程）
-    await _maybe_lit_kg(task_id, request.message)
+    final_state, reply_content, is_concluded = await _invoke_agent(
+        current_state,
+        metrics_callback,
+    )
 
     # 检查是否是新会话（用于判断是否提供计划建议）
     is_first_message = len(current_state.get("messages", [])) <= 1
@@ -276,6 +369,7 @@ async def chat_endpoint(request: ChatRequest):
         "await_offer",
         "await_confirm",
         "await_plan_confirm",
+        "await_exit_confirm",
         "collecting",
         "paused",
     }
@@ -313,6 +407,22 @@ async def chat_endpoint(request: ChatRequest):
     plan_data = memory.get_task_plan_data(task_id)
     plan_session = plan_data.get(PLAN_SESSION_KEY) if isinstance(plan_data, dict) else None
     plan_status = plan_session.get("status") if isinstance(plan_session, dict) else None
+    metrics = metrics_callback.snapshot(started_at)
+    await asyncio.to_thread(
+        memory.attach_reply_metrics,
+        session_id,
+        metrics.model_dump(),
+    )
+    await _dispatch_reply_maintenance(
+        session_id=session_id,
+        user_text=request.message,
+    )
+    logger.info(
+        "[性能] endpoint=chat route_source=%s total_ms=%d llm_calls=%d",
+        final_state.get("_route_source", "unknown") if isinstance(final_state, dict) else "unknown",
+        metrics.elapsed_ms,
+        metrics.llm_calls,
+    )
 
     return ChatResponse(
         task_id=task_id,
@@ -322,6 +432,7 @@ async def chat_endpoint(request: ChatRequest):
         plan_proposal=plan_proposal,
         plan_status=plan_status,
         suggested_replies=suggested_replies,
+        metrics=metrics,
     )
 
 
@@ -338,6 +449,10 @@ async def chat_stream_endpoint(request: ChatRequest):
 
     async def _gen():
         nonlocal session_id
+        started_at = time.perf_counter()
+        first_delta_at = None
+        metrics_callback = ReplyMetricsCallback()
+        metrics_token = None
         try:
             yield _event_line("start", {"task_id": task_id, "session_id": session_id})
 
@@ -348,9 +463,15 @@ async def chat_stream_endpoint(request: ChatRequest):
             final_state = None
             streamed_any = False
             saved_modules = None  # 保存 modules 信息，用于 node 事件
+            saved_route_source = "unknown"
 
             # 优先使用 LangGraph 事件流（真流式），若上游不支持则自动回退到后处理分片
-            async for event in agent_graph.astream_events(current_state, version="v1"):
+            metrics_token = activate_reply_metrics_callback(metrics_callback)
+            async for event in agent_graph.astream_events(
+                current_state,
+                config={"callbacks": [metrics_callback]},
+                version="v1",
+            ):
                 # 检查中断请求
                 if _check_interrupt(session_id):
                     print(f"⚠️ 生成被用户中断：{session_id}")
@@ -361,12 +482,14 @@ async def chat_stream_endpoint(request: ChatRequest):
                 event_name = event.get("event", "")
                 metadata = event.get("metadata", {}) or {}
                 node_name = metadata.get("langgraph_node")
+                _record_model_metrics(event, metrics_callback)
 
                 # 监听意图识别节点（analyzer）完成，保存 modules 信息
                 if node_name == "analyzer" and event_name == "on_chain_end":
                     # 意图识别完成，解析结果
                     output = (event.get("data") or {}).get("output")
                     if isinstance(output, dict) and output.get("plan"):
+                        saved_route_source = str(output.get("_route_source") or "unknown")
                         plan = output["plan"]
                         # 处理 Pydantic 模型对象
                         is_pydantic = hasattr(plan, "model_dump")
@@ -398,8 +521,8 @@ async def chat_stream_endpoint(request: ChatRequest):
                             "modules": modules
                         })
 
-                # 监听 aggregator 节点开始，发送 node 事件（使用保存的 modules 信息）
-                if node_name == "aggregator" and event_name == "on_chain_start" and saved_modules:
+                # 最终回复节点开始，发送 node 事件（使用保存的 modules 信息）
+                if node_name in {"aggregator", "direct_tutor"} and event_name == "on_chain_start" and saved_modules:
                     if saved_modules:
                         yield _event_line("node", {
                             "status": "processing",
@@ -408,17 +531,22 @@ async def chat_stream_endpoint(request: ChatRequest):
                         })
 
                 # 流式输出 token
-                if event_name == "on_chat_model_stream" and node_name == "aggregator":
+                if event_name == "on_chat_model_stream" and node_name in {"aggregator", "direct_tutor"}:
                     chunk = (event.get("data") or {}).get("chunk")
                     text_delta = _chunk_to_text(chunk)
                     if text_delta:
                         streamed_any = True
+                        if first_delta_at is None:
+                            first_delta_at = time.perf_counter()
                         yield _event_line("delta", {"text": text_delta})
 
-                if event_name == "on_chain_end" and node_name in {"aggregator", "plan"}:
+                if event_name == "on_chain_end" and node_name in {"aggregator", "direct_tutor", "plan"}:
                     output = (event.get("data") or {}).get("output")
                     if isinstance(output, dict):
                         final_state = output
+
+            reset_reply_metrics_callback(metrics_token)
+            metrics_token = None
 
             # 检查中断（在 agent 执行完成后）
             if _check_interrupt(session_id):
@@ -443,6 +571,7 @@ async def chat_stream_endpoint(request: ChatRequest):
                 "await_offer",
                 "await_confirm",
                 "await_plan_confirm",
+                "await_exit_confirm",
                 "collecting",
                 "paused",
             }
@@ -467,18 +596,21 @@ async def chat_stream_endpoint(request: ChatRequest):
                             _clear_interrupt(session_id)
                             yield _event_line("interrupted", {"reason": "user_requested"})
                             return
+                        if first_delta_at is None:
+                            first_delta_at = time.perf_counter()
                         yield _event_line("delta", {"text": chunk})
                         await asyncio.sleep(0.02)
                 else:
+                    if first_delta_at is None:
+                        first_delta_at = time.perf_counter()
                     yield _event_line("delta", {"text": reply_content})
 
             if streamed_any and offer_text:
+                if first_delta_at is None:
+                    first_delta_at = time.perf_counter()
                 yield _event_line("delta", {"text": offer_text})
 
             is_concluded = bool(final_state.get("should_exit", False))
-
-            # 知识图谱点亮钩子（流式接口，异步执行不阻塞）
-            await _maybe_lit_kg(task_id, request.message)
 
             if is_concluded:
                 summary_from_agent = final_state.get("summary_output") or final_state.get("summary_out")
@@ -489,6 +621,29 @@ async def chat_stream_endpoint(request: ChatRequest):
             plan_data = memory.get_task_plan_data(task_id)
             plan_session = plan_data.get(PLAN_SESSION_KEY) if isinstance(plan_data, dict) else None
             plan_status = plan_session.get("status") if isinstance(plan_session, dict) else None
+            metrics = metrics_callback.snapshot(started_at)
+            await asyncio.to_thread(
+                memory.attach_reply_metrics,
+                session_id,
+                metrics.model_dump(),
+            )
+            await _dispatch_reply_maintenance(
+                session_id=session_id,
+                task_id=task_id,
+                user_text=request.message,
+            )
+            ttft_ms = (
+                round((first_delta_at - started_at) * 1000)
+                if first_delta_at is not None
+                else -1
+            )
+            logger.info(
+                "[性能] endpoint=chat_stream route_source=%s ttft_ms=%d total_ms=%d llm_calls=%d",
+                saved_route_source,
+                ttft_ms,
+                metrics.elapsed_ms,
+                metrics.llm_calls,
+            )
 
             yield _event_line("done", {
                 "task_id": task_id,
@@ -497,37 +652,17 @@ async def chat_stream_endpoint(request: ChatRequest):
                 "plan_proposal": plan_proposal,
                 "plan_status": plan_status,
                 "suggested_replies": suggested_replies,
+                "metrics": metrics.model_dump(),
             })
         except HTTPException as e:
             yield _event_line("error", {"message": str(e.detail), "status": e.status_code})
         except Exception as e:
             yield _event_line("error", {"message": str(e), "status": 500})
+        finally:
+            if metrics_token is not None:
+                reset_reply_metrics_callback(metrics_token)
 
     return StreamingResponse(_gen(), media_type="application/x-ndjson")
-
-
-async def _maybe_lit_kg(task_id: str, user_text: str) -> None:
-    """知识图谱点亮钩子：异步检索知识库并点亮命中节点。
-
-    用线程池执行，失败静默降级，绝不阻塞对话主流程。
-    """
-    if not task_id or not user_text or not user_text.strip():
-        return
-    try:
-        await asyncio.to_thread(_do_lit_kg, task_id, user_text)
-    except Exception as e:
-        print(f"[KG] lit hook failed: {e}")
-
-
-def _do_lit_kg(task_id: str, user_text: str) -> None:
-    """线程内执行点亮（同步实现）。"""
-    try:
-        from app.knowledge_graph.doc_graph import hit_doc_graph
-        n = hit_doc_graph(task_id, user_text)
-        if n:
-            print(f"[KG] 点亮 {n} 个节点 (task={task_id})")
-    except Exception as e:
-        print(f"[KG] doc graph hit failed: {e}")
 
 
 async def _call_summary_agent(session_id: str, task_id: str, summary_text: str = None):

@@ -10,20 +10,16 @@
 
 import json
 import os
-from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
 from app.interview.models import AnswerRequest, StartRequest
 from app.interview import learn, workflow
+from app.interview.report_store import get_report, list_reports
+from app.knowledge.snapshot import snapshot_manager
 
 router = APIRouter()
-
-# 项目根目录（app/api/interview.py -> 项目根）
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-_KNOWLEDGE_DIR = Path(os.environ.get("KNOWLEDGE_DIR") or str(_PROJECT_ROOT / "knowledge"))
-
 
 @router.post("/start")
 async def start(request: StartRequest):
@@ -39,6 +35,22 @@ async def answer(request: AnswerRequest):
 async def review(request: dict):
     session_id = request.get("session_id", "")
     return await workflow.review(session_id)
+
+
+@router.get("/session/{session_id}")
+async def get_session(session_id: str):
+    result = workflow.get_session_view(session_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="会话不存在或已过期")
+    return result
+
+
+@router.post("/session/end")
+async def end_session(request: dict):
+    session_id = str(request.get("session_id") or "")
+    if not session_id:
+        raise HTTPException(status_code=400, detail="缺少 session_id")
+    return workflow.end_session(session_id)
 
 
 @router.post("/ask")
@@ -77,7 +89,11 @@ async def ask_stream(request: dict):
 
 
 @router.get("/source")
-async def read_source(source_file: str, question: str = ""):
+async def read_source(
+    source_file: str,
+    question: str = "",
+    snapshot_id: str = "",
+):
     """读取学习模式引用来源对应的知识文件完整内容（Markdown）。
 
     仅允许读取知识库目录内的 .md 文件，防止路径穿越。
@@ -87,9 +103,14 @@ async def read_source(source_file: str, question: str = ""):
     if not source_file:
         raise HTTPException(status_code=400, detail="缺少 source_file 参数")
 
-    # 拼接并归一化路径，确保落在知识库目录内
-    target = (_KNOWLEDGE_DIR / source_file).resolve()
-    root = _KNOWLEDGE_DIR.resolve()
+    try:
+        snapshot = snapshot_manager.resolve(snapshot_id or None)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    # 拼接并归一化路径，确保落在该快照的知识目录内。
+    root = snapshot.source_dir.resolve()
+    target = (root / source_file).resolve()
     if not str(target).startswith(str(root) + os.sep) and target != root:
         raise HTTPException(status_code=403, detail="非法的来源文件路径")
 
@@ -121,6 +142,7 @@ async def read_source(source_file: str, question: str = ""):
 
     return {
         "source_file": source_file,
+        "snapshot_id": snapshot.snapshot_id,
         "content": content,
         "heading": heading,
         "heading_index": heading_index,
@@ -128,5 +150,25 @@ async def read_source(source_file: str, question: str = ""):
 
 
 @router.get("/progress")
-async def progress(user_id: str = "local_user", limit: int = 20):
-    return workflow.get_progress(user_id=user_id, limit=limit)
+async def progress(
+    user_id: str = "local_user",
+    limit: int = 20,
+    goal_id: str | None = None,
+):
+    return workflow.get_progress(user_id=user_id, limit=limit, goal_id=goal_id)
+
+
+@router.get("/reports")
+async def reports(user_id: str = "local_user", goal_id: str | None = None):
+    return {
+        "goal_id": goal_id,
+        "reports": [item.model_dump() for item in list_reports(user_id=user_id, goal_id=goal_id)],
+    }
+
+
+@router.get("/reports/{report_id}")
+async def report(report_id: str):
+    result = get_report(report_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="面试报告不存在")
+    return result.model_dump()

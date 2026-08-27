@@ -12,21 +12,21 @@
     {
       "id": "g01",
       "query": "RAG 系统中如何设计文档分块策略？不同场景下应该怎么选择？",
-      "relevant_ids": ["rag-rag-系统中如何设计文档分块策略-不同场景下应该怎么选择-86ed64bb"],
+      "relevant_ids": ["rag-分块策略怎么设计-不同策略的优缺点-19dff388"],
       "dimension": "rag",
       "type": "verbatim"
     },
     {
       "id": "g02",
       "query": "RAG 的文档怎么切块？有哪些切分方法？",
-      "relevant_ids": ["rag-rag-系统中如何设计文档分块策略-不同场景下应该怎么选择-86ed64bb", "rag-分块策略怎么设计-不同策略的优缺点-19dff388"],
+      "relevant_ids": ["rag-分块策略怎么设计-不同策略的优缺点-19dff388"],
       "dimension": "rag",
       "type": "paraphrase"
     },
     {
       "id": "g03",
       "query": "就是给知识库文档切成一小块一小块的，具体咋选切法",
-      "relevant_ids": ["rag-rag-系统中如何设计文档分块策略-不同场景下应该怎么选择-86ed64bb"],
+      "relevant_ids": ["rag-分块策略怎么设计-不同策略的优缺点-19dff388"],
       "dimension": "rag",
       "type": "colloquial"
     },
@@ -110,8 +110,8 @@
     {
       "id": "g15",
       "query": "Agent 的 Tool Calling 是怎么工作的？Function Calling 和 Tool Use 有啥区别？",
-      "relevant_ids": ["architecture-agent-的-tool-calling-机制是怎么工作的-function-c-691fbba5"],
-      "dimension": "architecture",
+      "relevant_ids": ["tool-management-大模型的-function-call-是什么-tool-use-一般怎么用-ffe5388e"],
+      "dimension": "tool-management",
       "type": "verbatim"
     },
     {

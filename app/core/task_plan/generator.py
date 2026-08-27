@@ -47,11 +47,11 @@ def _build_system_prompt(existing_plan: Optional[Dict[str, Any]]) -> str:
 
 
 def _get_plan_model():
-    return create_chat_model(temperature=0.2)
+    return create_chat_model(temperature=0.2, role="plan")
 
 
 def _get_chat_model():
-    return create_chat_model()
+    return create_chat_model(role="plan")
 
 
 def generate_task_plan(
