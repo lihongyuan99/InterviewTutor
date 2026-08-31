@@ -12,6 +12,8 @@ export const EVENT_TIMELINE_UPDATED = "timeline-updated";
 export const EVENT_REQUEST_PLAN = "request-plan";
 /** LLM 模型设置更新后触发（detail: 新设置对象） */
 export const EVENT_LLM_SETTINGS_UPDATED = "llm-settings-updated";
+/** 请求打开系统设置（detail 可包含 { section: "models" }） */
+export const EVENT_OPEN_SETTINGS = "open-settings";
 
 export function emitAppEvent(name: string, detail?: unknown): void {
   if (detail === undefined) {

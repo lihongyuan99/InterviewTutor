@@ -24,12 +24,10 @@ import { MarkdownPreview } from "./MarkdownPreview";
 import { API_BASE_URL, ENABLE_STREAMING, apiSend } from "../../lib/api";
 import { clearDraftTask, loadDraftTask } from "../../lib/draftTask";
 import { normalizePlanSteps, type TaskPlan } from "../../lib/plan";
-import {
-  EVENT_LLM_SETTINGS_UPDATED,
-  EVENT_REQUEST_PLAN,
-} from "../../lib/events";
+import { EVENT_REQUEST_PLAN } from "../../lib/events";
 import { apiGet } from "../../lib/api";
 import { goalKeys, rememberActiveGoal, useGoal } from "../../lib/goals";
+import { ModelSwitcher } from "./ModelSwitcher";
 
 interface ReplyMetrics {
   elapsed_ms: number;
@@ -100,11 +98,6 @@ interface SessionMessagesResponse {
   topic: string;
   last_updated: string;
   messages: SessionMessage[];
-}
-
-interface ModelSummary {
-  providerName: string;
-  modelName: string;
 }
 
 interface StreamEvent {
@@ -386,7 +379,6 @@ export function TutorSession({ readOnly = false }: { readOnly?: boolean }) {
     loadDraftTask()
   );
   const [planStatus, setPlanStatus] = useState<string | null>(null);
-  const [activeModel, setActiveModel] = useState<ModelSummary | null>(null);
   const summaryAssistantIdRef = useRef<string | null>(null);
   const summaryBufferRef = useRef<string>("");
   const activeAssistantIdRef = useRef<string | null>(null);
@@ -645,51 +637,6 @@ export function TutorSession({ readOnly = false }: { readOnly?: boolean }) {
   useEffect(() => {
     if (goalId) rememberActiveGoal(goalId);
   }, [goalId]);
-  // 加载并保持当前激活的模型信息（用于在输入框展示）
-  useEffect(() => {
-    let cancelled = false;
-    const applySummary = (payload: unknown) => {
-      if (cancelled || !payload || typeof payload !== "object") return;
-      const settings = payload as {
-        providers?: Array<{ id?: string; name?: string; active_model?: string }>;
-        active_provider_id?: string | null;
-      };
-      const providers = Array.isArray(settings.providers) ? settings.providers : [];
-      const activeId = settings.active_provider_id;
-      const active = providers.find((p) => p.id === activeId) ?? providers[0];
-      if (!active) {
-        setActiveModel(null);
-        return;
-      }
-      const providerName = (active.name || active.id || "Model").trim();
-      const modelName = (active.active_model || "").trim();
-      if (!modelName) {
-        setActiveModel({ providerName, modelName: providerName });
-      } else {
-        setActiveModel({ providerName, modelName });
-      }
-    };
-    const loadSettings = async () => {
-      try {
-        const data = await apiGet<{
-          providers?: Array<{ id?: string; name?: string; active_model?: string }>;
-          active_provider_id?: string | null;
-        }>("/settings/llm");
-        applySummary(data);
-      } catch {
-        if (!cancelled) setActiveModel(null);
-      }
-    };
-    void loadSettings();
-    const handleSettingsUpdated = (event: Event) => {
-      applySummary((event as CustomEvent).detail);
-    };
-    window.addEventListener(EVENT_LLM_SETTINGS_UPDATED, handleSettingsUpdated);
-    return () => {
-      cancelled = true;
-      window.removeEventListener(EVENT_LLM_SETTINGS_UPDATED, handleSettingsUpdated);
-    };
-  }, []);
   useEffect(() => {
     let cancelled = false;
     const fallbackTitle = taskId ? "学习任务" : "欢迎使用 InterviewTutor";
@@ -1585,18 +1532,7 @@ export function TutorSession({ readOnly = false }: { readOnly?: boolean }) {
               </kbd>
               <span>换行</span>
             </div>
-            {activeModel && (
-              <div
-                className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-indigo-200/70 bg-indigo-50/80 px-2 py-0.5 text-indigo-600 dark:border-indigo-700/50 dark:bg-indigo-900/30 dark:text-indigo-300"
-                title={`${activeModel.modelName} · ${activeModel.providerName}`}
-                aria-label={`当前模型：${activeModel.modelName}，服务商：${activeModel.providerName}`}
-              >
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 shadow-[0_0_6px_rgba(139,92,246,0.6)]" aria-hidden="true" />
-                <span className="max-w-44 truncate font-medium">{activeModel.modelName}</span>
-                <span className="text-indigo-400/80 dark:text-indigo-400/60">·</span>
-                <span className="max-w-32 truncate text-indigo-500/80 dark:text-indigo-300/80">{activeModel.providerName}</span>
-              </div>
-            )}
+            <ModelSwitcher disabled={isSending} />
           </div>
         </div>
       </div>}

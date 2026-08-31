@@ -18,6 +18,7 @@ import { MarkdownPreview } from "./MarkdownPreview";
 import { API_BASE_URL } from "../../lib/api";
 import { useGoal } from "../../lib/goals";
 import type { WorkspaceOutletContext } from "./RootLayout";
+import { ModelSwitcher } from "./ModelSwitcher";
 
 interface Citation {
   question_id: string;
@@ -473,12 +474,16 @@ export function LearnPage() {
                        transition-all"
           >
             <div className="flex items-end gap-3">
-              {/* 左侧 Logo 图标 */}
+              {/* 左侧知识学习图标 */}
               <div className="w-9 h-9 shrink-0 mb-0.5 rounded-xl overflow-hidden
                               bg-emerald-100/60 dark:bg-emerald-900/30
                               ring-1 ring-emerald-200/60 dark:ring-emerald-700/40
                               flex items-center justify-center">
-                <img src="/img/logo.svg" alt="" className="w-7 h-7" />
+                <BookOpen
+                  data-testid="knowledge-input-icon"
+                  className="h-5 w-5 text-emerald-600 dark:text-emerald-300"
+                  aria-hidden="true"
+                />
               </div>
               <textarea
                 ref={inputRef}
@@ -538,6 +543,7 @@ export function LearnPage() {
               </kbd>
               <span>换行</span>
             </div>
+            <ModelSwitcher disabled={loading} tone="emerald" />
             {messages.length > 0 && (
               <button
                 onClick={reset}

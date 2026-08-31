@@ -151,6 +151,15 @@ describe("goal workspace", () => {
 
     const input = await screen.findByPlaceholderText(/向面试知识库提问/);
     expect(screen.getByTestId("workspace-learn-footer")).toHaveClass("workspace-bottom-dock");
+    expect(screen.getByTestId("knowledge-input-icon")).toHaveClass("text-emerald-600");
+    const knowledgeModelSwitcher = await screen.findByRole("button", {
+      name: /当前模型：Deepseek-v4-flash.*点击切换模型/,
+    });
+    expect(knowledgeModelSwitcher).toHaveClass(
+      "border-emerald-200/80",
+      "bg-emerald-50/80",
+      "text-emerald-700",
+    );
     fireEvent.change(input, { target: { value: "正在输入拼音" } });
     fireEvent.compositionStart(input);
     fireEvent.keyDown(input, { key: "Enter", code: "Enter", keyCode: 229 });

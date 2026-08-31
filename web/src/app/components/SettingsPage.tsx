@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertCircle,
   ArrowLeft,
@@ -24,7 +24,11 @@ import {
   SheetTitle,
 } from "./ui/sheet";
 import { API_BASE_URL, extractErrorMessage } from "../../lib/api";
-import { EVENT_LLM_SETTINGS_UPDATED, emitAppEvent } from "../../lib/events";
+import {
+  EVENT_LLM_SETTINGS_UPDATED,
+  EVENT_OPEN_SETTINGS,
+  emitAppEvent,
+} from "../../lib/events";
 import { KnowledgeSettingsPanel } from "./KnowledgeSettingsPanel";
 
 type Protocol = "openai_compatible" | "anthropic" | "openai_responses";
@@ -190,6 +194,7 @@ export function SettingsPage({ open, onOpenChange }: SettingsPageProps) {
   const [showApiKey, setShowApiKey] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const requestedSectionRef = useRef<SettingsSection | null>(null);
 
   const activeProvider = useMemo(
     () =>
@@ -200,6 +205,19 @@ export function SettingsPage({ open, onOpenChange }: SettingsPageProps) {
   );
 
   useEffect(() => {
+    const selectRequestedSection = (event: Event) => {
+      const section = (event as CustomEvent<{ section?: SettingsSection }>).detail
+        ?.section;
+      if (!section) return;
+      requestedSectionRef.current = section;
+      setActiveSection(section);
+    };
+    window.addEventListener(EVENT_OPEN_SETTINGS, selectRequestedSection);
+    return () =>
+      window.removeEventListener(EVENT_OPEN_SETTINGS, selectRequestedSection);
+  }, []);
+
+  useEffect(() => {
     if (!open) return;
     const controller = new AbortController();
     setIsLoading(true);
@@ -207,7 +225,8 @@ export function SettingsPage({ open, onOpenChange }: SettingsPageProps) {
     setNotice("");
     setDraft(null);
     setIsNewProvider(false);
-    setActiveSection("teaching");
+    setActiveSection(requestedSectionRef.current || "teaching");
+    requestedSectionRef.current = null;
 
     fetch(`${API_BASE_URL}/settings/llm`, { signal: controller.signal })
       .then(async (response) => {

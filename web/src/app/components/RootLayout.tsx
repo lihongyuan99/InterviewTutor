@@ -5,6 +5,7 @@ import { WorkspaceSidebar } from "./WorkspaceSidebar";
 import { WorkspacePanel } from "./WorkspacePanel";
 import { SettingsPage } from "./SettingsPage";
 import { useGoalPlan, useGoalProgress } from "../../lib/goals";
+import { EVENT_OPEN_SETTINGS } from "../../lib/events";
 
 export interface WorkspaceOutletContext {
   isPanelOpen: boolean;
@@ -38,6 +39,12 @@ export function RootLayout() {
       setIsSettingsOpen(true);
     }
   }, [location.search]);
+
+  useEffect(() => {
+    const openSettings = () => setIsSettingsOpen(true);
+    window.addEventListener(EVENT_OPEN_SETTINGS, openSettings);
+    return () => window.removeEventListener(EVENT_OPEN_SETTINGS, openSettings);
+  }, []);
 
   useEffect(() => {
     setMobileNavOpen(false);
